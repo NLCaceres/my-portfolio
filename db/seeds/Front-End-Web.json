@@ -1,0 +1,146 @@
+{
+  "Major-projects": [
+    {
+      "name": "Infection Control Front-end",
+      "desc": "Originally an idea of my father's, I began this app on iOS and Android, but as I began to build out the back-end to collect the data pertinent to an Infection & Control Department, I increasingly wanted to work with Angular 2+ for a better understanding of front-end frameworks as well as to allow a better online experience for users of the iOS and Android apps. While an Infection Control Practicioneer could use the phone apps on the go, having a centralized hub to keep track of reports or to control settings across users seemed more and more like an extremely useful feature that would be indispensable once fully fledged. In the future, I'd like to better adapt the components for general use and so they could more simply use the available endpoints from the back-end REST API.",
+      "images": [
+        {
+          "src": "https://imgur.com/9GIdK1H.png",
+          "alt": "The left side has a filter and the right side a list of professions."
+        },
+        {
+          "src": "https://imgur.com/7XXbsi6.png",
+          "alt": "The add screen for new profession titles."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/ng-records",
+      "url": "https://fathomless-atoll-23643.herokuapp.com/"
+    },
+    {
+      "name": "This Portfolio Site!",
+      "desc": "Having not worked with React ever before (or any front-end framework for that matter), I wanted to take my time and learn it as well as I could while also making a project that meant something to myself. I immediately figured what would be better than a portfolio site that I could show my skills in more ways than one. Since first starting this site, I feel I've come a long way in my software development skills not only in Front-End web development but overall from Android Development to even the back-end.",
+      "images": [
+        {
+          "src": "https://imgur.com/mDVxExd.png",
+          "alt": "Home screen displaying mobile version with carousel of images, a short description and github URL"
+        },
+        {
+          "src": "https://imgur.com/OLVRFWx.png",
+          "alt": "Android tab with open navbar displaying how tabs are changed depending on screen. It's a sticky navbar that slides over screen."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/resume-react",
+      "url": "https://nlcaceres.github.io/resume-react/"
+    },
+    {
+      "name": "Car Lords - The New Car Site to Compete and Beat the Rest",
+      "desc": "For my last assignment of my ITP 301 class for Web Dev, I wanted to create something that I would find useful in my own life. Though it was incredibly difficult to find data relating to cars (even basic info like car models and makes), over time I was able to accomplish a great deal with limited time and resources. Using the Edmunds API (ten requests a day at the time), I was able to carefully test my Document Object Model (DOM) manipulation skills and the page itself. Without a front-end framework, I managed to create three 'pages' that dealt with the initial search for a car of a certain model, make and year, displayed a list of articles related to a search keyword, and displayed a list of nearby new and used cars available to buy. If I could amass a free use collection of car data, I'd love to get this project going again, but unfortunately Edmunds made the data entirely private.",
+      "images": [
+        {
+          "src": "https://imgur.com/JP9uLEW.png",
+          "alt": "For smaller mobile devices, this is the homepage. A navbar, 3 dropdown menus, and footer"
+        },
+        {
+          "src": "https://imgur.com/9jcB7k9.png",
+          "alt": "For tablet and wider screens, this is the homepage. An expanded navbar, 3 dropdown menus and a full footer"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/carSearch-Site",
+      "url": "https://nlcaceres.github.io/carSearch-Site/"
+    }
+  ],
+  "Small-projects": [
+    {
+      "name": "The Walking Dead Fansite",
+      "desc": "My first official attempt at anything related to Web Development and the Front-End. In my USC class ITP 301, we were instructed to create a fansite for one of our favorite TV shows. At the time, the Walking Dead was probably at its highest viewership with the shock of the season 7 opening and 6 excellent seasons prior. In my little project, I'd create a simple html file with simple css talking about the main characters and the first 5 seasons.",
+      "images": [
+        {
+          "src": "https://i.imgur.com/92xr3mE.png",
+          "alt": "Walking Dead Fan Site with descriptions of seasons 1 through 5 as well as several main character descriptions"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/WD-show-fanpage",
+      "url": "https://nlcaceres.github.io/WD-show-fanpage/"
+    },
+    {
+      "name": "My Girlfriend and I's Photo Gallery",
+      "desc": "As a part of the second assignment for my ITP 301 class, we made a point of overviewing jQuery for a couple weeks which culminated in this project, a simple gallery using jQuery to highlight images and when clicked, the image would be swapped into the main frame.",
+      "images": [
+        {
+          "src": "https://i.imgur.com/wDMkYkJ.png",
+          "alt": "Column of photos along the left side with a main image on the right"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/jQuery-gallery",
+      "url": "https://nlcaceres.github.io/jQuery-gallery/"
+    },
+    {
+      "name": "Color my Life",
+      "desc": "In the third assignment for ITP 301, the task was even more simple than the previous one, namely create a page that describes your life in a nutshell AND use javascript to modify the CSS of various parts of the page. Using radio buttons and a pair of JS functions, a user can easily swap out the background to whatever basic colors they want and to a font color they'd prefer.",
+      "images": [
+        {
+          "src": "https://i.imgur.com/6lRZSbd.png",
+          "alt": "Two columns of radio buttons relating to background and text color with a main image sitting alongside paragraphs about my life and school."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/js-color-control",
+      "url": "https://nlcaceres.github.io/js-color-control/"
+    },
+    {
+      "name": "Need a Calculator?",
+      "desc": "Getting into the groove of my first Web Development class, we finally got into a project that was a bit more practical and useful, a calculator! Picking out a few images for calculator buttons and laying them out as expected for a calculator, I added onClick attributes to each button which would add numbers to the text field sitting atop. As the user clicks the operators along the side, the number will disappear in the text field and allow the next number to be input until you finally click the equals sign and get your result. Simple and plenty useful!",
+      "images": [
+        {
+          "src": "https://imgur.com/FduCCFf.png",
+          "alt": "Basic calculator with red buttons and a text input sitting atop it for numbers"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/calculator-webApp",
+      "url": "https://nlcaceres.github.io/calculator-webApp/"
+    },
+    {
+      "name": "The New and Improved Photo Gallery",
+      "desc": "Improving upon the previous jQuery gallery my ITP 301 class had made, I'd change the layout adding more images, focus it around my girlfriend and I's Walt Disney World trip, using vanilla Javascript alone. The main image frame and row images would function similarly, highlighting when the mouse hovers over and swapping on click, but I'd include a row of random images underneath the main frame and above the larger full gallery of images. With the row of random images, I included a random button that would choose a set of three images to display (though it could choose two of the same). Not perfect, but a good step towards a fully fledged project and one heck of a road trip!",
+      "images": [
+        {
+          "src": "https://imgur.com/XVzYyDm.png",
+          "alt": "Home screen displaying the login. Once logged in, login-screen will no longer be seen until log-out."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/js-gallery",
+      "url": "https://nlcaceres.github.io/js-gallery/"
+    },
+    {
+      "name": "These are a Few of My Favorite Sites",
+      "desc": "In order to practice HTML manipulation and get a feel for the power Javascript had over the Document Object Model, my class would make one of its last projects, a search bar scanning through a few arrays with website names and keywords related to those websites. Pressing enter with an empty search bar will give you a full list of around 20 websites that I use whether for news, for entertainment or for shopping, but otherwise the search bar will act as one might expect and return any websites that relate to the keyword a user types in.",
+      "images": [
+        {
+          "src": "https://imgur.com/XJX7BSA.png",
+          "alt": "Home screen displaying the login. Once logged in, login-screen will no longer be seen until log-out."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/bookmark-search",
+      "url": "https://nlcaceres.github.io/bookmark-search/"
+    },
+    {
+      "name": "The Group Project - Flip through a Fun Van Gogh Flipbook",
+      "desc": "As my semester came to a close in ITP 301 Intro to Web Dev, my professor was sure to incorporate a group project into the class, pairing Computer Science Majors with Computer Science Minors. Having the minor under my belt, I paired with a classmate, Duncan, a CS Major. Though our schedules didn't ever seem to fit, this was the perfect opportunity to make use of Github. With Github on our side, we were able to divide and conquer fairly quickly. Unfortunately our merge conflicts made things difficult as our presentations finally arrived, but we fixed them in record time and had a presentable flipbook for all to enjoy.",
+      "images": [
+        {
+          "src": "https://i.imgur.com/kfmVnZw.png",
+          "alt": "Cover Page of Van Gogh Web Flipbook"
+        },
+        {
+          "src": "https://i.imgur.com/GYvfv5w.png",
+          "alt": "Two Pages on Screen"
+        },
+        {
+          "src": "https://i.imgur.com/4NR5Jr9.png",
+          "alt": "Actual Page taking up half of screen"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/itp301-group-project",
+      "url": "https://nlcaceres.github.io/itp301-group-project/"
+    }
+  ]
+}

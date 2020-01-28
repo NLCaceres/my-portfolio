@@ -1,0 +1,354 @@
+{
+  "Major-projects": [
+    {
+      "name": "Positive Note Android",
+      "desc": "This was the first major app I wrote in Android. In the class that first taught me Android development, we were asked to create an app that would help those in their day-to-day lives whether that was an acessibility issue, a handicap, or simply a health-related concern. Being a Biology major focused in Neuroscience, I immediately thought about the issue of mental illness. I hoped to create an app that would help users to be able to voice their concerns about their mental well-being if they felt they could not do so easily. Ideally I could create a chat system, map out local mental health professionals, display helpful articles and create a simple login. The biggest concern, and ultimately the task I could not complete, was the chat system. I had hoped to create a system that would connect users who felt they could help in certain topics whether relationships, depression, or simply daily troubles with users who were having trouble in these topics. Though the system was established programmatically with help from Firebase (just before Google acquired it), it didn't function as intended. Consequently, the remainder was fleshed out as best as possible within the time frame, and the chat system was kept basic. Despite my shortcomings, it taught me a number of important lessons from project management, laying out tasks, and interacting with a number of different technologies.",
+      "images": [
+        {
+          "src": "https://imgur.com/w10Dsd6.png",
+          "alt": "Home screen featuring your positive notes!"
+        },
+        {
+          "src": "https://imgur.com/TefBsft.png",
+          "alt": "Login screen with one for generic email and one for Gmail"
+        },
+        {
+          "src": "https://imgur.com/3X0daJ5.png",
+          "alt": "App asking for permission to use location services."
+        },
+        {
+          "src": "https://imgur.com/r857jqw.png",
+          "alt": "Profile screen with photo, privacy buttons, and user information"
+        },
+        {
+          "src": "https://imgur.com/2OQnW93.png",
+          "alt": "User settings to change user email, username, and user password in addition to more personal settings"
+        },
+        {
+          "src": "https://imgur.com/1Z04Ndm.png",
+          "alt": "User settings with focused edit text that enables a confirmation button"
+        },
+        {
+          "src": "https://imgur.com/hxJaQvY.png",
+          "alt": "List of chats with recent users you've interacted with"
+        },
+        {
+          "src": "https://imgur.com/vPqfFaH.png",
+          "alt": "Tab with mental health facility locator included"
+        },
+        {
+          "src": "https://imgur.com/gPlIKCp.png",
+          "alt": "Tab with several links and notes on mental health and the various ways it can appear"
+        },
+        {
+          "src": "https://imgur.com/aKJCBhm.png",
+          "alt": "After clicking the link, you are taken to one of several websites to inform and educate about the particular topic"
+        },
+        {
+          "src": "https://imgur.com/RT1mHx9.png",
+          "alt": "Find a new user to chat with screen"
+        },
+        {
+          "src": "https://imgur.com/fXtJs9n.png",
+          "alt": "Chat messages between two users"
+        },
+        {
+          "src": "https://imgur.com/HarVn7S.png",
+          "alt": "Action bar appearing upon highlighting user messages with options to favorite and delete"
+        },
+        {
+          "src": "https://imgur.com/wQr0Dd9.png",
+          "alt": "Messages after favoriting"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Positive-note"
+    },
+    {
+      "name": "Infection Control Android",
+      "desc": "This app started in Android before moving more recently into iOS. Originally an idea of my father's, I began this app to help solve an issue of data collection and data visualization for his department, Infection Control, at work. However, as I worked out the details with him, it became more apparent how helpful this app could be for not only his own hospital but for hospitals in general. In his experience, hospitals often lag behind in terms of technology, despite being able to benefit immensely from the revolution data collection and computeres can bring.  Ideally as I further pursue this project to its limits, I can generalize and help a number of different hospitals, beginning with local clinics, offering a cheap and user friendly experience to help those in need. Beginning with the Android app, I wanted a simple user interface that would quickly and immediately enable users to create reports when needed. In addition, I wanted to ensure that administrative users had the tools to cater to their clinics needs, adapting the base app as necessary. While the settings portion of the app is still a work in progress, the biggest challenges came from filtering reports and implementing nested Recycler Views. Both will be improved upon to some degree, but getting them done as neatly as possible was a huge point of pride and an important set of lessons in routine Android app development. In the future, I'll add graphs and improved filtering as with the Android app. In addition to this, I expect to improve the settings to allow administrative staff control, look, feel and data collectable.",
+      "images": [
+        {
+          "src": "https://imgur.com/snSm3v5.png",
+          "alt": "Home screen with several buttons to create different report types"
+        },
+        {
+          "src": "https://imgur.com/Wu8DWth.png",
+          "alt": "Home screen with slid over buttons"
+        },
+        {
+          "src": "https://imgur.com/uTzRZsy.png",
+          "alt": "Create new report screen with options for employee, type, and more"
+        },
+        {
+          "src": "https://imgur.com/hdjvFQC.png",
+          "alt": "List of recent reports"
+        },
+        {
+          "src": "https://imgur.com/Ew7gM5Q.png",
+          "alt": "Report list filtered by search term"
+        },
+        {
+          "src": "https://imgur.com/srakz9V.png",
+          "alt": "List of different options to filter the reports results"
+        },
+        {
+          "src": "https://imgur.com/JTxER8O.png",
+          "alt": "Expanded list of filter options for reports"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Android-Records"
+    },
+    {
+      "name": "Work-it Android",
+      "desc": "Ever since I started learning iOS, I hoped to be able to duplicate my projects in Android. Eventually, I would be able to take a class focused on Android and use the knowledge that came from learning iOS to move more smoothly into Android. As stated in my iOS section, the idea for this app came from conversations with my best friend about an all encompassing fitness and health app. There are plenty of apps that cover nutrition, and plenty that cover exercise, but we wanted an app that would fit it all in one clean space.",
+      "images": [
+        {
+          "src": "https://via.placeholder.com/350.png?text=Project",
+          "alt": "Temporary project placeholder"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/WorkIt-Android"
+    },
+    {
+      "name": "Test Takin' 'n Ace'n'",
+      "desc": "A fairly simple idea given to me by my dad and a few friends with the goal of helping people to study, ace that exam, and keep doing so",
+      "images": [
+        {
+          "src": "https://via.placeholder.com/350.png?text=Project",
+          "alt": "Temporary project placeholder"
+        }
+      ],
+      "github": "github-url"
+    }
+  ],
+  "Small-projects": [
+    {
+      "name": "Superman or Batman? Android",
+      "desc": "The following apps show my small efforts as I grew as an Android developer. Similar to when I first started developing iOS apps, I also begin my Android endeavors with a project about Superman and Batman, the world's most recognizable superheros. Who's your favorite?",
+      "images": [
+        {
+          "src": "https://imgur.com/hTkAtau.png",
+          "alt": "Home screen with two buttons one for Superman and one for Batman"
+        },
+        {
+          "src": "https://imgur.com/DIRrVOk.png",
+          "alt": "Having selected Superman, a toast message appears noting that Superman was chosen once"
+        },
+        {
+          "src": "https://imgur.com/eWUJHzU.png",
+          "alt": "Having selected Batman, a toast message appears noting that Batman was chosen three times"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/BvS-Android"
+    },
+    {
+      "name": "How Do You Take Your Morning Coffee?",
+      "desc": "After learning the basics of Android development, the goal here was to take a look at the various UI options in the Android toolkit and use them in conjunction with basic object oriented programming. Simply put, put your order together, save it and load it back when needed.",
+      "images": [
+        {
+          "src": "https://imgur.com/xCmyOZ1.png",
+          "alt": "Home screen with no options chosen"
+        },
+        {
+          "src": "https://imgur.com/3tx6pqf.png",
+          "alt": "Home screen with a few options chosen"
+        },
+        {
+          "src": "https://imgur.com/UBj0Xoy.png",
+          "alt": "Order confirmation screen"
+        },
+        {
+          "src": "https://imgur.com/Y6xs2WE.png",
+          "alt": "Order confirmed and taken back to main screen with toast to show confirmation."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Coffee-ordering-app"
+    },
+    {
+      "name": "A Few of My Favorite Foods from Around the World",
+      "desc": "I found that as I developed these Android apps, the entire operating system felt very intuitive and just as customizable as a developer as it is for a user. Naturally it was important for our teacher to remind us that it's not always necessary to re-invent the wheel, so we took a look at a very commonly used 3rd party dependency, Glide. Using Glide we could load in images to the image view based on URL, and create that much more intuitive and creative apps. With this simple example, every flag was clickable, and when clicked, the URL would change, revealing a different food item that the student enjoyed .",
+      "images": [
+        {
+          "src": "https://imgur.com/g7bOdnK.png",
+          "alt": "Home screen with a few different flags from around the world"
+        },
+        {
+          "src": "https://imgur.com/USyVbOs.png",
+          "alt": "Home screen after clicking a few of the flags, revealing a few different food dishes"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Foods-Around-the-World"
+    },
+    {
+      "name": "Try and Escape!",
+      "desc": "After several basic attempts, it was finally time to learn something a bit more complicated and specific to how the Android OS works, fragments. Using fragments, the goal was to use a single activity to contain all the screens of the App, being sure they all interacted with each other as necessary. In the end, I created an escape room type game with several 'rooms', each with a different puzzle to solve, that the user needs to complete to beat the entire game.",
+      "images": [
+        {
+          "src": "https://imgur.com/QM9tjT6.png",
+          "alt": "The main room showing whether the other puzzles have been solved yet before allowing the user to complete the game."
+        },
+        {
+          "src": "https://imgur.com/8kptYT1.png",
+          "alt": "The color puzzle, including three sliders and a image view that changes color according to them."
+        },
+        {
+          "src": "https://imgur.com/n9vZttW.png",
+          "alt": "After moving the sliders, the image view is now colored orange."
+        },
+        {
+          "src": "https://imgur.com/oCNUUJu.png",
+          "alt": "Having solved the first puzzle, the main room shows your updated progress with green lettering."
+        },
+        {
+          "src": "https://imgur.com/1sHR3T5.png",
+          "alt": "Attempting to solve early leads to a 'try again' screen, and a full restart of the game"
+        },
+        {
+          "src": "https://imgur.com/mMJYt2D.png",
+          "alt": "The second puzzle is a simple check for whether small, medium, or large is required"
+        },
+        {
+          "src": "https://imgur.com/DFuhDqA.png",
+          "alt": "The third puzzle asks for a name relating once again to the three red lines in the main room"
+        },
+        {
+          "src": "https://imgur.com/g7rThIN.png",
+          "alt": "After filling in the text view, pressing set changes completes the puzzle and takes things back to the main room"
+        },
+        {
+          "src": "https://imgur.com/ZENmWfx.png",
+          "alt": "The fourth puzzle asks for the particular season that it requests, pressing cheat in any room will give the correct answer though"
+        },
+        {
+          "src": "https://imgur.com/aCOZMna.png",
+          "alt": "Having changed the fourth puzzle to the correct solution, the user can move on with the full set of solutions"
+        },
+        {
+          "src": "https://imgur.com/sPht9JF.png",
+          "alt": "Full set of solutions and ready to press solve"
+        },
+        {
+          "src": "https://imgur.com/sQXGKfL.png",
+          "alt": "After pressing solve with all four solutions in place, you get the proper 'Win' announcement"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Escape-Room-Puzzle-Game"
+    },
+    {
+      "name": "A Simple Tip Calculator",
+      "desc": "Using listeners with Android's typical UI, it was super simple and quick to make this nifty little tip calculator. Plus, it was helpful to learn how to use Spinners, which acted nicely as a precursor to learning adapters for List Views and later Recycler Views.",
+      "images": [
+        {
+          "src": "https://imgur.com/ozGpbUM.png",
+          "alt": "Home screen with empty text field to auto-calculate tips"
+        },
+        {
+          "src": "https://imgur.com/1twmTLx.png",
+          "alt": "After inputting a simple $10 at 10% tip rate, we see the tip should be $1 with a $11 total for the bill."
+        },
+        {
+          "src": "https://imgur.com/jdvF5Fv.png",
+          "alt": "If you're splitting with two friends, a small 5% tip on $10 bill means everyone pays $3.50 each for a $0.50 tip and a $10.50 total"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Tip-Calculator-Android"
+    },
+    {
+      "name": "More than Just Your Simple Tip Calculator!",
+      "desc": "With both fragments and listeners well understood, a multi-function calculator came naturally to mind after the simple tip calculator from before. Adding in the feature to calculate currency conversions and unit conversions helped to establish that programming done right can be as simple as dropping in features to speed up development and create enormous and well-built projects.",
+      "images": [
+        {
+          "src": "https://imgur.com/rEfY0zj.png",
+          "alt": "Home screen without any fragments inserted into the activity"
+        },
+        {
+          "src": "https://imgur.com/RlRr0KY.png",
+          "alt": "After clicking the tip calculator button, the tip calculator fragment is inserted and blank"
+        },
+        {
+          "src": "https://imgur.com/26EiVcR.png",
+          "alt": "Inserting $10 on a 15% tip leaves you with $1.50 in tip and $11.50 total"
+        },
+        {
+          "src": "https://imgur.com/SLZHsG9.png",
+          "alt": "Splitting the $11.50 total between two people means each pays $5.75 or $0.75 tip per person"
+        },
+        {
+          "src": "https://imgur.com/6DjI0M8.png",
+          "alt": "With a more complicated bill, $23.45 and a 30% tip, it quickly calculate a $7.03 tip for a total of $30.48, split among four people coming out to $7.62 each"
+        },
+        {
+          "src": "https://imgur.com/UpeFaTJ.png",
+          "alt": "Switching to the unit converter"
+        },
+        {
+          "src": "https://imgur.com/8CxJNMO.png",
+          "alt": "Using the centimeter to meter conversion, 100 centimeters is equal to 1.00 meter"
+        },
+        {
+          "src": "https://imgur.com/5BnHreX.png",
+          "alt": "Using the miles to feet conversion, 1 mile is 5280 feet"
+        },
+        {
+          "src": "https://imgur.com/0ySM6QJ.png",
+          "alt": "Switching to the currency conversion feature"
+        },
+        {
+          "src": "https://imgur.com/ryicbOe.png",
+          "alt": "Converting $25 US dollars to euros returns 22.50 euros"
+        },
+        {
+          "src": "https://imgur.com/bysaXXQ.png",
+          "alt": "Converting 160.70 yuan to euros also returns 22.50 euros"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Multi-Func-Calculator-Android"
+    },
+    {
+      "name": "Keep a Notebook",
+      "desc": "After using understanding spinners, the natural progression in Android was to start using List views for a more complex layout. Implementing adapters to feed the list view data was a bit more of a challenge but understanding it helped immensely when recycler views became more common and important in the Android UI ecosystem. Finally after making iOS apps for some time and learning a number of daily-use aspects of Android, my Android apps were starting to feel fully fledged and I was ready for my big semester project after completing a project that would feature some of the most common features of apps, a simple list, saving data and persisting it.",
+      "images": [
+        {
+          "src": "https://imgur.com/8YDui9a.png",
+          "alt": "List of notes to start with in the app"
+        },
+        {
+          "src": "https://imgur.com/t70OveB.png",
+          "alt": "Detail view of the note to edit a note and save the new text"
+        },
+        {
+          "src": "https://imgur.com/3JU3Dia.png",
+          "alt": "Clicking the add note button from the home screen brings you to a similar screen to the detail view to save a new note with title and message"
+        },
+        {
+          "src": "https://imgur.com/DqZa016.png",
+          "alt": "Simply filling in the text views and clicking save note will create a new note"
+        },
+        {
+          "src": "https://imgur.com/ZJfhnQj.png",
+          "alt": "After saving a new note, a new note will appear in the list view."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Note-Book-Android"
+    },
+    {
+      "name": "Enter the Hazard Room",
+      "desc": "As I worked on my final project, Positive Note, my class continued to improve upon basic skills, teaching me a new skill that I hadn't learned much from my iOS development, database interactions. It's this app experience that encouraged me to use Firebase for maintaining messaging and user data. Overall as frustrating as finishing a text based game in Android was, it was an extremely worthwhile experience and one that I still reference for a deeper and more base level understanding of Android's cursor handling of databases. This knowledge certainly serves one well for implementing CLEAN architecture and Android's Room Persistance library.",
+      "images": [
+        {
+          "src": "https://imgur.com/dYi9uaF.png",
+          "alt": "A list of the rankings for the Hazard Room battle simulator with an empty box for displaying the results of battles"
+        },
+        {
+          "src": "https://imgur.com/6lgIXpK.png",
+          "alt": "After selecting Jean Grey and Cyclops, the result of round 1 is Cyclops wins against Jean with his laser eyes, grounding her flight"
+        },
+        {
+          "src": "https://imgur.com/j6psyN1.png",
+          "alt": "After several rounds, Jean Grey manages to wear Cyclops down and win the fight"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Hazard-Room-Game"
+    }
+  ]
+}

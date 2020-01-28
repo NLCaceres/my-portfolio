@@ -1,0 +1,39 @@
+{
+  "Major-projects": [
+    {
+      "name": "Infection Control Back-end",
+      "desc": "This app started in Android before moving more recently into iOS. Originally an idea of my father's, I began this app to help solve an issue of data collection and data visualization for his department, Infection Control, at work. However, as I worked out the details with him, it became more apparent how helpful this app could be for not only his own hospital but in general. In his experience, hospitals often lag behind in terms of technology, despite being able to benefit immensely from the revolution data collection and computeres can bring. Ideally as I further pursue this project to its limits, I can generalize and help a number of different hospitals, beginning with local clinics, offering a cheap and user friendly experience to help those in need. In this side of the project, I explored the Express framework and the flexibility it provides by being an entirely unopinionated back-end solution. In my experience trying out different frameworks, Express's flexibility can be great, but for a beginner it can come with quite the learning curve causing me to spend a lot longer finding middleware and other solutions to implement expected features like security, authentication and more. While the learning experience is worthwhile, I do expect to change the framework I use in this project.",
+      "images": [
+        {
+          "src": "https://via.placeholder.com/350.png?text=Project",
+          "alt": "Temporary project placeholder"
+        }
+      ],
+      "github": "github-url"
+    }
+  ],
+  "Small-projects": [
+    {
+      "name": "Starting Small with Django",
+      "desc": "When I first started learning about the back-end, I knew it simply as a REST API that I could access through given urls, but had no clue about the endless world of frameworks that existed. One of the first ones I learned about was Django. Having never taken a class on the back-end, I used my basic web development experience and Mozilla guides to create a simple library web app. While I didn't fully understand it when creating it, the simplicity of working Django made the learning fun and a great starting point. Between templating for HTML, highlighting the importance of DRY coding, using Heroku and much more, Django as a framework and Mozilla's guide to it are excellent options for an aspiring full-stack developer.",
+      "images": [
+        {
+          "src": "https://via.placeholder.com/350.png?text=Project",
+          "alt": "Temporary project placeholder"
+        }
+      ],
+      "github": "github-url"
+    },
+    {
+      "name": "Running React with Rails",
+      "desc": "In constant pursuit of a better understanding of the back-end as well as the different sides of modern software development, my latest attempts have included Ruby on Rails and Dot Net. In this particular attempt, I wanted to add Rails to my existing react project, specifically my resume / portfolio site. In my existing Angular 2+ project, I separated the front-end it created from the back-end entirely into two heroku based apps, enabling cross-origin resource sharing. In this case, I wanted to circumvent CORS issues altogether by having a single project that was served by Rails (instead of Express) and rendered dynamically by React. Using Rails as a REST API, I could eliminate the existing JSON files containing data, store the information online and explore new options for arranging the page.",
+      "images": [
+        {
+          "src": "https://via.placeholder.com/350.png?text=Project",
+          "alt": "Temporary project placeholder"
+        }
+      ],
+      "github": "github-url"
+    }
+  ]
+}

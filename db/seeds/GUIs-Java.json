@@ -1,0 +1,39 @@
+{
+  "Main-projects": [
+    {
+      "name": "Post-humus GUI",
+      "desc": "This app started in Android before moving more recently into iOS. Originally an idea of my father's, I began this app to help solve an issue of data collection and data visualization for his department, Infection Control, at work. However, as I worked out the details with him, it became more apparent how helpful this app could be for not only his own hospital but in general. In his experience, hospitals often lag behind in terms of technology, despite being able to benefit immensely from the revolution data collection and computeres can bring.",
+      "images": [
+        {
+          "src": "../images/beach.jpeg",
+          "alt": "Home screen with several buttons to point users to various data points"
+        }
+      ],
+      "github": "github-url"
+    },
+    {
+      "name": "Work-it GUI",
+      "desc": "Ever since I started learning iOS, I hoped to be able to duplicate my projects in Android. Eventually, I would be able to take a class focused on Android and use the knowledge that came from learning iOS to move more smoothly into Android. As stated in my iOS section, the idea for this app came from conversations with my best friend about an all encompassing fitness and health app. There are plenty of apps that cover nutrition, and plenty that cover exercise, but we wanted an app that would fit it all in one clean space.",
+      "images": [
+        {
+          "src": "../images/beach.jpeg",
+          "alt": "Home screen displaying "
+        }
+      ],
+      "github": "github-url"
+    }
+  ],
+  "Smaller-projects": [
+    {
+      "name": "Playing with UI-Kit GUI",
+      "desc": "The remaining apps showcase my simple attempts in several iOS focused classes to incorporate various libraries from Apple and Facebook. In this particular example, we were actually instructed to create a small app that would create balls to bounce across the screen, interacting with each other thanks to UI-Kit and its physics that you can apply",
+      "images": [
+        {
+          "src": "../images/beach.jpeg",
+          "alt": "Home screen with a simple button to make more circles (balls) that will float and bounce around the screen."
+        }
+      ],
+      "github": "github-url"
+    }
+  ]
+}

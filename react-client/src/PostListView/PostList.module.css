@@ -1,0 +1,27 @@
+/* If necessary min-height
+may be helpful at 250px instead */
+.cardImg {
+  min-height: 75%;
+  max-height: 400px;
+  max-width: 100%;
+}
+.cardImgBackupStyle {
+  height: 100%;
+  max-height: 250px;
+  width: 100%;
+  max-width: 350px;
+}
+.cardText {
+  white-space: pre-wrap;
+}
+img:hover.clickable {
+  filter: brightness(50%);
+}
+
+.githubLink {
+  background-color: purple !important;
+}
+
+.blockButton {
+  max-width: 125px;
+}

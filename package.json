@@ -1,0 +1,14 @@
+{
+  "name": "resume-react-rails",
+  "license": "MIT",
+  "engines": {
+    "node": "12.4.0",
+    "yarn": "1.21.1",
+    "npm": "6.11.2"
+  },
+  "scripts": {
+    "build": "yarn --cwd react-client install && yarn --cwd react-client build",
+    "deploy": "cp -a react-client/build/. public/",
+    "heroku-postbuild": "yarn build && yarn deploy"
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "Major-projects": [
+    {
+      "name": "Infection Control iOS",
+      "desc": "Originally an idea of my father's, I began this app in Android to help solve an issue of data collection and data visualization for his department, Infection & Control, at work. However, as I worked out the details with him, it became more apparent how helpful this app could be for not only his own hospital but for hospitals and clinics in general. In his experience, hospitals often lag behind in terms of technology, despite the huge benefit data collection often brings.  Ideally as I further pursue this project to its limits, I can generalize and help a number of different hospitals, beginning with local clinics, offering a cheap and user friendly experience to help those in need. Beginning this project Android, I understood that there would have to be a few layout changes in order to provide a more Apple approved look and feel, namely report creation. Luckily, reyclerviews could be easily replicated in iOS which made other screens simple while the report creation took the most thinking and effort. Aside from these mentioned screens, being consistent across the two versions led me to spend a fair deal of time pouring through Apple documentation on coloring and customizing existing UI without breaking it or risking a potentially outdated 3rd party tool if not necessary. In the future, I'll add graphs and improved filtering as with the Android app. In addition to this, I expect to improve the settings to allow administrative staff control, look, feel and data collectable.",
+      "images": [
+        {
+          "src": "https://imgur.com/vEULS92.png",
+          "alt": "Home screen with 6 buttons to begin creating new IC Reports"
+        },
+        {
+          "src": "https://imgur.com/mU3gquc.png",
+          "alt": "List of Employees"
+        },
+        {
+          "src": "https://imgur.com/bwoYyGA.png",
+          "alt": "Screen to create a new report (initially a Contact Report)"
+        },
+        {
+          "src": "https://imgur.com/1cq8bgu.png",
+          "alt": "Empty Settings Screen"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/iOS-Records"
+    },
+    {
+      "name": "Work-it iOS",
+      "desc": "One of my first major iOS projects. The idea came from conversations with my best friend about an all encompassing fitness and health app. There are plenty of apps that cover nutrition, and plenty that cover exercise, but we wanted an app that would fit it all in one clean space. Using this project for my second iOS class, the undertaking was far too much to manage in a month, but I found this realization helped me for future projects by teaching me better project management and setting realistic goals. Between the number of screens, the number of 3rd party APIs, and novel features that I had hoped to implement, it was a major challenge, even now, that remains unfinished. One day I hope to be able to overcome those technical issues and see this app fully fledged and combined with my first app, Recipes Galore.",
+      "images": [
+        {
+          "src": "https://imgur.com/i0cLTiz.png",
+          "alt": "A map full of options for gyms and recreation nearby"
+        },
+        {
+          "src": "https://imgur.com/IL267XG.png",
+          "alt": "Log-in screen"
+        },
+        {
+          "src": "https://imgur.com/VdrqjHC.png",
+          "alt": "A list full of options for gyms and recreation nearby"
+        },
+        {
+          "src": "https://imgur.com/nW1pSBT.png",
+          "alt": "User Profile Screen with basic stats"
+        },
+        {
+          "src": "https://imgur.com/pAzDwzH.png",
+          "alt": "User Edit Profile Settings"
+        },
+        {
+          "src": "https://imgur.com/lHLSXil.png",
+          "alt": "User Calorie Count and placeholder for food intake breakdown graphs"
+        },
+        {
+          "src": "https://imgur.com/jKw77w8.png",
+          "alt": "User Achievements screen without icons"
+        },
+        {
+          "src": "https://imgur.com/RLEg9eC.png",
+          "alt": "User's Workout Log"
+        },
+        {
+          "src": "https://imgur.com/SCzW65N.png",
+          "alt": "User adding new workout to his log"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/WorkIt-iOS"
+    },
+    {
+      "name": "Recipes Galore iOS",
+      "desc": "This was my very first major project in a class. Though I had taken two classes in C++ up to this point, by comparison, this project felt incredibly fleshed out. A simple app with huge endeavours, I had hoped to create an app that would deliver solid recipe recommendations for every ingredient you may have had in your fridge. Though I could never figure out barcode scanning (as an easier way to insert ingredients in your virtual fridge), I'm glad I managed to implement a majority of the app despite rookie mistakes such as multiple segues to the same view controller. This project would continue to influence me in the direction I wanted to take my apps, hoping to improve the lives of the users and their health (like Work it and currently Infection Control). Though, in retrospect, I had made quite a few mistakes in my early Software Development career, I feel I've come a very long way since then. Having recently cleaned up my code and updated some UI for better user experience, I look fondly at my beginnings and excitedly for my future.",
+      "images": [
+        {
+          "src": "https://imgur.com/K7naT1F.png",
+          "alt": "Initial Recipes Galore Home Screen before Logging in"
+        },
+        {
+          "src": "https://imgur.com/WMSHKAO.png",
+          "alt": "Login Screen"
+        },
+        {
+          "src": "https://imgur.com/wvWDDL5.png",
+          "alt": "Once logged in, the screen opens user features"
+        },
+        {
+          "src": "https://imgur.com/6FVnRl7.png",
+          "alt": "Desserts Options"
+        },
+        {
+          "src": "https://imgur.com/dKuTM77.png",
+          "alt": "User Profile"
+        },
+        {
+          "src": "https://imgur.com/VV9KmAV.png",
+          "alt": "Add New Recipe from User Profile Screen before image chosen"
+        },
+        {
+          "src": "https://imgur.com/u2tRPAb.png",
+          "alt": "Add New Recipe from User Profile Screen after image chosen"
+        },
+        {
+          "src": "https://imgur.com/T2Numjx.png",
+          "alt": "Meat Dishes"
+        },
+        {
+          "src": "https://imgur.com/WGLAtWO.png",
+          "alt": "Recipe Detail View"
+        },
+        {
+          "src": "https://imgur.com/QxAuPyl.png",
+          "alt": "Refrigerator list of ingredients"
+        },
+        {
+          "src": "https://imgur.com/92TLsI3.png",
+          "alt": "Add Ingredient to Refrigerator List"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/recipes-galore"
+    }
+  ],
+  "Small-projects": [
+    {
+      "name": "Keeping Data Secured ...as Long as the Bugs Don't Leak Them. iOS",
+      "desc": "This was one of my last projects that used Objective-C, and would have been a fun example of keychain, using internal passwords or fingerprints securely. Unfortunately, keychain was horribly bugged at the time and required at least a few workarounds to get it to properly work. After searching tirelessly to find some way to make keychain work as intended and expected based on Apple's documentation, I found several suggestions on StackOverflow and various sites online on what to change to enable keychain. Thankfully the workaround I found temporarily fixed keychain for me and finally a user could write notes that were secure from any prying eyes.",
+      "images": [
+        {
+          "src": "https://imgur.com/lUlihRx.png",
+          "alt": "Home screen asking for the user to create a PIN to securely store credit card information"
+        },
+        {
+          "src": "https://imgur.com/l09XsUM.png",
+          "alt": "Initial Credit card list"
+        },
+        {
+          "src": "https://imgur.com/Bfn3UlH.png",
+          "alt": "Add new credit card screen"
+        },
+        {
+          "src": "https://imgur.com/ONXL5xT.png",
+          "alt": "After adding two credit cards to the list"
+        },
+        {
+          "src": "https://imgur.com/rEJVNoo.png",
+          "alt": "If the user exits the app, this lock screen will appear preventing them from accessing the app secured information"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/secured-keychain-example"
+    },
+    {
+      "name": "Keeping Things Flowing with Background Downloading iOS",
+      "desc": "This project was built to not only practice working with REST, grabbing images online from various URLs, but also to see how Table Views could be further customized as objects loaded in series. Using Grand Central Dispatch to create queues and handle threads, the project would make GET requests, parse the response, and slide each object as a cell into the table when ready. In addition to sliding in the images, depending on the content of the picture (if Apple's Face recognition API detects faces or not), the app will make adjustments. For those pictures that it detects faces, it'll count them and apply a blur. For those that do not have faces, it'll add hue and exposure, discoloring the image.",
+      "images": [
+        {
+          "src": "https://imgur.com/IWzBt3R.png",
+          "alt": "Home screen displaying"
+        },
+        {
+          "src": "https://imgur.com/Yd0EIJM.png",
+          "alt": "Main screen displaying no downloaded images"
+        },
+        {
+          "src": "https://imgur.com/taotH4F.png",
+          "alt": "Home screen displaying images as they download and are modified."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/BGDownloaderExample"
+    },
+    {
+      "name": "Remembering My Contacts with Help from CoreData iOS",
+      "desc": "In this app, I took my first steps in learning Swift. Incorporating Apple's CoreData for data persistance, a user could save contacts locally, keeping things simple without a database.",
+      "images": [
+        {
+          "src": "https://imgur.com/vsa5BLy.png",
+          "alt": "Home screen displaying a table view of the contacts contained and saved within the app."
+        },
+        {
+          "src": "https://imgur.com/HwsMNs8.png",
+          "alt": "Add contact screen"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/PhoneBookManager"
+    },
+    {
+      "name": "Playing with UI-Kit iOS",
+      "desc": "The remaining apps showcase my simple attempts in several iOS focused classes to incorporate various libraries from Apple and Facebook. In this particular example, we were instructed to create a small app that would create balls to bounce across the screen, interacting with each other thanks to UI-Kit and the simple physics it provides",
+      "images": [
+        {
+          "src": "https://imgur.com/fwqrd40.png",
+          "alt": "Home screen with a simple button to make more circles (balls) that will bounce around the screen. Two are bouncing."
+        },
+        {
+          "src": "https://imgur.com/KsMIMb5.png",
+          "alt": "Home screen with circular views resting on the bottom of the screen."
+        },
+        {
+          "src": "https://imgur.com/iWoBJ1C.png",
+          "alt": "Home screen with a new circular view dropping down."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/UIKitDynamicsProjectExample"
+    },
+    {
+      "name": "Quotes to Remember Project",
+      "desc": "This project encompassed the enirety of a semester when I first learned how to create iOS apps. On and off, the class was instructed to further add features to this app given the new information we had just learned. Beginning with a shared model (singleton pattern) and plists, we created the initial screen displaying quotes in the cloud on tap. Eventually, we added more gesture recognizers to handle swipes and create favorites. Soon the favorites list was added with the help of delegates and data sources to populate and control the table view, and finally, the add quotes screen was implemented. It didn't seem like much at first, but by the end of the class, it felt like well-thought out app and a fun one to boot!",
+      "images": [
+        {
+          "src": "https://imgur.com/ZrNzXdl.png",
+          "alt": "Home screen with a quote and the favorited button displaying."
+        },
+        {
+          "src": "https://imgur.com/2Qa7jij.png",
+          "alt": "Empty Home Screen with initial screen suggesting to the user to tap to begin reading quotes"
+        },
+        {
+          "src": "https://imgur.com/45uW0iJ.png",
+          "alt": "Home screen with the first quote displayed and no favorited button showing."
+        },
+        {
+          "src": "https://imgur.com/V0ZpSh4.png",
+          "alt": "Table view list of all the quotes in the app."
+        },
+        {
+          "src": "https://imgur.com/xZcSvWF.png",
+          "alt": "Add new quote screen"
+        },
+        {
+          "src": "https://imgur.com/YyhGU3k.png",
+          "alt": "List of quotes with newly added quote from Plato."
+        },
+        {
+          "src": "https://imgur.com/aFHt8wx.png",
+          "alt": "Table view list of the user's favorite quotes."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/Full-Quote-Project"
+    },
+    {
+      "name": "Los Angeles Sightseeing",
+      "desc": "This was one of the couple projects that interspersed the quotes project in my first iOS class. Using a collection view to display the images of famous locations in Los Angeles, users could click the collection view cell and display the webpage for these locations, providing the user all the information they could need on it.",
+      "images": [
+        {
+          "src": "https://imgur.com/HbeKPCt.png",
+          "alt": "Collection View of the six famous spots in Los Angeles"
+        },
+        {
+          "src": "https://imgur.com/3vuwlET.png",
+          "alt": "Loading up the Dodger Stadium Webpage."
+        },
+        {
+          "src": "https://imgur.com/JKab77w.png",
+          "alt": "Disneyland's homepage."
+        },
+        {
+          "src": "https://imgur.com/qDV3YP4.png",
+          "alt": "The California Science Center website."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/simple-places-iOS"
+    },
+    {
+      "name": "Create Your Own Story!",
+      "desc": "Since iOS is more than just the iPhone after all, my professor ensured that we took the time to play with the iPad Simulator in XCode as well. At the time, constraints were confusing enough for me, so considering the UI as well as making sense of objective C felt tough. Making a fun app in the style of MadLibs, on the other hand, definitely helped to define a concrete goal to work to.",
+      "images": [
+        {
+          "src": "https://imgur.com/VXJMfjD.png",
+          "alt": "Main screen with story but no bonus options"
+        },
+        {
+          "src": "https://imgur.com/yNtnoA5.png",
+          "alt": "Main screen with no text fields filled in"
+        },
+        {
+          "src": "https://imgur.com/hNmmIqs.png",
+          "alt": "Main screen with no bonus options"
+        },
+        {
+          "src": "https://imgur.com/P71YXhA.png",
+          "alt": "Main screen with bonus options"
+        },
+        {
+          "src": "https://imgur.com/ahpOJD2.png",
+          "alt": "Main screen with bonus options and story open."
+        }
+      ],
+      "github": "https://github.com/NLCaceres/make-your-own-story"
+    },
+    {
+      "name": "Batman vs Superman iOS",
+      "desc": "This was the very first iOS project that I ever created. Looking back on at it, it seemed incredibly difficult to make between the constraints, a new language, and actual GUI to interact with. Since then though, I'm proud to see what I learned from this project and what I can do now. This project simply has the background image, a text field for your name, a simple label to dynamically fill, and two buttons for the user to play with. It would take your choice and if you filled in your name, it would insert it into the label with your choice of superhero.",
+      "images": [
+        {
+          "src": "https://imgur.com/YR66lVj.png",
+          "alt": "Main screen with user name and having chosen Batman."
+        },
+        {
+          "src": "https://imgur.com/ZQDA9mn.png",
+          "alt": "Main screen without the name but having chosen Superman"
+        }
+      ],
+      "github": "https://github.com/NLCaceres/BvS-iOS"
+    }
+  ]
+}
