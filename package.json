@@ -2,8 +2,8 @@
   "name": "resume-react-rails",
   "license": "MIT",
   "engines": {
-    "node": "12.4.0",
-    "yarn": "1.21.1",
+    "node": "14.17.0",
+    "yarn": "1.21.10",
     "npm": "6.11.2"
   },
   "scripts": {

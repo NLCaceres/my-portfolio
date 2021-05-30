@@ -1,24 +1,29 @@
-# README
+# My Portfolio! Data Brought To You By Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Originally written using Rails 5, my React-based portfolio would fetch data from a fully fledged rails app, perfectly capable of serving up it's own html. Around the same time that I started building out the two apps, front-end and back-end, Rails 6 would be released. As it released, I looked further into the documentation and found a great solution to get things up and running faster, API mode! A Rails app can very easily be created using the CLI, and with the addition of the '--api' flag, it'll drop any unnecessary middleware, leaving behind a powerful but lightweight Rails API! As with any project, doing your best to take advantage of the framework's abilities to speed up development and keep focused on fleshing out tougher features, not only make for a better product but can make the dev's life tremendously easier. Rails definitely delivers on that promise, and has allowed me to look much more into taming the beast that is React and the many ways it can create beautiful front-ends. 
 
-Things you may want to cover:
+While writing the two apps, I had plenty of time to think about the number of projects I had written going through my Mobile Apps Minor at the University of Southern California, and found myself thinking that my journey as a software developer is exactly how I'd layout my portfolio, step by step, project by project and type by type. From mobile app development to web development and even basic GUI development, I feel confident as ever to take on any task in any language or framework and that's exactly what I'd like to convey! While relatively simple compared to my passion projects, like the Infection Control web, Android and iOS app or my Account On It property management web app, the tech behind it and possibilties feel endless, and I look forward to improving it and adding to it year after year!
 
-* Ruby version
+## Future Development
+- From here out, focus on this project rather than the Rails 5 version.  
+- Contact Us from the back-end!
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Notes to Remember! - May 2021
+- Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
+  - To see a list just run `bin/rails` in the root rails dir
+  - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
+  - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
+- Preface to next point, Facebook still uses yarn primarily BUT since npm is actually the primary installer of yarn, it's pretty easy to get confused. 
+  - `npx create-react-app app-name` still used to make a new React app. 
+  - Yarn scripts are included in the README to handle the production build and testing, BUT it also includes `yarn start` which is identical to `npm start` 
+- When pushing up to Heroku, we use `postbuild` to run 2 custom commands `build` & `deploy`
+  - Our `build` script in the rails root 'package.json' is used to switch the current working directory to the react-client directory, install dependencies via `yarn install` and then uses `yarn build` to make the production build.
+      - `yarn build` is actually a default script for react to make the production build in 'build' dir so worth noting that our custom one is different, though it does drop down into the react-client directory to run its version of `yarn build`
+  - Our `deploy` script in the rails root 'package.json' copies the production build dir from react-client into the rails public folder to serve up!
+- Bundler is a nifty package manager for Ruby with two ways of updating
+  - `Bundle install` conservatively updates packages once you modify the Gemfile. It only will update based on changes
+  - `Bundle update` on the other hand, will update all packages to their latest versions, respecting the limits set by the Gemfile
+    BUT updating as much as it can nonetheless. This can be good and bad! It'll resolve any Gemfile lock issues as an example but may cause breaking changes
+- Could update to ruby 3 BUT Rails 6 might not be ready for it (>= 2.5)
+- Rails 6+ does use Webpacker 5.x (which is a Webpack bundler and not Webpack itself) BUT since React can bundle up itself, it's probably best to let it handle the production build and just let Rails serve up the main React page as well as send the json data.
+  - As a quick note, Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
