@@ -5,12 +5,14 @@ Originally written using Rails 5, my React-based portfolio would fetch data from
 While writing the two apps, I had plenty of time to think about the number of projects I had written going through my Mobile Apps Minor at the University of Southern California, and found myself thinking that my journey as a software developer is exactly how I'd layout my portfolio, step by step, project by project and type by type. From mobile app development to web development and even basic GUI development, I feel confident as ever to take on any task in any language or framework and that's exactly what I'd like to convey! While relatively simple compared to my passion projects, like the Infection Control web, Android and iOS app or my Account On It property management web app, the tech behind it and possibilties feel endless, and I look forward to improving it and adding to it year after year!
 
 ## Future Development
-- From here out, focus on this project rather than the Rails 5 version.  
+- From here out, focus on this project rather than the Rails 5 version. 
+  - Create a Swagger UI inspired routes list view 
 - Contact Us from the back-end!
 
 ## Notes to Remember! - May 2021
 - Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
   - To see a list just run `bin/rails` in the root rails dir
+  - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
   - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
   - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
 - Preface to next point, Facebook still uses yarn primarily BUT since npm is actually the primary installer of yarn, it's pretty easy to get confused. 
@@ -24,6 +26,8 @@ While writing the two apps, I had plenty of time to think about the number of pr
   - `Bundle install` conservatively updates packages once you modify the Gemfile. It only will update based on changes
   - `Bundle update` on the other hand, will update all packages to their latest versions, respecting the limits set by the Gemfile
     BUT updating as much as it can nonetheless. This can be good and bad! It'll resolve any Gemfile lock issues as an example but may cause breaking changes
+  - `Bundle outdated --minor` particularly helpful for checking for smaller upgrades and preventing said breaking changes before running `bundle update`
+    - On the other hand, just flat out using `bundle update --minor` guarantees only minor upgrades (e.g. 1.0 to 1.1) will happen if the Gemfile allows some gems to updated across major versions (e.g. 1.x to 2.x)
 - Could update to ruby 3 BUT Rails 6 might not be ready for it (>= 2.5)
 - Rails 6+ does use Webpacker 5.x (which is a Webpack bundler and not Webpack itself) BUT since React can bundle up itself, it's probably best to let it handle the production build and just let Rails serve up the main React page as well as send the json data.
   - As a quick note, Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
