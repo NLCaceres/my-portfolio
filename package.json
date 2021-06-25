@@ -1,10 +1,10 @@
 {
-  "name": "resume-react-rails",
+  "name": "react-rails-portfolio",
   "license": "MIT",
   "engines": {
-    "node": "14.17.0",
-    "yarn": "1.21.10",
-    "npm": "7.15.0"
+    "node": "14.17.1",
+    "yarn": "1.22.10",
+    "npm": "6.14.13"
   },
   "scripts": {
     "build": "yarn --cwd react-client install && yarn --cwd react-client build",
