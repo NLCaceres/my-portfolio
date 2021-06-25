@@ -1,11 +1,10 @@
-import logo from "../logo.svg";
 import "./App.css";
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import SimpleNavBar from "../SimpleNavbar/SimpleNavbar";
 import PostListView from "../PostListView/PostListView.js";
 import throttle from "lodash.throttle";
+import ConsoleLogger from "../Utility/LoggerFuncs";
 //import * as serviceWorker from "./serviceWorker";
 
 class App extends Component {
@@ -40,7 +39,7 @@ class App extends Component {
   }
 
   openTab(tab) {
-    console.log(`Open tab called`);
+    ConsoleLogger(`Open tab called`);
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab
@@ -50,7 +49,7 @@ class App extends Component {
 
   render() {
     return (
-      <BrowserRouter basename="/resume-react">
+      <BrowserRouter basename="/portfolio">
         <SimpleNavBar openTab={this.openTab} viewWidth={this.state.width} />
         <Switch>
           <Route
@@ -115,6 +114,10 @@ class App extends Component {
   }
 }
 
+const MainSections = () => {
+
+}
+
 const NoMatchFoundPage = () => {
   const randomImgSet = [
     "https://imgur.com/uclpvfT.png",
@@ -129,12 +132,12 @@ const NoMatchFoundPage = () => {
   ];
   const rand = Math.floor(Math.random() * 9);
   const imgSrc = randomImgSet[rand];
-  console.log(rand);
+  ConsoleLogger(rand);
   return (
     <div>
-      <h1>Sorry Not Much to See Here!</h1>
-      <img src={imgSrc} className="not-found-img" />
-      <h4>So Here's a Puppy to Make Up for It!</h4>
+      <h1 style={{ marginLeft: "10px" }}>Sorry! Not Much to See Here!</h1>
+      <img src={imgSrc} alt="A Cute Pup!" className="not-found-img" />
+      <h4 style={{ marginLeft: "10px", marginTop: "10px" }}>So Here's a Puppy to Make Up for It!</h4>
     </div>
   );
 };
