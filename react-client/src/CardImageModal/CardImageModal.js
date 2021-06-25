@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import cnames from "classnames";
 import SimpleCarousel from "../SimpleCarousel/SimpleCarousel";
 import cardImg from "./CardImageModal.module.css";
-const util = require("util");
 
 const CardImgModal = props => {
   const project = props.project;
