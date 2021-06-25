@@ -1,13 +1,7 @@
 import React, { Component } from "react";
+import Logo from "../logo.svg";
 import { NavLink } from "react-router-dom";
-import {
-  Navbar,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavbarToggler,
-  Collapse
-} from "reactstrap";
+import { Navbar, NavbarBrand, Nav, NavItem, NavbarToggler, Collapse } from "reactstrap";
 import cnames from "classnames";
 import navbar from "./Navbar.module.css";
 
@@ -76,14 +70,15 @@ const MobileNav = props => {
     <>
       <NavbarBrand
         className={cnames(
-          navbar.header,
+          navbar.brand,
           "border border-dark rounded thick-border",
-          "px-3 py-1",
+          "px-3 py-0",
           "font-weight-bold"
         )}
-        href="/"
+        href="/portfolio"
       >
         Nick Caceres
+        <img src={Logo} className="ml-2" width="38" height="38" alt="" />
       </NavbarBrand>
       <Collapse isOpen={props.isOpened} navbar>
         <NavList
@@ -111,12 +106,13 @@ const FullNav = props => {
         className={cnames(
           navbar.brand, // indicates css class
           "border border-dark rounded thick-full-border",
-          "px-3 py-1",
+          "px-3 py-0",
           "font-weight-bold"
         )}
-        href="/resume-react"
+        href="/portfolio"
       >
         Nick Caceres
+        <img src={Logo} className="ml-2" width="45" height="45" alt=""></img>
       </NavbarBrand>
     </>
   );
