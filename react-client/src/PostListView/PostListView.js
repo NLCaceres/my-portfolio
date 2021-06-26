@@ -1,27 +1,14 @@
-// This is a component to create a series of posts
-// They will start on the left side and alternate (May refactor for right start as option)
+//* Component: Lists posts, alternating left to right (May refactor for right start as an option)
 import React, { Component } from "react";
-import {
-  Row,
-  Col,
-  Card,
-  CardText,
-  CardBody,
-  CardTitle,
-  Button
-} from "reactstrap";
+import { Row, Col, Card, CardText, CardBody, CardTitle, Button } from "reactstrap";
 import SimpleCarousel from "../SimpleCarousel/SimpleCarousel";
 import CardImageModal from "../CardImageModal/CardImageModal";
 import cnames from "classnames";
 import postlist from "./PostList.module.css";
-// import iOSProjects from "../TabPanelData/iOS.json"; // Imports are static so you have to list contents one by one
-// import androidProjects from "../TabPanelData/Android.json";
-// import frontEndProjects from "../TabPanelData/Front-End-Web.json";
-// import backEndProjects from "../TabPanelData/Back-End-Web.json";
-// import aboutMe from "../TabPanelData/About-Me.json";
-const util = require("util"); // Helps debug JS objects
+import ConsoleLogger from "../Utility/LoggerFuncs";
+//* 'Import' loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
+// import iOSProjects from "../TabPanelData/iOS.json";
 
-// FUTURE INSTALL FOR UNIQUE KEYS - Nano-ID
 
 class PostListView extends Component {
   constructor(props) {
@@ -33,12 +20,11 @@ class PostListView extends Component {
       projectList: {
         majorProjects: [],
         minorProjects: []
-      } // Without this init, it won't work
+      } //? Without initing all used state, will get errs
     };
 
     this.openModal = this.openModal.bind(this);
     this.fetchProjects = this.fetchProjects.bind(this);
-    //this.fetchAboutMe = this.fetchAboutMe.bind(this);
     this.fetchProjectSet = this.fetchProjectSet.bind(this);
   }
 
@@ -49,14 +35,14 @@ class PostListView extends Component {
   async componentDidUpdate(prevProps) {
     // !!! CHECK IF IT IS CONSTANTLY FIRING!
     if (this.props.location !== prevProps.location) {
-      console.log("Component Update fired");
+      ConsoleLogger("Component Update fired");
       this.fetchProjects();
     }
   }
 
   async fetchProjects() {
     let queryParams = this.props.tabId;
-    console.log(`Tab ID: ${this.props.tabId}`);
+    ConsoleLogger(`Tab ID: ${this.props.tabId}`);
     if (queryParams === "About Me!") {
       const httpResponse = await fetch("/api/posts?project_type=null");
       const jsonResponse = await httpResponse.json();
@@ -78,14 +64,14 @@ class PostListView extends Component {
     const httpResponse = await fetch(`/api/posts${filterStr}`);
     const jsonResponse = await httpResponse.json();
 
-    const projectList = { ...this.state.projectList }; // Spread the object, set its values and set the object!
+    const projectList = { ...this.state.projectList }; //* Common react pattern: Spread another obj to create a new obj!
     projectList.majorProjects = jsonResponse.filter(
       project => project["project_size"] === "major_project"
     );
     projectList.minorProjects = jsonResponse.filter(
       project => project["project_size"] === "small_project"
     );
-    this.setState({ projectList: projectList }); // Returns array. Requires array to already exist in state object!
+    this.setState({ projectList: projectList }); //* Shallow merge projectList to projectList key with rest of state 
   }
 
   openModal(project) {
@@ -94,9 +80,8 @@ class PostListView extends Component {
         modal: !prevState.modal
       }));
     } else {
-      if (this.props.viewWidth < 768) {
-        // Prevent modal from appearing
-        return;
+      if (this.props.viewWidth < 768) { //todo Probably Get rid of modal in mobile version
+        return; //* No modal needed so don't let it open in mobile
       }
       this.setState(prevState => ({
         modal: !prevState.modal,
@@ -132,8 +117,7 @@ class PostListView extends Component {
 }
 
 const ProjectList = props => {
-  // For future reference, can use nanoid, shortid, uuid from npm for keys on lists or id on forms
-  // Otherwise using other props is helpful as a key
+  //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT often times obj/class properties are best
   return Object.values(props.projectList).map((projects, i) => {
     const projectSize = i === 0 ? "Major Projects" : "Small Projects";
     const aboutMeTitle =
