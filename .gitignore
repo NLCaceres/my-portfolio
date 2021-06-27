@@ -24,3 +24,6 @@
 # No need for public when react will make it for us
 /public
 .env
+
+# Keep the bin directory to be sure bin/rails commands can be issued
+!bin
