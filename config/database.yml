@@ -81,5 +81,12 @@ test:
 production:
   <<: *default
   database: resume_react_rails_production
-  username: resume_react_rails
-  password: <%= ENV['RESUME_REACT_RAILS_DATABASE_PASSWORD'] %>
+  # //? Following would work for running prod mode locally BUT
+  # //? When a Rails app is sent up to Heroku MOST of this file doesn't matter
+  # //? Heroku Rails apps default to the DB url set in Heroku's config vars, DATABASE_URL (without needing to appear or be set anywhere in the project)
+  # //? SO 'adapter', 'database', 'username', 'password', 'host' & 'port' CAN'T be set here
+  # username: resume_react_rails
+  # password: <%= ENV['RESUME_REACT_RAILS_DATABASE_PASSWORD'] %>
+  # url: <%= ENV['DATABASE_URL'] %> # //? HOWEVER using 'url' DOES enable an override if so desired
+  # //? Why not just use DATABASE_URL? Well once you use 'url' you CAN change the above list of variables (adapter, host, port, etc)
+  # //? But best to set Heroku's DATABASE_URL config var and allow Heroku to inject its own database.yml
