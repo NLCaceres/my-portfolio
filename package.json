@@ -1,5 +1,6 @@
 {
   "name": "react-rails-portfolio",
+  "private": true,
   "license": "MIT",
   "engines": {
     "node": "14.17.1",

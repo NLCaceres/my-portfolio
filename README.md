@@ -13,6 +13,11 @@ While writing the two apps, I had plenty of time to think about the number of pr
 - Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
   - To see a list just run `bin/rails` in the root rails dir
   - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
+    - Running this command makes a new_framework_defaults file. This file lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (ex: 6.0 to 6.1). 
+      - So goal becomes: Uncomment one line at a time and see how things change or break rather than update config.load_defaults first and break things all at once.
+        - It IS possible that a minor update (ex: 6.0 to 6.1) breaks absolutely nothing and you can just update config.load_defaults without a problem BUT better safe than sorry. 
+        - Also possible (though unlikely) you don't want to change a line/option in new_framework_defaults so either add that line with the value you want to the end of config/application.rb OR add it to the appropriate config/environments/*.rb
+        - Also worth noting that a patch update (ex: 5.2.4 to 5.2.6) will still make a new_framework_defaults file BUT in that case, config.load_defaults will remain the same ('config.load_defaults 5.2'), nothing should break, and no changes needed.
   - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
   - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
 - Preface to next point, Facebook still uses yarn primarily BUT since npm is actually the primary installer of yarn, it's pretty easy to get confused. 
