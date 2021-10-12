@@ -1,0 +1,26 @@
+first_post:
+  title: "Foobar"
+  description: "Here's a long description for example number 1"
+  github_url: "github url number 1"
+
+second_post:
+  title: "Barfoo"
+  description: "Here's a different long description for example number 2"
+  github_url: "github url number 2"
+
+about_post:
+  title: "Barfoo"
+  description: "Here's a different long description for example number 2"
+  github_url: "https://github.com/NLCaceres"
+
+android_post:
+  title: "Barfoo"
+  description: "Here's a different long description for android example number 1"
+  github_url: "android github url 1"
+  project_type: 0 #* Android Enum Val is 0
+
+android_post_2:
+  title: "Barfoo"
+  description: "Here's a different long description for android example number 2"
+  github_url: "android github url 2"
+  project_type: 0 #* Android Enum Val is 0
