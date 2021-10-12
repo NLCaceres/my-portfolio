@@ -25,13 +25,19 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
+# To give ActiveAdmin its stylesheets
+gem 'sassc-rails'
 # ActiveAdmin (With API version 'rails g devise:install' command followed by 'rails g active_admin:install' required to get things working as needed)
 gem 'devise'
 gem 'activeadmin'
+# Rack-Attack (Adds throttling and blacklisting to Rack apps like Rails)
+gem 'rack-attack', '>= 6.5', '< 6.8' # Based on current pace, 6.8 would drop ruby 2.7 BUT Rails 7 may be ready + have Ruby 3 support
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'ruby-debug-ide'
+  gem 'debase'
 end
 
 group :development do
@@ -39,6 +45,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'solargraph'
+  gem 'rubocop'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

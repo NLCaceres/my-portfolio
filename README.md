@@ -8,31 +8,45 @@ While writing the two apps, I had plenty of time to think about the number of pr
 - From here out, focus on this project rather than the Rails 5 version. 
   - Create a Swagger UI inspired routes list view 
 - Contact Us from the back-end!
+  - Front End Mostly Setup (Missing Backend Recaptcha route)
+  - Email Server via Heroku
+- Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
+- Ruby 3 is now an option BUT Rails 6 might not be ready for it (>= 2.5)
+  - Similarly Webpacker 5.x is an option on Rails 6 BUT since React can bundle itself, it's best to let it handle the production build while Rails serves it up
+    - Note: Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
+    - Note for future upgrade: Rails includes `bin/rails webpacker:install` to handle changes. ActiveAdmin does too: `bin/rails g active_admin:install`
+    With one additional step of adding `config.use_webpacker = true` in config/initializers/active_admin.rb
+    - Sprockets handles activeAdmin just fine + is responsible for Sass, Css, images anyway (though Webpacker CAN handle them if properly configured)
 
-## Notes to Remember! - May 2021
-- Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
-  - To see a list just run `bin/rails` in the root rails dir
-  - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
-    - Running this command makes a new_framework_defaults file. This file lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (ex: 6.0 to 6.1). 
-      - So goal becomes: Uncomment one line at a time and see how things change or break rather than update config.load_defaults first and break things all at once.
-        - It IS possible that a minor update (ex: 6.0 to 6.1) breaks absolutely nothing and you can just update config.load_defaults without a problem BUT better safe than sorry. 
-        - Also possible (though unlikely) you don't want to change a line/option in new_framework_defaults so either add that line with the value you want to the end of config/application.rb OR add it to the appropriate config/environments/*.rb
-        - Also worth noting that a patch update (ex: 5.2.4 to 5.2.6) will still make a new_framework_defaults file BUT in that case, config.load_defaults will remain the same ('config.load_defaults 5.2'), nothing should break, and no changes needed.
-  - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
-  - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
-- Preface to next point, Facebook still uses yarn primarily BUT since npm is actually the primary installer of yarn, it's pretty easy to get confused. 
-  - `npx create-react-app app-name` still used to make a new React app. 
-  - Yarn scripts are included in the README to handle the production build and testing, BUT it also includes `yarn start` which is identical to `npm start` 
-- When pushing up to Heroku, we use `postbuild` to run 2 custom commands `build` & `deploy`
-  - Our `build` script in the rails root 'package.json' is used to switch the current working directory to the react-client directory, install dependencies via `yarn install` and then uses `yarn build` to make the production build.
-      - `yarn build` is actually a default script for react to make the production build in 'build' dir so worth noting that our custom one is different, though it does drop down into the react-client directory to run its version of `yarn build`
-  - Our `deploy` script in the rails root 'package.json' copies the production build dir from react-client into the rails public folder to serve up!
-- Bundler is a nifty package manager for Ruby with two ways of updating
+## Notes to Remember! - October 2021
+### Bundler
+- A nifty package manager for Ruby with two ways of updating
   - `Bundle install` conservatively updates packages once you modify the Gemfile. It only will update based on changes
   - `Bundle update` on the other hand, will update all packages to their latest versions, respecting the limits set by the Gemfile
     BUT updating as much as it can nonetheless. This can be good and bad! It'll resolve any Gemfile lock issues as an example but may cause breaking changes
   - `Bundle outdated --minor` particularly helpful for checking for smaller upgrades and preventing said breaking changes before running `bundle update`
     - On the other hand, just flat out using `bundle update --minor` guarantees only minor upgrades (e.g. 1.0 to 1.1) will happen if the Gemfile allows some gems to updated across major versions (e.g. 1.x to 2.x)
-- Could update to ruby 3 BUT Rails 6 might not be ready for it (>= 2.5)
-- Rails 6+ does use Webpacker 5.x (which is a Webpack bundler and not Webpack itself) BUT since React can bundle up itself, it's probably best to let it handle the production build and just let Rails serve up the main React page as well as send the json data.
-  - As a quick note, Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
+### Rails and its Commands
+- Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
+  - For list of commands, run `bin/rails` in the root rails dir
+  - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
+    - Running this command makes a 'new_framework_defaults' file, which lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (e.g. 6.0 to 6.1). 
+      - So it's best to uncomment line by line to see how each changes/breaks things rather than update config.load_defaults first and break things all at once.
+        - Minor updates (ex: 6.0 to 6.1) may break nothing allowing you to quickly update config.load_defaults without a problem BUT better to be cautious
+        - You may not want to change a line/option in new_framework_defaults so either change it across environments by placing it at the end of config/application.rb OR add it to a single environment in the config directory
+        - Patch updates (ex: 5.2.4 to 5.2.6) still make a new_framework_defaults file BUT in that case, config.load_defaults does not need to be updated ('config.load_defaults 5.2') and nothing should break.
+  - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
+  - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
+### My Package.json Commands
+- Preface to next point, Facebook still uses yarn primarily BUT since yarn is installed via NPM, it's pretty easy to get confused. 
+  - `npx create-react-app app-name` still used to make a new React app. 
+  - Yarn commands are included in the README to handle the production build and testing, BUT it also includes `yarn start` which is identical to `npm start` 
+- When deploying to Heroku, heroku will auto-run `postbuild` which runs 2 custom commands `build` & `deploy`
+  - The `build` commands in the rails root 'package.json' is used to switch the current working directory to the react-client directory, install dependencies via `yarn install` and then use `yarn build` to make the production build for Rails to serve
+      - React uses `yarn build` to make the production build in its root 'build' dir. The one in the Rails root 'package.json' takes one extra step, dropping down a directory to use React's
+  - The `deploy` commands in the rails root 'package.json' copies the production build dir from react-client into the rails public folder to serve up!
+    - Note on ZSH/Bash: Normally using '-R' with copy command, one would expect to copy both the directory and the contents! But here the goal is to
+      copy JUST the contents of the build dir over not the build dir itself! For that reason a trailing '/.' is included. The target dir 
+      (our rails public dir) doesn't need the trailing slash but it's included for symmetry
+      - The '-a' flag used in 'deploy' works similarly! BUT added bonus of copying files EXACTLY as is (file dates and stats preserved)
+      - Any files that match in name will be overwritten (source directory version will overwrite the target's version)

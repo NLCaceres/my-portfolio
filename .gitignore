@@ -27,3 +27,6 @@
 
 # Keep the bin directory to be sure bin/rails commands can be issued
 !bin
+
+# For testing
+*.http
