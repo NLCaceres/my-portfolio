@@ -1,11 +1,13 @@
 class Post < ApplicationRecord
   has_many :post_images, dependent: :destroy
-  validates :title, presence: true, length: { minimum: 5} # Built right into Rails Models!
+  validates :title, presence: true, length: { minimum: 5 } #? Validation built right into Rails Models!
 
-  enum project_type: [ :android, :back_end, :front_end, :gui, :iOS ]
-  enum project_size: [ :major_project, :small_project ]
+  enum project_type: %i[android back_end front_end gui iOS]
+  enum project_size: %i[major_project small_project]
 
   def self.select_without(*columns)
-    select(column_names - columns.map(&:to_s)) # (to_s is shorthand for a to string function passed in to run on all vals in Arr)
+    #? column_names = inherited func from ActiveRecord's model schema. Returns an Arr of field/attribute names
+    select(column_names - columns.map(&:to_s)) #* 'to_s' passed in as map() block to run on variadic param Arr
+    #? Rubocop avoids explicit 'return' statements SO FYI we're returning the select func here to use in method chaining
   end
 end
