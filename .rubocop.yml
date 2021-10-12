@@ -1,0 +1,11 @@
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Layout/LeadingCommentSpace:
+  Enabled: false

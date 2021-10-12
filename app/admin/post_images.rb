@@ -1,8 +1,8 @@
 ActiveAdmin.register PostImage do
   config.per_page = [10, 25, 40, 50]
 
-  index do 
-    selectable_column 
+  index do
+    selectable_column
     column :post
     column :image_url
     column :alt_text
@@ -17,7 +17,7 @@ ActiveAdmin.register PostImage do
       end
       #row :alt_text
       row :image_url do |image|
-        image_tag image.image_url, size: "600x600"
+        image_tag image.image_url, size: '600x600'
       end
     end
   end
@@ -37,5 +37,4 @@ ActiveAdmin.register PostImage do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  
 end

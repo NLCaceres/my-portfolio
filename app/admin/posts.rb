@@ -1,6 +1,7 @@
+# rubocop:disable Metrics/BlockLength
 ActiveAdmin.register Post do
   config.per_page = [5, 10, 25, 40, 50]
-  config.sort_order = "project_type_asc"
+  config.sort_order = 'project_type_asc'
 
   scope :all
   scope :major_project
@@ -23,16 +24,16 @@ ActiveAdmin.register Post do
     column :homepage_url
     column :project_type
     column :project_size
-    column "Image Count", :post_images_count
+    column 'Image Count', :post_images_count
     actions
   end
 
-  sidebar 'Images in this Post', only: :show do 
+  sidebar 'Images in this Post', only: :show do
     table_for PostImage.joins(:post).where(post_id: post.id) do |t|
-      t.column("Url") { |post_image| link_to post_image.image_url, admin_post_image_path(post_image) }
+      t.column('Url') { |post_image| link_to post_image.image_url, admin_post_image_path(post_image) }
     end
   end
-  
+
   permit_params :title, :description, :github_url, :homepage_url, :project_type, :project_size
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -48,5 +49,5 @@ ActiveAdmin.register Post do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  
 end
+# rubocop:enable Metrics/BlockLength
