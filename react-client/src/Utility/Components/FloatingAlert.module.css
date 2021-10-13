@@ -1,0 +1,20 @@
+.floatingAlert {
+  position: fixed;
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  z-index: 1;
+}
+
+@media only screen and (min-width: 576px) {
+  .floatingAlert {
+    width: 70%;
+  }  
+}
+
+@media only screen and (max-width: 575px) {
+  .floatingAlert {
+    width: 90%;
+  }  
+}
