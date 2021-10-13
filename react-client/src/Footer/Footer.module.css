@@ -1,0 +1,42 @@
+.navbar {
+  background-color: #00E000;
+}
+
+@media only screen and (min-width: 992px) {
+  .navbarText {
+    font-weight: 500;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 991px) {
+  .navbarText {
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+}
+
+.navLink {
+  font-weight: 550;
+}
+.navLink:hover, .navLink:active {
+  border-width: 2px;
+  border-color: white;
+  color: black;
+}
+
+.contactButton {
+  font-weight: 550;
+}
+.contactButton:hover, .contactButton:active {
+  border-width: 2px;
+  border-color: white !important;
+  color: black !important;
+  background-color: transparent !important;
+}
+.contactButton:focus, .contactButton:focus:active {
+  box-shadow: none !important;
+  border-width: 2px;
+  border-color: white !important;
+  color: black !important;
+  background-color: transparent !important;
+}

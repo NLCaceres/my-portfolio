@@ -1,0 +1,32 @@
+.formLabel {
+  color: white;
+  font-weight: bolder;
+  text-decoration: underline;
+}
+:global(.dark) .formLabel {
+  color: black;
+}
+
+.submitButton {
+  font-weight: bolder;
+  color: white;
+  background-color: #00E000 !important;
+  border-color: white !important;
+  border-width: 2px;
+}
+:global(.dark) .submitButton {
+  border-color: black !important;
+}
+
+.submitButton:disabled:hover {
+  border-color: white !important;
+  border-width: 2px;
+  color: white !important;
+}
+
+.submitButton:active, .submitButton:hover {
+  color:#262626 !important;
+  border-width: 4px;
+  background-color: #00E000 !important;
+  border-color: white !important;
+}
