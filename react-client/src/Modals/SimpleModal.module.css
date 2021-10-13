@@ -1,0 +1,15 @@
+.content {
+  background-color: #333333;
+  border-radius: 0.6em;
+}
+
+.header {
+  color: #fff;
+}
+
+.submitButton {
+  font-weight: bolder;
+  background-color: #00E000;
+  border-color: white;
+  border-width: 2px;
+}

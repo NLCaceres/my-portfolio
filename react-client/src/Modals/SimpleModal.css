@@ -1,0 +1,11 @@
+.modal-header > button.close {
+  color: white !important;
+}
+
+.modal-title {
+  color:white;
+}
+
+.modal-body > p {
+  color: white;
+}
