@@ -2,18 +2,15 @@
 
 ## Future Changes
 - Switch from Reactstrap to react-bootstrap (supports Bootstrap 5 plus quicker on the React upgrades)
-- Contact Us in a Footer
+  - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
+    - Title = h5.mx-2 + div.underline
+- Include the following in Seeder:
+  - Laravel + Vue Account On It
+  - Most of my experience with classic GUIs (Made in Java)
 
 ## Recent Changes
-- Added Modal Views that appear on click of images. Added a brightness darkener on images for desktops BS4 breakpoint.
-- Added in Carousels to those modals with project names included
-- Added in Carousels for lower breakpoints (mobile devices).
-- Single images do not render as carousels across app
-
-## To Add to Seeder List
-- About Me Edits
-- Laravel + Vue Account On It
-- Most of my experience with classic GUIs (Made in Java)
+- Footer + Contact Me Button that displays modal or /contact-me page
+- React-Bootstrap migration beginning in Modal, Contact page, Footer & Alerts
 
 ## Quick Notes
 - React 17 decided to put testing dependencies in package.json's normal dependencies list. Why?
@@ -22,6 +19,14 @@
   - Downgrading npm to 6.14.13 alongside Node 14.17.1 (actually an upgrade) reduced vulnerabilities to 3 moderate and 4 high
     - The fix comes since React has clarified that it does NOT support npm 7 yet and using npm 7 results in dependency conflict errors
     - How? Use nvm to switch whenever necessary installs or audits needed
+  - UPDATE!!! - NPM 8 is available and while it might not fix the vulnerabilities may be worth upgrading to BECAUSE the React team
+  does NOT seem intent to fix the vulnerabilities any time soon. Their current suggestion is move react-scripts to devDependencies
+  and run `npm audit --production` so only real issues appear
+    - Only real issues? According to them (and it probably is), the issues involved with react-scripts likely will never be exploited in the wild
+    Since react-scripts are simple build tools that run on your dev machine, unless your dev machine is compromised AND the attacker really just 
+    feels like messing with you, it's EXTREMELY unlikely the vulnerabilities will ever and could ever affect the live app.
+      - Finally, it brings up the concern with NPM as a whole, `npm audit` is not perfect. It will warn you about ALL potential issues regardless
+      if those issues could potentially affect you. It may even bring up the same exact issue multiple times under slightly different names.
 
 ### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
