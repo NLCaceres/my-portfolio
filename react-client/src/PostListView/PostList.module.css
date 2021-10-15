@@ -1,3 +1,7 @@
+.postCard {
+  background-color: #f9fae8;
+}
+
 /* If necessary min-height
 may be helpful at 250px instead */
 .cardImg {
@@ -12,16 +16,24 @@ may be helpful at 250px instead */
   max-width: 350px;
 }
 .cardText {
-  white-space: pre-wrap;
+  white-space: pre-wrap; /* Preserves whitespace, allow line breaks at newline, br tag, and at line end */
 }
 img:hover.clickable {
   filter: brightness(50%);
 }
 
 .githubLink {
-  background-color: purple !important;
+  background-color: #7F0799 !important;
+}
+
+.pageLink {
+  background-color: #F50000 !important;
 }
 
 .blockButton {
-  max-width: 125px;
+  max-width: 127px;
+}
+.blockButton:hover, .blockButton:active {
+  border-color: #00E000 !important;
+  border-width: 4px;
 }
