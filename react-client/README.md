@@ -13,6 +13,8 @@
 - React-Bootstrap migration beginning in Modal, Contact page, Footer & Alerts
 
 ## Quick Notes
+- Package.json's homepage option has a secret! When you set it, including a directory at the end ('/portfolio') React uses it to set PUBLIC_URL. Using Nuxt or setting 
+  up a static page via Vercel, this may not be a problem. When you're running your own backend though, it'll append this directory to the front of all your assets which means NOTHING will load correctly without reconfiguring from the front-end or backend. So be careful!
 - React 17 decided to put testing dependencies in package.json's normal dependencies list. Why?
   - If you're just bundling the project up into a static directory, then it makes no difference! So in the case of this project, it's totally fine to do the same and list them in the normal dependency area BUT it does mean that `npm audit` will stress any vulnerabilities it finds in those devDependency now normal dependencies rather than just toss out a warning.
 - React-Scripts 4 has had plenty of security vulnerabilities! Currently best solution has been downgrading npm and waiting!
@@ -27,6 +29,8 @@
     feels like messing with you, it's EXTREMELY unlikely the vulnerabilities will ever and could ever affect the live app.
       - Finally, it brings up the concern with NPM as a whole, `npm audit` is not perfect. It will warn you about ALL potential issues regardless
       if those issues could potentially affect you. It may even bring up the same exact issue multiple times under slightly different names.
+    - BUT problem with moving react-scripts to devDependencies is that Heroku won't be able to build your React app! So the above fix is a VERY
+    temporary one. Only good for brief checks before prepping the repo for another deploy to Heroku
 
 ### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

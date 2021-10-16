@@ -28,6 +28,7 @@ While writing the two apps, I had plenty of time to think about the number of pr
     - On the other hand, just flat out using `bundle update --minor` guarantees only minor upgrades (e.g. 1.0 to 1.1) will happen if the Gemfile allows some gems to updated across major versions (e.g. 1.x to 2.x)
 ### Rails and its Commands
 - Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
+  - `heroku local -f Procfile.dev` -> Also works to serve & display locally. It's functionally exactly the same
   - For list of commands, run `bin/rails` in the root rails dir
   - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
     - Running this command makes a 'new_framework_defaults' file, which lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (e.g. 6.0 to 6.1). 
