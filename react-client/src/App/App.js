@@ -114,11 +114,11 @@ const Body = props => {
 }
 
 const MainRoutes = props => {
-  const paths = ['iOS', 'android', 'front-end', 'back-end', 'about-me'];
+  const paths = ['/iOS', '/android', '/front-end', '/back-end', '/about-me'];
   const mainRoutes = paths.map((pathStr) => {
     return (
-      <Route exact path={`/${pathStr}`} key={`/${pathStr}`} render={ routeProps => 
-        (<PostListView tabId={`${pathStr}`} viewWidth={ props.viewWidth } location={ routeProps.location } />) }
+      <Route exact path={pathStr} key={pathStr} render={ routeProps =>
+        (<PostListView viewWidth={ props.viewWidth } location={ routeProps.location } />) }
       />
     )
   });

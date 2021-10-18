@@ -70,11 +70,15 @@ class PostListView extends React.PureComponent {
   }
 
   render() {
-    const titleArr = this.props.location.pathname.slice(1).split('-');
-    let title; for (let word of titleArr) {
+    //todo Abstract 'proper casing' functionality away 
+    const projectType = this.props.location.pathname.slice(1); //* Remove '/' from url to get 'iOS', 'front-end', etc.
+    let title; for (let word of projectType.split('-')) { //* Init title then concat url strings split at hyphen
       if (word === 'iOS') { title = word; break; } //* Only case where no capital first letter needed
-      title = (title ?? '') + ' ' + word.charAt(0).toUpperCase() + word.slice(1);
+      if (!title) title = word.charAt(0).toUpperCase() + word.slice(1); //* Only fires very 1st loop
+      else if (title === 'About') title += (' ' + word.charAt(0).toUpperCase() + word.slice(1)) //* Separate case for 'About Me'
+      else title += ('-' + word.charAt(0).toUpperCase() + word.slice(1)) //* Match usage of front-end rather than frontend or front end in texts
     }
+
     return (
       (this.state.projectList.majorProjects.length > 0 || this.state.projectList.minorProjects.length > 0) && 
       (
@@ -83,8 +87,8 @@ class PostListView extends React.PureComponent {
             <CardImageModal modalControl={ this.openModal } isModalOpen={ this.state.modal }
               project={ this.state.modalProject } viewWidth={ this.props.viewWidth } />
           )}
-          <h1 className="ml-2 mb-0">{title.trim()}</h1>
-          <ProjectList tabId={ this.props.tabId } projectList={ this.state.projectList }
+          <h1 className="ml-2 mb-0">{ title }</h1>
+          <ProjectList projectType={ projectType } projectList={ this.state.projectList }
             viewWidth={ this.props.viewWidth } modalControl={ this.openModal } />
         </div>
       )
@@ -96,10 +100,10 @@ const ProjectList = props => {
   //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT often times obj/class properties are best
   return Object.values(props.projectList).map((projects, i) => {
     const projectSize = i === 0 ? "Major Projects" : "Small Projects";
-    const aboutMeTitle = props.tabId === "About Me!" ? "Nicholas L. Caceres" : null;
-    const projectSectionKey = props.tabId + " " + projectSize;
+    const aboutMeTitle = props.projectType === "about-me" ? "Nicholas L. Caceres" : null;
+
     return ( projects.length > 0 && (
-        <div key={ projectSectionKey }>
+        <div key={`${props.projectType} ${projectSize}`}>
           <h1 className="ml-2 my-1">{ aboutMeTitle || projectSize }</h1>
           <ProjectSection className="mx-sm-4" projects={ projects }
             viewWidth={ props.viewWidth } modalControl={ props.modalControl }/>
@@ -110,9 +114,8 @@ const ProjectList = props => {
 };
 
 const ProjectSection = props => {
-  const projects = props.projects;
-  if (Array.isArray(projects)) {
-    return projects.map((project, i) => {
+  if (Array.isArray(props.projects)) {
+    return props.projects.map((project, i) => {
       if (i % 2 === 0 || props.viewWidth < 768) {
         return (
           <LeftSidedCardPost className={`${props.className}`} project={ project }
@@ -129,16 +132,16 @@ const ProjectSection = props => {
     });
   } else {
     return (
-      <LeftSidedCardPost className={`${props.className}`} key={ projects.name }
-        project={ projects } viewWidth={ props.viewWidth } />
+      <LeftSidedCardPost className={`${props.className}`} key={ props.projects.name }
+        project={ props.projects } viewWidth={ props.viewWidth } />
     );
   }
 };
 
 const LeftSidedCardPost = props => {
-  const project = props.project;
+  const { project } = props; //* Rather than 'const project = props.project'. Destructure! Fancy!
   const postImagesLength = project.post_images.length;
-  const imageSrc = postImagesLength > 0 ? project.post_images["0"].image_url : "No img";
+  const imageSrc = postImagesLength > 0 ? project.post_images["0"].image_url : "No img"; //* 'No img' string forces onError block to run
   const imageAlt = postImagesLength > 0 ? project.post_images["0"].alt_text : "Placeholder";
   const backupImgCheck =
     imageSrc === "https://via.placeholder.com/350.png?text=Profile" ||
@@ -194,7 +197,7 @@ const LeftSidedCardPost = props => {
 };
 
 const RightSidedCardPost = props => {
-  const project = props.project;
+  const { project } = props;
   const postImagesLength = project.post_images.length;
   const imageSrc = postImagesLength > 0 ? project.post_images["0"].image_url : "No img";
   const imageAlt = postImagesLength > 0 ? project.post_images["0"].alt_text : "Placeholder";
