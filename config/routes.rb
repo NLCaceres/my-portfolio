@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   #? For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  #? Recommended to place root 1st since it's so commonly used
-  root to: 'application#fallback_redirect' #? root ONLY works if public/index.html DOESN'T exist. Else it defaults to it
+  #? Root put 1st to match 1st + frequently visited (defaults to 'Rails Welcome' page when not set)
+  root 'application#fallback_redirect'
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
