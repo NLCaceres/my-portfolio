@@ -7,7 +7,12 @@ module RedirectAssertions
   end
 
   def assert_redirect_to_react
-    assert_response :redirect
-    assert_redirected_to 'http://www.example.com:3000/portfolio'
+    if ENV['RAILS_ENV'] == 'production'
+      assert_response :success
+      assert_match 'Foobar', @response.body
+    else
+      assert_response :redirect
+      assert_redirected_to 'http://www.example.com:3000/portfolio'
+    end
   end
 end

@@ -1,4 +1,5 @@
 ENV['RAILS_ENV'] ||= 'test'
+# ENV['RAILS_ENV'] = 'production' #? Useful for imitating Heroku (likely need a staging version)
 require_relative '../config/environment'
 require 'rails/test_help'
 require 'test_helpers/redirect_assertions'

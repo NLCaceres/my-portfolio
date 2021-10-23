@@ -1,8 +1,13 @@
 class ApplicationControllerTest < ActionDispatch::IntegrationTest
   test 'should redirect' do
     get '/foo' #* Fires off request on port 3001 but will always redirect to 3000
-    assert_response :redirect
-    assert_redirected_to 'http://www.example.com:3000/portfolio'
+    if ENV['RAILS_ENV'] == 'production'
+      assert_response :success
+      assert_match 'Foobar', @response.body
+    else
+      assert_response :redirect
+      assert_redirected_to 'http://www.example.com:3000/portfolio'
+    end
 
     get '/admin' #* Gets redirected still on port 3001
     assert_response :redirect
