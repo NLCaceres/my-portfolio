@@ -28,8 +28,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # To give ActiveAdmin its stylesheets
 gem 'sassc-rails'
 # ActiveAdmin (With API version 'rails g devise:install' command followed by 'rails g active_admin:install' required to get things working as needed)
-gem 'devise'
-gem 'activeadmin'
+gem 'devise', '~> 4.8'
+gem 'activeadmin', '~> 2.10'
 # Rack-Attack (Adds throttling and blacklisting to Rack apps like Rails)
 gem 'rack-attack', '>= 6.5', '< 6.8' # Based on current pace, 6.8 would drop ruby 2.7 BUT Rails 7 may be ready + have Ruby 3 support
 
