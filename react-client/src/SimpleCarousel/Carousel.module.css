@@ -1,3 +1,4 @@
+/* Next 2 classes refer to img tags at different screen sizes */
 .slide {
   max-height: 700px;
   min-width: 100%;
@@ -10,4 +11,57 @@
 
 .full {
   min-width: 100%;
+}
+/* Following example of how to modify children of CSS Module class 
+  (so no need to know specifics of the special unique resulting class (e.g. Carousel_full__123)
+  Following = '.Carousel_full__123 .carousel-indicators' thanks to wrapping :global() selector
+*/
+.full :global(.carousel-indicators) {
+  margin: 1rem 1.5rem 0 1.5rem;
+}
+/* Getting slightly more complicated with :global() makes the usage more clear
+  Following = '.Carousel_full__123 .carousel-indicators li'
+  Everything wrapped will NOT receive the CSS module treatment
+  If we wrapped '.full' too, then none of our styling linked to the '.Carousel_full__123' version would work!
+  Since the CSS would be '.full .carousel-indicators...' which would be nowhere to be found
+*/
+.full :global(.carousel-indicators li) {
+  background-color: red;
+  width: 80px;
+  height: 20px;
+  border-style: solid;
+  border-width: thick;
+  border-color: rgb(241, 218, 16);
+  border-radius: 10%;
+  opacity: 0.7;
+}
+
+.full :global(.carousel-indicators .active) {
+  width: 80px;
+  height: 20px;
+  background-color: lime;
+  border-style: solid;
+  border-width: thick;
+  border-color: yellow;
+  border-radius: 10%;
+}
+
+@media only screen and (min-width: 768px) {
+  :global(.carousel-indicators) {
+    /* Both visibility + opacity need to be transitioned
+    if not using visible, then indicators remain clickable when invisible
+    if not using opacity, then can't smoothly transition */
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.5s, opacity 0.5s ease-out;
+  }
+  .full:hover > :global(.carousel-indicators) {
+    visibility: visible;
+    opacity: 1;
+  }
+  /* Get the above hover effect by adding a basic CSS class to root element in Carousel component */
+  .full:global(.hovered-indicators) > :global(.carousel-indicators) {
+    visibility: visible;
+    opacity: 1;
+  }
 }

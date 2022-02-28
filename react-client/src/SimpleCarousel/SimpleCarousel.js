@@ -1,64 +1,59 @@
 import React, { Component } from "react";
-import { Carousel, CarouselItem, CarouselCaption, CarouselIndicators } from "reactstrap";
+import Carousel from 'react-bootstrap/Carousel';
 import CarouselCss from "./Carousel.module.css";
-import "./Carousel.css";
 import cnames from "classnames";
-// const util = require("util"); //? Can help debug JS objects and more! -> Obj example below... May not matter with improved browser tools though
 
-let images = []; //? Reactstrap carousel requires image array prop
-//@params Also required: Src (useful as React list key) and alt text
-
+/* Bootstrap Carousel with defaults set - no control arrows or interval */
 class SimpleCarousel extends Component {
+  //@params: 2 Required Props - images and viewWidth
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: 0
+      activeIndex: 0,
+      forceHoverClass: false,
     };
-    this.next = this.next.bind(this);
-    this.previous = this.previous.bind(this);
-    this.goToIndex = this.goToIndex.bind(this);
   }
 
-  //? Required to start carousel animation
-  next() {
-    if (this.animating) return;
-    const nextIndex = this.state.activeIndex === images.length - 1 ? 0 : this.state.activeIndex + 1;
-    this.setState({ activeIndex: nextIndex });
-  }
-
-  previous() {
-    if (this.animating) return;
-    const nextIndex = this.state.activeIndex === 0 ? 
-      images.length - 1 : this.state.activeIndex - 1;
-    this.setState({ activeIndex: nextIndex });
-  }
-
-  goToIndex(newIndex) {
-    if (this.animating) return;
+  goToIndex = (newIndex, e) => {
     this.setState({ activeIndex: newIndex });
   }
 
-  render() {
-    const { activeIndex } = this.state;
-    const projectImgs = this.props.images;
-    
-    const slides = projectImgs.map(image => {
-      return (
-        <CarouselItem key={ image.image_url }>
-          <img className={ cnames("img-fluid", this.props.viewWidth >= 768 ? CarouselCss.slide : CarouselCss.mobileSlide) }
-            src={ image.image_url } alt={ image.alt_text } />
-          <CarouselCaption captionText="" />
-        </CarouselItem>
-      );
-    });
+  //* Goal: Let user know that carousel indicators are there onHover
+  simulateHover = () => {
+    let iterations = 0;
+    this.fadeEffectInterval = setInterval(() => {
+      iterations++; //* 6 runs! On 6th we clear THEN hide by class removal
+      //* 1st iteration = Show, 2nd = hide, so on and so forth
+      if (iterations > 5) clearInterval(this.fadeEffectInterval);
+      this.setState((state) => ({ forceHoverClass: !state.forceHoverClass }));
+    }, 750)
+  }
 
+  componentDidMount() {
+    if (this.props.viewWidth >= 768) this.simulateHover();
+  }
+  componentWillUnmount() {
+    if (this.props.viewWidth >= 768) clearInterval(this.fadeEffectInterval);
+  }
+
+  render() {
     return (
-      <Carousel pause={false} next={ this.next } previous={ this.previous }
-        activeIndex={ activeIndex } ride="carousel" interval={false}
-        className={ cnames(CarouselCss.full, "px-4 mt-3") }>
-          <CarouselIndicators items={ projectImgs } className="mx-4 mt-3 mb-0"
-            activeIndex={ activeIndex } onClickHandler={ this.goToIndex } />
-          {slides}
+      <Carousel activeIndex={ this.state.activeIndex } onSelect={ this.goToIndex } controls={false}
+        interval={null} data-testid="simple-carousel" className={ cnames(CarouselCss.full, "px-4 mt-3", 
+        {"hovered-indicators": this.state.forceHoverClass}) }>
+          { //? React-bootstrap expects 'Carousel.Item's so abstracting this block to a Func component DOESN'T work
+            this.props.images.map(image => { //* Create an array of Carousel.Items to display
+              return (
+                <Carousel.Item key={ image.image_url }>
+                  <img className={ cnames("img-fluid", this.props.viewWidth >= 768 ? CarouselCss.slide : CarouselCss.mobileSlide) }
+                    src={ image.image_url } alt={ image.alt_text } />
+                  { image.caption &&  
+                    <Carousel.Caption> <h3>{image.caption}</h3> </Carousel.Caption>
+                  }
+                </Carousel.Item>
+              )}
+            )
+          }
       </Carousel>
     );
   }
