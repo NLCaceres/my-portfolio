@@ -1,0 +1,16 @@
+.placeholderImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 250px;
+  max-height: 50vh; /* Slightly neater looking than full 100% height */
+  width: 100%;
+  max-width: 350px; /* Keeps placeholder from being too wide in mobile */
+  align-self: center;
+  background-color: rgb(207, 207, 207);
+}
+
+.placeholderText {
+  color: rgb(151, 149, 149);
+}

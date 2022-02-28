@@ -1,47 +1,58 @@
-import React, { Component } from "react";
+import React from "react";
 import SimpleModalCss from "./SimpleModal.module.css";
-import './SimpleModal.css';
 import Modal from 'react-bootstrap/Modal';
+import { CreateID } from "../Utility/Functions/ComputedProps";
 
-class SimpleModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    };
+let modalCount = 0;
+const propIdOrModalId = id => {
+  if (id === undefined) { //* Provide a default ID that should be unique
+    let finalID;
+    [modalCount, finalID] = CreateID(modalCount, 'modal');
+    return finalID;
   }
-
-  render() {
-    return (
-      <Modal centered show={ this.props.show } onHide={ this.props.onHide }
-        aria-labelledby={`${this.props.ID}-modal`} contentClassName={ SimpleModalCss.content }>
-          { this.props.title && 
-            <ModalHeader className={`${this.props.headerClasses}`} titleClasses={`${this.props.titleClasses}`}>
-              { this.props.title }
-            </ModalHeader> 
-          }
-          <Modal.Body>{ this.props.children }</Modal.Body>
-          { this.props.footer && <ModalFooter className={`${this.props.footerClasses}`}>{this.props.footer}</ModalFooter> }
-      </Modal>
-    );
-  }
+  return `${id}-modal`;
 }
 
+//* Probably an oversimplification of react-bootstrap's modal BUT works great!
+//@params - Required: Show = Visibility prop, onHide = Callback prop, ID = aria-label
+//@params Optional: contentClasses = modal-content section CSS class
+//@params title = Like React children prop. Pass any string into Header > Title
+//@params headerClasses = header section CSS class, titleClasses = title section CSS class
+//@params bodyClasses = body section CSS class, footerClasses = footer section CSS class
+//@params footer = Like React children prop. Pass any element or string into Footer
+const SimpleModal = props => {
+  const computedID = propIdOrModalId(props.ID);
 
+  return (
+    <Modal centered show={ props.show } onHide={ props.onHide }
+      aria-labelledby={computedID} contentClassName={`${SimpleModalCss.content} ${props.contentClasses || ''}`.trim()}>
+        { props.title && 
+          <ModalHeader ID={ computedID } className={`${props.headerClasses || ''}`} titleClasses={`${props.titleClasses || ''}`}>
+            { props.title }
+          </ModalHeader> 
+        }
+        <Modal.Body className={`${props.bodyClasses || ''}`}>{ props.children }</Modal.Body>
+        { props.footer && <ModalFooter className={`${props.footerClasses || ''}`}>{ props.footer }</ModalFooter> }
+    </Modal>
+  );
+}
+
+//@params headerClasses -> className, titleClasses -> titleClasses, ID -> ID
+//@params title -> children = simple title string ideally
 const ModalHeader = props => {
   return (
-    <Modal.Header closeButton className={`${props.className}`}>
-      <Modal.Title id={`${props.ID}-modal`} className={`${props.titleClasses}`}>
+    <Modal.Header closeButton className={ props.className }>
+      <Modal.Title as="h4" id={ props.ID } className={ props.titleClasses }>
         { props.children }
       </Modal.Title>
     </Modal.Header>
   )
 }
 
-
+//@params footerClasses -> className, footer -> children = Any element or string
 const ModalFooter = props => {
   return (
-    <Modal.Footer className={`${props.className}`}>
+    <Modal.Footer className={ props.className }>
       { props.children }
     </Modal.Footer>
   )

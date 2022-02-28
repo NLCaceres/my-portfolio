@@ -1,5 +1,4 @@
 import React from "react";
-import cnames from "classnames";
 import NotFoundCss from "./NotFoundPage.module.css"
 
 //? Using react.memo allows shouldComponentUpdate like optimizing (see callback below)
@@ -21,13 +20,13 @@ const NotFoundPage = React.memo(() => {
   return (
     <div className="flex-grow-1" style={{ paddingLeft: "10px", paddingRight: "10px" }}>
       <h1>Sorry! Not Much to See Here!</h1>
-      <img src={ imgSrc } alt="A Cute Pup!" className={ cnames("img-thumbnail", NotFoundCss['img-thumbnail']) } />
+      <img src={ imgSrc } alt="A Cute Pup!" className={ `${NotFoundCss['img-thumbnail']}` } />
       <h4 style={{ marginTop: "10px" }}>So Here's a Puppy to Make Up for It!</h4>
     </div>
   );
-}, function (prevProps, nextProps) { 
+}, function (prevProps, nextProps) { //* Essentially an areEqual overriden function
   //* Since no other props change, observe page url to prevent rerendering/img change when a modal appears
-  return prevProps.location.pathname === nextProps.location.pathname;
+  return prevProps.location?.pathname === nextProps.location?.pathname; //* Return true means props equal don't rerender
 });
 
 export default NotFoundPage

@@ -7,9 +7,7 @@
   color: #fff;
 }
 
-.submitButton {
-  font-weight: bolder;
-  background-color: #00E000;
-  border-color: white;
-  border-width: 2px;
-}
+:global(.modal-header > h4 + button.close) {
+  color: white !important;
+  opacity: 1;
+} /* This global css rule required to recolor close button */

@@ -4,6 +4,7 @@
   }
 }
 .img-thumbnail {
+  max-width: 90%;
   background-color: #00E000;
   border: 3.5px solid white;
 }
