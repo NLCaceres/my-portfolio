@@ -1,9 +1,9 @@
 import React from "react";
-import { Row, Col, Card, CardText, CardBody, CardTitle, Button } from "reactstrap";
-import SimpleCarousel from "../SimpleCarousel/SimpleCarousel";
+import PostCard from "./PostCard";
 import CardImageModal from "../Modals/CardImageModal/CardImageModal";
-import cnames from "classnames";
-import PostlistCss from "./PostList.module.css";
+import NotFoundPage from "../NotFoundPage/NotFoundPage";
+import GetPostList from "../Utility/Functions/Api";
+import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
 //* 'Import' loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
 
@@ -13,7 +13,7 @@ class PostListView extends React.PureComponent {
     super(props);
     this.state = {
       width: window.innerWidth,
-      modal: false,
+      showModal: false,
       modalProject: null,
       projectList: {
         majorProjects: [],
@@ -27,7 +27,7 @@ class PostListView extends React.PureComponent {
     this.fetchProjects = this.fetchProjects.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.fetchProjects();
   }
 
@@ -39,73 +39,55 @@ class PostListView extends React.PureComponent {
   }
 
   async fetchProjects() {
-    let qParams = (this.props.location.pathname === '/about-me') ? 'null' : this.props.location.pathname.slice(1).replace('-', '_'); 
-    const httpResponse = await fetch(`/api/posts?project_type=${qParams}`, { headers: { "Accept": "application/json" } });
-    const jsonResponse = await httpResponse.json();
-    if (jsonResponse.status === 500 || jsonResponse.status === 404) return;
-
-    const projectList = { ...this.state.projectList }; //* Common react pattern: Spread another obj into a new obj!
-
-    if (Array.isArray(jsonResponse)) {
-      projectList.majorProjects = jsonResponse.filter(project => project["project_size"] === "major_project");
-      projectList.minorProjects = jsonResponse.filter(project => project["project_size"] === "small_project");
-    } 
-    else { projectList.majorProjects.unshift(jsonResponse); }
-    
-    this.setState({ projectList: projectList }); //* Shallow merge projectList to projectList key with rest of state 
+    const splitUrlPath = this.props.location?.pathname?.split('/') ?? ['']; //* Should split into 3 ['','portfolio','tab-name']
+    let qParams = (splitUrlPath[splitUrlPath.length - 1] === 'about-me') ? 'null' : splitUrlPath[splitUrlPath.length - 1].replace('-', '_');
+    const projectList = await GetPostList(qParams);
+    this.setState({ projectList: projectList }); //* Shallow merge projectList to projectList key with rest of state
   }
 
   openModal(project) {
-    if (project === null) {
-      this.setState(prevState => ({
-        modal: !prevState.modal
-      }));
-    } else {
-      if (this.props.viewWidth < 768) { return } //* No modal rendered for mobile so end func here
-      this.setState(prevState => ({
-        modal: !prevState.modal,
-        modalProject: project
-      }));
-    }
+    if (this.props.viewWidth < 768) { return } //* No modal rendered for mobile so end func here
+    this.setState(prevState => ({
+      showModal: !prevState.showModal,
+      modalProject: project
+    }));
   }
 
   render() {
-    //todo Abstract 'proper casing' functionality away 
-    const projectType = this.props.location.pathname.slice(1); //* Remove '/' from url to get 'iOS', 'front-end', etc.
-    let title; for (let word of projectType.split('-')) { //* Init title then concat url strings split at hyphen
-      if (word === 'iOS') { title = word; break; } //* Only case where no capital first letter needed
-      if (!title) title = word.charAt(0).toUpperCase() + word.slice(1); //* Only fires very 1st loop
-      else if (title === 'About') title += (' ' + word.charAt(0).toUpperCase() + word.slice(1)) //* Separate case for 'About Me'
-      else title += ('-' + word.charAt(0).toUpperCase() + word.slice(1)) //* Match usage of front-end rather than frontend or front end in texts
-    }
+    const splitUrlPath = this.props.location?.pathname?.split('/') ?? [''];
+    const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on '/' from url to get 3rd section, i.e. 'iOS', 'front-end', etc.
+    const title = KebabToUppercasePhrase(projectType);
 
     return (
-      (this.state.projectList.majorProjects.length > 0 || this.state.projectList.minorProjects.length > 0) && 
+      (this.state.projectList?.majorProjects?.length > 0 || this.state.projectList?.minorProjects?.length > 0) ?
       (
         <div>
           { this.props.viewWidth >= 768 && (
-            <CardImageModal modalControl={ this.openModal } isModalOpen={ this.state.modal }
+            <CardImageModal onHide={ () => this.openModal(null) } show={ this.state.showModal }
               project={ this.state.modalProject } viewWidth={ this.props.viewWidth } />
           )}
-          <h1 className="ml-2 mb-0">{ title }</h1>
+          { title && <h1 className="ml-2 mb-0">{ title }</h1> }
           <ProjectList projectType={ projectType } projectList={ this.state.projectList }
             viewWidth={ this.props.viewWidth } modalControl={ this.openModal } />
         </div>
-      )
+      ) 
+      : <NotFoundPage />
     );
   }
 }
 
+//* ProjectList always returns an array of 2, the major projects list + the small projects list
+//* EXCEPT in the case of the AboutMe page where it's the 1 section & gets a special header
 const ProjectList = props => {
-  //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT often times obj/class properties are best
-  return Object.values(props.projectList).map((projects, i) => {
-    const projectSize = i === 0 ? "Major Projects" : "Small Projects";
+  return Object.keys(props.projectList).map((projectKey) => {
+    const projectSize = CamelCaseToUppercasePhrase((projectKey === 'minorProjects') ? 'smallProjects' : projectKey);
     const aboutMeTitle = props.projectType === "about-me" ? "Nicholas L. Caceres" : null;
 
-    return ( projects.length > 0 && (
+    //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT obj/class props = best
+    return ( props.projectList[projectKey].length > 0 && (
         <div key={`${props.projectType} ${projectSize}`}>
           <h1 className="ml-2 my-1">{ aboutMeTitle || projectSize }</h1>
-          <ProjectSection className="mx-sm-4" projects={ projects }
+          <ProjectSection postCardClasses="mx-sm-4" projects={ props.projectList[projectKey] }
             viewWidth={ props.viewWidth } modalControl={ props.modalControl }/>
         </div>
       )
@@ -113,135 +95,19 @@ const ProjectList = props => {
   });
 };
 
+//* Project Section returns the list of either major or small projects 
+//* On small screens the cards are always setup left to right. On big screens, they zig-zag (left to right / right to left)
+//* If no posts are returned from the server, a fallback Not Found Component will render
 const ProjectSection = props => {
-  if (Array.isArray(props.projects)) {
-    return props.projects.map((project, i) => {
-      if (i % 2 === 0 || props.viewWidth < 768) {
-        return (
-          <LeftSidedCardPost className={`${props.className}`} project={ project }
-            key={ project.title } modalControl={ props.modalControl } 
-            viewWidth={ props.viewWidth } />
-        );
-      } else {
-        return (
-          <RightSidedCardPost className={`${props.className}`} project={ project }
-            key={ project.title } modalControl={ props.modalControl } 
-            viewWidth={ props.viewWidth } />
-        );
-      }
-    });
-  } else {
-    return (
-      <LeftSidedCardPost className={`${props.className}`} key={ props.projects.name }
-        project={ props.projects } viewWidth={ props.viewWidth } />
-    );
-  }
-};
-
-const LeftSidedCardPost = props => {
-  const { project } = props; //* Rather than 'const project = props.project'. Destructure! Fancy!
-  const postImagesLength = project.post_images.length;
-  const imageSrc = postImagesLength > 0 ? project.post_images["0"].image_url : "No img"; //* 'No img' string forces onError block to run
-  const imageAlt = postImagesLength > 0 ? project.post_images["0"].alt_text : "Placeholder";
-  const backupImgCheck =
-    imageSrc === "https://via.placeholder.com/350.png?text=Profile" ||
-    imageSrc === "https://via.placeholder.com/350.png?text=Project";
-  const aboutMeTitleCheck = project.title !== "Aspiring Jack of All Trades";
-  return (
-    <>
-      <Card className={`${PostlistCss.postCard} ${props.className}`}>
-        <Row noGutters>
-          <Col xs="12" md="2" className="d-flex justify-content-center">
-            { props.viewWidth >= 768 || postImagesLength <= 1 ? (
-              <img className={ cnames(`align-self-center ${ (backupImgCheck) ?
-                  PostlistCss.cardImgBackupStyle : PostlistCss.cardImg }`,
-                  { [PostlistCss.clickable]: props.viewWidth >= 992 && aboutMeTitleCheck && postImagesLength > 1 }
-                )}
-                src={ imageSrc || project.post_images } alt={ imageAlt }
-                onClick={ () => { if (aboutMeTitleCheck && postImagesLength > 1) props.modalControl(project) }}
-                onError={ e => {
-                  e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/350.png?text=Project";
-                  e.target.style.height = "100%";
-                }}
-              />
-            ) : (<SimpleCarousel images={ project.post_images } viewWidth={ props.viewWidth } />)
-            }
-          </Col>
-          <Col xs="12" md="10">
-            <CardBody>
-              <CardTitle tag="h5" className="ml-2 font-weight-bold">
-                { project.title }
-              </CardTitle>
-              <CardText className={ cnames(PostlistCss.cardText) }>
-                { project.description }
-              </CardText>
-              <Button href={ project.github_url }
-                className={ cnames(PostlistCss.githubLink, PostlistCss.blockButton,
-                  "font-weight-bold", { "d-block": props.viewWidth >= 992 }
-                )}>
-                  Github Page
-              </Button>
-              { project.homepage_url != null && (
-                <Button className={`font-weight-bold ${PostlistCss.blockButton} ${(props.viewWidth < 992) ? 
-                  'ml-4' : 'd-block mt-4'} ${PostlistCss.pageLink}`} href={ project.homepage_url }>
-                    Home Page
-                </Button>
-              )}
-            </CardBody>
-          </Col>
-        </Row>
-      </Card>
-    </>
-  );
-};
-
-const RightSidedCardPost = props => {
-  const { project } = props;
-  const postImagesLength = project.post_images.length;
-  const imageSrc = postImagesLength > 0 ? project.post_images["0"].image_url : "No img";
-  const imageAlt = postImagesLength > 0 ? project.post_images["0"].alt_text : "Placeholder";
-  return (
-    <>
-      <Card className={`${PostlistCss.postCard} ${props.className}`}>
-        <Row noGutters>
-          <Col xs="12" md="10">
-            <CardBody>
-              <CardTitle tag="h5" className="ml-2 font-weight-bold">
-                { project.title }
-              </CardTitle>
-              <CardText className="">{ project.description }</CardText>
-              <Button href={ project.github_url } 
-                className={ cnames(PostlistCss.githubLink, PostlistCss.blockButton,
-                  "font-weight-bold", { "d-block": props.viewWidth >= 992 }
-                )}>
-                  Github Page
-              </Button>
-              { project.homepage_url != null && (
-                <Button className={`font-weight-bold ${PostlistCss.blockButton} ${(props.viewWidth < 992) ? 
-                  'ml-4' : 'd-block mt-4'} ${PostlistCss.pageLink}`} href={ project.homepage_url }>
-                    Home Page
-                </Button>
-              )}
-            </CardBody>
-          </Col>
-          <Col xs="12" md="2" className="d-flex justify-content-center">
-            <img className={ cnames("align-self-center", PostlistCss.cardImg, {
-                [PostlistCss.clickable]: props.viewWidth >= 768 && postImagesLength > 1
-              })}
-              src={ imageSrc } alt={ imageAlt }
-              onClick={ () => { if (postImagesLength > 1) props.modalControl(project) }}
-              onError={ e => {
-                e.target.onerror = null;
-                e.target.src = "https://via.placeholder.com/350.png?text=Project";
-                e.target.style.height = "100%";
-              }}
-            />
-          </Col>
-        </Row>
-      </Card>
-    </>
-  );
+  return (Array.isArray(props.projects) && props.projects?.length > 0) ? //* Rails will ALWAYS return array (even if only 1 post returned)
+    props.projects.map((project, i) => {
+      const reversed = (i % 2 === 0 || props.viewWidth < 768) ? '' : 'flex-row-reverse';
+      const modalRendered = (props.viewWidth >= 768 && project.post_images?.length > 1);
+      return <PostCard className={ props.postCardClasses } rowClasses={ reversed }
+        project={ project } viewWidth={ props.viewWidth } key={ project.title } 
+        handleImgClick={ () => { if (modalRendered) props.modalControl(project) } } />
+    })
+    : <NotFoundPage /> //todo This 'else' will be Bootstrap 5 set of placeholder cards
 };
 
 export default PostListView;

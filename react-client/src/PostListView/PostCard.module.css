@@ -9,25 +9,21 @@ may be helpful at 250px instead */
   max-height: 400px;
   max-width: 100%;
 }
-.cardImgBackupStyle {
-  height: 100%;
-  max-height: 250px;
-  width: 100%;
-  max-width: 350px;
-}
 .cardText {
   white-space: pre-wrap; /* Preserves whitespace, allow line breaks at newline, br tag, and at line end */
 }
-img:hover.clickable {
+img:hover.clickable { /* Exported CssClass = .clickable */
   filter: brightness(50%);
 }
 
 .githubLink {
   background-color: #7F0799 !important;
+  border-color: gray;
 }
 
 .pageLink {
   background-color: #F50000 !important;
+  border-color: gray;
 }
 
 .blockButton {

@@ -5,8 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { renderToStaticMarkup } from "react-dom/server";
 
 describe("renders a react-bootstrap modal", () => {
-  const voidFunc = () => 'void';
-
   //* Root
   test("creating a unique id via prop or utility func for the root and title tags", () => {
     const { rerender } = render(

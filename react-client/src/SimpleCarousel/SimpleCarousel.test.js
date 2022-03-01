@@ -1,5 +1,5 @@
 import React from 'react';
-import { prettyDOM, render, screen } from '@testing-library/react';
+import { render, screen, prettyDOM } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import SimpleCarousel from "./SimpleCarousel";
 import { ProjectImageFactory } from '../Utility/Functions/Tests/ProjectFactory';
