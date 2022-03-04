@@ -36,6 +36,9 @@ h4 {
   border-width: 3px !important;
 }
 
+.fw-normal {
+  font-weight: 500 !important;
+}
 
 /* 
 5 Main colors of App:

@@ -51,7 +51,7 @@ const CardDetails = props => {
 
   return (
     <Card.Body>
-      <Card.Title as="h5" className="ml-2 font-weight-bold">
+      <Card.Title as="h5" className="ms-2 fw-bold">
         { project.title }
       </Card.Title>
       <Card.Text className={ cnames(PostCardCss.cardText) }>
@@ -59,13 +59,13 @@ const CardDetails = props => {
       </Card.Text>
       <Button href={ project.github_url }
         className={ cnames(PostCardCss.githubLink, PostCardCss.blockButton,
-          "font-weight-bold", { "d-block": viewWidth >= 992 }
+          "fw-bold", { "d-block": viewWidth >= 992 }
         )}>
           Github Page
       </Button>
       { project.homepage_url && (
-        <Button className={`font-weight-bold ${PostCardCss.blockButton} ${(viewWidth < 992) ? 
-          'ml-4' : 'd-block mt-4'} ${PostCardCss.pageLink}`} href={ project.homepage_url }>
+        <Button className={`fw-bold ${PostCardCss.blockButton} ${(viewWidth < 992) ? 
+          'ms-4' : 'd-block mt-4'} ${PostCardCss.pageLink}`} href={ project.homepage_url }>
             Home Page
         </Button>
       )}

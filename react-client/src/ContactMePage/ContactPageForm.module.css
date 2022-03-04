@@ -2,6 +2,7 @@
   color: white;
   font-weight: bolder;
   text-decoration: underline;
+  margin-left: -0.5rem;
 }
 :global(.dark) .formLabel {
   color: black;

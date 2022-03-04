@@ -122,21 +122,21 @@ describe('render a single PostCard', () => {
       expect(projectDescriptionTag).toBeInTheDocument();
       expect(projectDescriptionTag).toHaveClass('cardText');
 
-      const githubLinkButton = screen.getByRole('link', { name: /github page/i });
+      const githubLinkButton = screen.getByRole('button', { name: /github page/i });
       expect(githubLinkButton).toBeInTheDocument();
-      expect(githubLinkButton).toHaveClass('githubLink blockButton font-weight-bold');
+      expect(githubLinkButton).toHaveClass('githubLink blockButton fw-bold');
 
       //* Only renders if homepage button if (homepage_url != null && notEmptyString)
-      expect(screen.queryByRole('link', { name: /home page/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /home page/i })).not.toBeInTheDocument();
       testProject.homepage_url = '';
       rerender(<PostCard project={testProject} viewWidth={smallDesktopLowEndWidth} handleImgClick={dumbImgClickFunc} />);
-      expect(screen.queryByRole('link', { name: /home page/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /home page/i })).not.toBeInTheDocument();
 
       testProject.homepage_url = 'FoobarUrl'; //* Not actually a VALID url BUT maybe one day only real valid urls would pass+render
       rerender(<PostCard project={testProject} viewWidth={smallDesktopLowEndWidth} handleImgClick={dumbImgClickFunc} />);
-      const homepageLinkButton = screen.getByRole('link', { name: /home page/i });
+      const homepageLinkButton = screen.getByRole('button', { name: /home page/i });
       expect(homepageLinkButton).toBeInTheDocument();
-      expect(homepageLinkButton).toHaveClass('blockButton font-weight-bold pageLink');
+      expect(homepageLinkButton).toHaveClass('blockButton fw-bold pageLink');
     })
     test("calculate the right css modules on buttons based on viewWidth", () => {
       const testProject = ProjectFactory.create();
@@ -144,10 +144,10 @@ describe('render a single PostCard', () => {
       const { rerender } = render(
         <PostCard project={testProject} viewWidth={tabletHighEndWidth} handleImgClick={dumbImgClickFunc} />
       );
-      const githubLinkButton = screen.getByRole('link', { name: /github page/i });
+      const githubLinkButton = screen.getByRole('button', { name: /github page/i });
       expect(githubLinkButton).not.toHaveClass('d-block');
-      const homepageLinkButton = screen.getByRole('link', { name: /home page/i }); //* Only renders if a homepage_url exists
-      expect(homepageLinkButton).toHaveClass('ml-4');
+      const homepageLinkButton = screen.getByRole('button', { name: /home page/i }); //* Only renders if a homepage_url exists
+      expect(homepageLinkButton).toHaveClass('ms-4');
       
       rerender(<PostCard project={testProject} viewWidth={smallDesktopLowEndWidth} handleImgClick={dumbImgClickFunc} />);
       expect(githubLinkButton).toHaveClass('d-block');

@@ -70,7 +70,7 @@ describe("renders a react-bootstrap modal", () => {
 
     const modalTitle = modalHeader.firstChild;
     expect(modalTitle).toHaveClass('title-class');
-    expect(modalTitle).toHaveClass('title-class modal-title', { exact: true });
+    expect(modalTitle).toHaveClass('fs-3 title-class modal-title', { exact: true });
 
     const modalBody = screen.getByRole('heading', { name: /barfoo/i }).parentElement;
     expect(modalBody).toHaveClass('body-class'); //* Could use toHaveAttribute() to test EXACT string match (but possibly TOO specific)

@@ -25,25 +25,31 @@
   If we wrapped '.full' too, then none of our styling linked to the '.Carousel_full__123' version would work!
   Since the CSS would be '.full .carousel-indicators...' which would be nowhere to be found
 */
-.full :global(.carousel-indicators li) {
+.full :global(.carousel-indicators button) {
   background-color: red;
-  width: 80px;
-  height: 20px;
+  width: 60px;
+  height: 15px;
   border-style: solid;
-  border-width: thick;
-  border-color: rgb(241, 218, 16);
+  border-width: medium; /* Medium is actually the default BUT if not set then end up with odd style */
+  border-color: #262626;
   border-radius: 10%;
   opacity: 0.7;
 }
-
 .full :global(.carousel-indicators .active) {
-  width: 80px;
-  height: 20px;
-  background-color: lime;
-  border-style: solid;
-  border-width: thick;
-  border-color: yellow;
-  border-radius: 10%;
+  background-color: rgb(21, 218, 21);
+  border-color: black;
+  opacity: 1.0;
+}
+
+@media only screen and (max-width: 576px) { /* Mobile screens slightly bigger button */
+  .full :global(.carousel-indicators button) {
+    width: 80px;
+    height: 20px;
+  }
+  .full :global(.carousel-indicators .active) {
+    width: 80px;
+    height: 20px;
+  }
 }
 
 @media only screen and (min-width: 768px) {

@@ -41,7 +41,7 @@ describe("renders modal using my simple-modal component to display project's tit
     const projectWithoutImgs = ProjectFactory.create(1);
     render(<CardImageModal project={projectWithoutImgs} viewWidth={averageTabletViewWidth} show={true} onHide={voidFunc}/>);
     const modalTitleTag = screen.getByText(/foobar/i);
-    expect(modalTitleTag).toHaveClass('font-weight-bolder text-white');
+    expect(modalTitleTag).toHaveClass('fw-bolder text-white');
     const modalHeader = modalTitleTag.parentElement;
     expect(modalHeader).toHaveClass('pt-2 pb-1');
     const modalBody = modalHeader.nextElementSibling;
