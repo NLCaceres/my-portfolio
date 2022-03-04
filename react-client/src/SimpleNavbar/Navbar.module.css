@@ -26,6 +26,7 @@
   color: #000 !important;
   font-weight: 550;
   display: flex;
+  border-radius: 0.15rem !important; /* Change BS 5 links' default + prevent odd gap when links in button */
   justify-content: center; /* horizontal text align */
   align-items: center; /* Vertical text align */
 }

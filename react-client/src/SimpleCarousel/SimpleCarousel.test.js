@@ -49,7 +49,7 @@ describe('render a simple react-bootstrap carousel', () => {
       const setStateMock = jest.spyOn(SimpleCarousel.prototype, 'setState');
       render(<SimpleCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)
       const user = userEvent.setup();
-      const activeImgIndicators = screen.getAllByRole('listitem');
+      const activeImgIndicators = screen.getAllByRole('button');
       await user.click(activeImgIndicators[1]);
       await user.click(activeImgIndicators[0]);
       expect(setStateMock).toHaveBeenCalledTimes(2);

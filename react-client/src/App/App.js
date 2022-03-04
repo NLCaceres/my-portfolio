@@ -63,10 +63,10 @@ class App extends Component { //todo Should refactor App as func component to sh
         this.recaptchaBadge.style.display = "block"
         //? Setting a CSS attr to "" removes the attr (if invalid) whereas 'auto' (the default)
         //? OR 'initial' may keep the attr and unintendedly style element
-        this.recaptchaBadge.style['z-index'] = 1050//? 1050 matches modal z-index
+        this.recaptchaBadge.style['z-index'] = 1051 //? 1051 > 1050 for the modal z-index (so it's not shadowed)
       } else {
         this.recaptchaBadge.style.display = "none";
-        this.recaptchaBadge.style['z-index'] = ""; //? 1050 matches modal z-index
+        this.recaptchaBadge.style['z-index'] = ""; 
       }
     }
   }
@@ -108,7 +108,7 @@ class App extends Component { //todo Should refactor App as func component to sh
         <Footer viewWidth={ this.state.width } modalOpen={ () => this.modalOpen(true) }/>
         
         <SimpleModal ID="contact-me" show={ this.state.showModal } onHide={ () => this.modalOpen(false) } title="Send Me a Message!"
-          headerClasses={`pt-2 pb-1`} titleClasses={`font-weight-bolder text-white`}>
+          headerClasses={`pt-2 pb-1`} titleClasses={`fw-bolder text-white`}>
             <ContactPageForm onSubmitForm={ this.submitContactForm } />
         </SimpleModal>
       </BrowserRouter>
@@ -130,7 +130,7 @@ const MainRoutes = props => {
       { mainRoutes }
       
       <Route exact path="/contact-me" >
-        <ContactPage onMount={ props.showRecaptcha }/>
+        <ContactPage onMount={ props.showRecaptcha } viewWidth={props.viewWidth} />
       </Route>
       <Route exact path="/" render={() => <Redirect to="/portfolio/about-me" />} /> 
       {/*//* Need above 'home' route before the next redirect, or always get 404. Shows importance of order of routes/redirects */}

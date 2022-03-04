@@ -42,7 +42,7 @@ const SimpleModal = props => {
 const ModalHeader = props => {
   return (
     <Modal.Header closeButton className={ props.className }>
-      <Modal.Title as="h4" id={ props.ID } className={ props.titleClasses }>
+      <Modal.Title as="h4" id={ props.ID } className={`fs-3 ${props.titleClasses}`}>
         { props.children }
       </Modal.Title>
     </Modal.Header>
