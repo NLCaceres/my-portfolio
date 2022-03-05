@@ -27,21 +27,20 @@ const ContactPageForm = props => {
 
   return (
     <Form onSubmit={ SubmitContactForm } className={ cnames({ "dark": props.darkMode }) } data-testid="form-container">
-      <Form.Row>
-        <Form.Group controlId="senderEmail" as={ Col } xs="10" sm="8">
-          <Form.Label className={`ml-n2 ${ContactPageFormCss.formLabel}`}>Email Address</Form.Label>
-          <Form.Control className="px-2" type="email" placeholder="Please enter your email" />
-        </Form.Group>
-      </Form.Row>
-      <Form.Group controlId="senderMessage">
-        <Form.Label className={`ml-n2 ${ContactPageFormCss.formLabel}`}>Message</Form.Label>
+      { /* Using column to size appropriately at smaller viewports */ }
+      <Form.Group controlId="senderEmail" as={ Col } xs="10" sm="8" className="mb-3">
+        <Form.Label className={`${ContactPageFormCss.formLabel}`}>Email Address</Form.Label>
+        <Form.Control className="px-2" type="email" placeholder="Please enter your email" />
+      </Form.Group>
+      <Form.Group controlId="senderMessage" className="mb-3">
+        <Form.Label className={`${ContactPageFormCss.formLabel}`}>Message</Form.Label>
         <Form.Control className="px-2" type="message" placeholder="Your Message" as="textarea" rows={ 3 } />
       </Form.Group>
 
       <div className="mt-1 d-flex justify-content-end"> 
         <Button className={`${ContactPageFormCss.submitButton}`} type="submit" disabled={ !IsContactable || isLoading }>
           { (isLoading && IsContactable) //* Show loading spinner when verifying and NOT disabled
-            && <Spinner className="mr-2" as="span" animation="border" size="sm" role="status" aria-hidden="true"/> }
+            && <Spinner className="me-2" as="span" animation="border" size="sm" role="status" aria-hidden="true"/> }
 
           { !IsContactable ? "Currently Unavailable" : //* Separate conditions to set text for button
             (isLoading) ? "Checking You're Human!" : "Contact Me" }
