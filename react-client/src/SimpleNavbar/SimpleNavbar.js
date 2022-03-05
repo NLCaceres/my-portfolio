@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../logo.svg";
 import { NavLink } from "react-router-dom";
+import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import cnames from "classnames";
@@ -19,9 +20,11 @@ const SimpleNavbar = props => {
     return () => { document.removeEventListener('click', expansionListener) } //* Cleanup listener
   })
   return (
-    <Navbar className={cnames(NavbarCss.header, "sticky-top")} expand="md" expanded={expanded}>
-      <Navbar.Toggle className="align-self-start mt-1" aria-controls="basic-navbar-nav" />
-      <FullNav viewWidth={ props.viewWidth } />
+    <Navbar className={`${NavbarCss.header} sticky-top`} expand="md" expanded={expanded}>
+      <Container fluid>
+        <Navbar.Toggle className="align-self-start mt-1" aria-controls="basic-navbar-nav" />
+        <FullNav viewWidth={ props.viewWidth } />      
+      </Container>
     </Navbar>
   )
 }
@@ -36,7 +39,7 @@ const FullNav = props => {
       </Navbar.Collapse>
       <Navbar.Brand className={`${NavbarCss.brand} px-3 py-0`} href="/" >
         Nick Caceres
-        <img src={Logo} className="ml-2" width="45" height="45" alt="Brand Logo"></img>
+        <img src={Logo} className="ms-2" width="45" height="45" alt="Brand Logo"></img>
       </Navbar.Brand>
     </>
   );
