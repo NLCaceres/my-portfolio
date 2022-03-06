@@ -4,7 +4,7 @@ import { render, screen, prettyDOM } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProjectFactory from '../Utility/Functions/Tests/ProjectFactory';
 import * as Api from '../Utility/Functions/Api';
-import { averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
+import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 
 describe("renders a list of bootstrap cards filled with post objs", () => {
   test("only if the list has a set of major or minor projects", async () => {
@@ -43,13 +43,14 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
 
     ApiMock.mockRestore();
   })
-  test("that depends on viewWidth to render a modal and zigzag post cards", async () => {
+  test("that depends on viewWidth to render a modal, correct size title, & zigzag post cards", async () => {
     const twoImgProj = ProjectFactory.create(2); const noImgProj = ProjectFactory.create(); const oneImgProj = ProjectFactory.create(1);
     const ApiMock = jest.spyOn(Api, 'default').mockImplementation(() => ({ majorProjects: [twoImgProj, noImgProj], minorProjects: [oneImgProj] }) );
     const OpenModalSpy = jest.spyOn(PostListView.prototype, 'openModal');
     const user = userEvent.setup();
+    const urlLocation = { pathname: '/foobar-title' };
 
-    const { rerender } = render(<PostListView viewWidth={averageTabletViewWidth} />);
+    const { rerender } = render(<PostListView viewWidth={averageTabletViewWidth} location={urlLocation} />);
     await user.click(await screen.findByRole('img', { name: twoImgProj.post_images[0].alt_text })); //* Use click to make modal appear
     expect(OpenModalSpy).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('dialog')).toBeInTheDocument(); expect(screen.getByRole('dialog')).toHaveClass('show'); //* Modal mounted + visible
@@ -59,6 +60,14 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     await user.click(await screen.findByRole('img', { name: oneImgProj.post_images[0].alt_text })); //* Only 1 image in [] so click doesn't work
     expect(OpenModalSpy).toHaveBeenCalledTimes(2); //* Spy not called since 1 img (condition in ProjectSection)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument(); //* Modal long gone
+
+    const bigTitle = screen.getByRole('heading', { name: /foobar title/i }); //* iOS, android, etc...
+    expect(bigTitle).toHaveClass('display-2');
+    const projectSectionsByType = screen.getAllByRole('heading', { name: /projects/i }); //* Either about-me or major/minor 
+    for (const projectSectionType of projectSectionsByType) expect(projectSectionType).toHaveClass('display-2');
+    rerender(<PostListView viewWidth={averageTabletLowEndWidth} location={urlLocation} />); 
+    expect(bigTitle).toHaveClass('display-3'); //* Above 768 - slightly decrease font sizes
+    for (const projectSectionType of projectSectionsByType) expect(projectSectionType).toHaveClass('display-3');
 
     const postCardRows = screen.getAllByTestId('post-card-row'); //* Only odd rows are reversed
     for (let i = 0; i < postCardRows.length; i++) (i % 2 === 0) ? //* Order matters so 'for in' not an option 
