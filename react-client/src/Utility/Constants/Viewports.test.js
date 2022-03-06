@@ -10,9 +10,9 @@ describe("with an array of viewport constants", () => {
       else exactSetCount++;
       totalCount++;
     }
-    expect(totalCount).toBe(8);
+    expect(totalCount).toBe(9);
     expect(exactSetCount).toBe(4);
-    expect(lowLimitCount).toBe(1);
+    expect(lowLimitCount).toBe(2);
     expect(upperLimitCount).toBe(3);
   })
   test("representing specific viewport breakpoints", () => {
@@ -22,7 +22,8 @@ describe("with an array of viewport constants", () => {
     expect(Viewports.largeDesktopViewWidth).toBe(1200);
   })
   test("representing the lower limit of viewports", () => {
-    expect(Viewports.smallDesktopLowEndWidth).toBe(993)
+    expect(Viewports.smallDesktopLowEndWidth).toBe(993);
+    expect(Viewports.averageTabletLowEndWidth).toBe(769);
   })
   test("representing the upper limit of viewports", () => {
     expect(Viewports.mobileHighEndWidth).toBe(575);

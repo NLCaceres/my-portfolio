@@ -1,6 +1,7 @@
 import React from "react"
 import { render, screen } from '@testing-library/react';
 import ContactPage from '.';
+import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 
 //? jest.mock() hoists above imports so use jest.doMock() as a per test option
 jest.mock('../Utility/Hooks/UseRecaptcha', () => {
@@ -33,5 +34,12 @@ describe("renders a simple contact page with a form component", () => {
     const formComponent = formParentContainer.firstChild;
     expect(formComponent).toBeInTheDocument();
     expect(formComponent).toHaveClass('dark');
+  })
+  test("that depends on viewWidth for correct title font size", () => {
+    const { rerender } = render(<ContactPage viewWidth={averageTabletLowEndWidth} />);
+    const title = screen.getByRole('heading', { name: /contact me page/i });
+    expect(title).toHaveClass('display-3');
+    rerender(<ContactPage viewWidth={averageTabletViewWidth} />);
+    expect(title).toHaveClass('display-2');
   })
 })

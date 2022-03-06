@@ -66,7 +66,7 @@ class PostListView extends React.PureComponent {
             <CardImageModal onHide={ () => this.openModal(null) } show={ this.state.showModal }
               project={ this.state.modalProject } viewWidth={ this.props.viewWidth } />
           )}
-          { title && <h1 className="ml-2 mb-0">{ title }</h1> }
+          { title && <h1 className={`ms-2 mb-0 fw-normal ${(this.props.viewWidth > 768) ? 'display-3' : 'display-2'}`}>{ title }</h1> }
           <ProjectList projectType={ projectType } projectList={ this.state.projectList }
             viewWidth={ this.props.viewWidth } modalControl={ this.openModal } />
         </div>
@@ -86,7 +86,7 @@ const ProjectList = props => {
     //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT obj/class props = best
     return ( props.projectList[projectKey].length > 0 && (
         <div key={`${props.projectType} ${projectSize}`}>
-          <h1 className="ml-2 my-1">{ aboutMeTitle || projectSize }</h1>
+          <h1 className={`ms-2 my-1 fw-normal ${(props.viewWidth > 768) ? 'display-3' : 'display-2'}`}>{ aboutMeTitle || projectSize }</h1>
           <ProjectSection postCardClasses="mx-sm-4" projects={ props.projectList[projectKey] }
             viewWidth={ props.viewWidth } modalControl={ props.modalControl }/>
         </div>

@@ -11,6 +11,7 @@ export const largeDesktopViewWidth = 1200;
 
 //* Lower Limit of Viewports Widths
 export const smallDesktopLowEndWidth = 993;
+export const averageTabletLowEndWidth = 769;
 
 //* Upper Limit of Viewports Widths
 export const mobileHighEndWidth = 575;
