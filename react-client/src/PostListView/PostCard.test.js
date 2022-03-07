@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import PostCard from './PostCard';
 import ProjectFactory, { ProjectImageFactory } from '../Utility/Functions/Tests/ProjectFactory';
-import { smallDesktopLowEndWidth, tabletHighEndWidth, smallTabletHighEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
+import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 
 describe('render a single PostCard', () => {
   const dumbImgClickFunc = () => 'void';
@@ -137,21 +137,6 @@ describe('render a single PostCard', () => {
       const homepageLinkButton = screen.getByRole('button', { name: /home page/i });
       expect(homepageLinkButton).toBeInTheDocument();
       expect(homepageLinkButton).toHaveClass('blockButton fw-bold pageLink');
-    })
-    test("calculate the right css modules on buttons based on viewWidth", () => {
-      const testProject = ProjectFactory.create();
-      testProject.homepage_url = 'FoobarUrl';
-      const { rerender } = render(
-        <PostCard project={testProject} viewWidth={tabletHighEndWidth} handleImgClick={dumbImgClickFunc} />
-      );
-      const githubLinkButton = screen.getByRole('button', { name: /github page/i });
-      expect(githubLinkButton).not.toHaveClass('d-block');
-      const homepageLinkButton = screen.getByRole('button', { name: /home page/i }); //* Only renders if a homepage_url exists
-      expect(homepageLinkButton).toHaveClass('ms-4');
-      
-      rerender(<PostCard project={testProject} viewWidth={smallDesktopLowEndWidth} handleImgClick={dumbImgClickFunc} />);
-      expect(githubLinkButton).toHaveClass('d-block');
-      expect(homepageLinkButton).toHaveClass('d-block mt-4');
     })
   })
 })

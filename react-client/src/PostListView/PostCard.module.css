@@ -18,7 +18,7 @@ img:hover.clickable { /* Exported CssClass = .clickable */
 
 .githubLink {
   background-color: #7F0799 !important;
-  border-color: gray;
+  border-color: gray !important;
 }
 
 .pageLink {
