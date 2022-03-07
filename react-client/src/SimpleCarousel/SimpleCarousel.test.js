@@ -65,16 +65,19 @@ describe('render a simple react-bootstrap carousel', () => {
       expect(carouselIndicators).toHaveStyle('visibility: hidden')
     }) */
   })
-  //todo Test out jest spies by swapping out interval callback? just MAYBE
-  test("displaying the right css modules for its image tags", () => {
+  //todo MAYBE Test out jest spies by swapping out interval callback?
+  test("displaying the right css classes for its root & image tags", () => {
     const { rerender } = render(<SimpleCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)
+    const carouselRoot = screen.getByTestId('simple-carousel');
+    expect(carouselRoot).toHaveClass('full carousel slide', { exact: true });
     const carouselImageTags = screen.getAllByRole('img');
     expect(carouselImageTags).toHaveLength(2);
     for (let imageTag of carouselImageTags) {
       expect(imageTag).toHaveClass('img-fluid slide');
     }
 
-    rerender(<SimpleCarousel images={imageSet} viewWidth={smallTabletHighEndWidth} />);
+    rerender(<SimpleCarousel images={imageSet} viewWidth={smallTabletHighEndWidth} className="foobar" />);
+    expect(carouselRoot).toHaveClass('full carousel slide foobar', { exact: true });
     expect(carouselImageTags).toHaveLength(2);
     for (let imageTag of carouselImageTags) {
       expect(imageTag).toHaveClass('img-fluid mobileSlide');

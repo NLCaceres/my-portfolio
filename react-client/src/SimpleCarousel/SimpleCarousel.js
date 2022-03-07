@@ -39,7 +39,7 @@ class SimpleCarousel extends Component {
   render() {
     return (
       <Carousel activeIndex={ this.state.activeIndex } onSelect={ this.goToIndex } controls={false}
-        interval={null} data-testid="simple-carousel" className={ cnames(CarouselCss.full, "px-4 mt-3", 
+        interval={null} data-testid="simple-carousel" className={ cnames(CarouselCss.full, `${this.props.className || ''}`, 
         {"hovered-indicators": this.state.forceHoverClass}) }>
           { //? React-bootstrap expects 'Carousel.Item's so abstracting this block to a Func component DOESN'T work
             this.props.images.map(image => { //* Create an array of Carousel.Items to display

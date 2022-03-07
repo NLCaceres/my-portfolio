@@ -17,7 +17,7 @@
   Following = '.Carousel_full__123 .carousel-indicators' thanks to wrapping :global() selector
 */
 .full :global(.carousel-indicators) {
-  margin: 1rem 1.5rem 0 1.5rem;
+  margin: 1rem 1.5rem 1rem 1.5rem;
 }
 /* Getting slightly more complicated with :global() makes the usage more clear
   Following = '.Carousel_full__123 .carousel-indicators li'
@@ -38,7 +38,7 @@
 .full :global(.carousel-indicators .active) {
   background-color: rgb(21, 218, 21);
   border-color: black;
-  opacity: 1.0;
+  opacity: 0.9;
 }
 
 @media only screen and (max-width: 576px) { /* Mobile screens slightly bigger button */
