@@ -1,0 +1,25 @@
+.header {
+  font-size: calc(1.575rem + 3.9vw); /* Equal to BS-5 display-2 */
+}
+@media only screen and (min-width: 769px) {
+  .header {
+    font-size: calc(1.525rem + 3.3vw); /* Equal to BS-5 display-3 */
+  }
+}
+
+.postCard {
+  min-height: 300px;
+}
+
+.smallHeader {
+  font-size: calc(1.375rem + 1.5vw); /* Equal to BS-5 h1 class */
+}
+@media only screen and (min-width: 768px) {
+  .smallHeader {
+    font-size: calc(1.325rem + .9vw); /* Equal to BS-5 h2 class */
+  }
+}
+
+.cardRow {
+  min-height: 300px;
+}

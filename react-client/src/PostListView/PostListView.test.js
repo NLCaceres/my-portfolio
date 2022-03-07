@@ -30,16 +30,16 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
 
     ApiMock.mockImplementation(() => ({ majorProjects: [], minorProjects: [] }) );
     const { unmount: fourthUnmount } = render(<PostListView />); //* Don't unmount since component is empty anyway
-    expect(await screen.findByRole('heading', { name: /sorry/i })).toBeInTheDocument();
-    expect(await screen.queryByRole('heading', { name: /major projects/i })).not.toBeInTheDocument();
-    expect(await screen.queryByRole('heading', { name: /small projects/i })).not.toBeInTheDocument();
+    const placeHolderImgs = screen.getAllByRole('heading', { name: /project/i }); //* 4 with class 'placeholderText;
+    expect(placeHolderImgs).toHaveLength(4); expect(placeHolderImgs[0]).toHaveClass('placeholderText');
+    expect(await screen.queryByRole('heading', { name: /(major|small) projects/i })).not.toBeInTheDocument();
     fourthUnmount();
 
     ApiMock.mockImplementation(() => ({}) );
-    render(<PostListView />); //* Same as with empty arrays
-    expect(await screen.findByRole('heading', { name: /sorry/i })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /major projects/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /small projects/i })).not.toBeInTheDocument();
+    render(<PostListView />); //* Same as with empty arrays. Just get placeholders
+    const morePlaceHolderImgs = screen.getAllByRole('heading', { name: /project/i }); //* 4 with class 'placeholderText;
+    expect(placeHolderImgs).toHaveLength(4); expect(morePlaceHolderImgs[0]).toHaveClass('placeholderText');
+    expect(screen.queryByRole('heading', { name: /(major|small) projects/i })).not.toBeInTheDocument();
 
     ApiMock.mockRestore();
   })
