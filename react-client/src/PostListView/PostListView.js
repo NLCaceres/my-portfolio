@@ -1,9 +1,9 @@
 import React from "react";
 import PostCard from "./PostCard";
 import CardImageModal from "../Modals/CardImageModal/CardImageModal";
-import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import GetPostList from "../Utility/Functions/Api";
 import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
+import PostCardListPlaceholder from "./PostCardPlaceholder";
 //* 'Import' loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
 
@@ -71,7 +71,7 @@ class PostListView extends React.PureComponent {
             viewWidth={ this.props.viewWidth } modalControl={ this.openModal } />
         </div>
       ) 
-      : <NotFoundPage />
+      : <PostCardListPlaceholder viewWidth={ this.props.viewWidth } />
     );
   }
 }
@@ -99,15 +99,15 @@ const ProjectList = props => {
 //* On small screens the cards are always setup left to right. On big screens, they zig-zag (left to right / right to left)
 //* If no posts are returned from the server, a fallback Not Found Component will render
 const ProjectSection = props => {
-  return (Array.isArray(props.projects) && props.projects?.length > 0) ? //* Rails will ALWAYS return array (even if only 1 post returned)
+  return (Array.isArray(props.projects) && props.projects?.length > 0) && //* Rails will ALWAYS return array (even if only 1 post returned)
     props.projects.map((project, i) => {
-      const reversed = (i % 2 === 0 || props.viewWidth < 768) ? '' : 'flex-row-reverse';
+      const reversed = (props.viewWidth < 768 || i % 2 === 0) ? '' : 'flex-row-reverse';
       const modalRendered = (props.viewWidth >= 768 && project.post_images?.length > 1);
       return <PostCard className={ props.postCardClasses } rowClasses={ reversed }
         project={ project } viewWidth={ props.viewWidth } key={ project.title } 
         handleImgClick={ () => { if (modalRendered) props.modalControl(project) } } />
-    })
-    : <NotFoundPage /> //todo This 'else' will be Bootstrap 5 set of placeholder cards
+    }
+  )
 };
 
 export default PostListView;
