@@ -1,6 +1,6 @@
 import throttle from "lodash/throttle";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
-import "./App.css";
+// import "./App.css";
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";
 import SimpleNavBar from "../SimpleNavbar/SimpleNavbar";
