@@ -8,23 +8,25 @@ While writing the two apps, I had plenty of time to think about the number of pr
 - From here out, focus on this project rather than the Rails 5 version. 
   - Create a Swagger UI inspired routes list view 
 - Contact Us from the back-end!
-  - Front End Mostly Setup (Missing Backend Recaptcha route)
+  - Front End Setup - DONE
   - Email Server via Heroku
-- Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
+- Include the following in Seeder:
+  - Laravel + Vue Account On It
+  - Most of my experience with classic GUIs (Made in Java)
 - Ruby 3 is now an option BUT Rails 6 might not be ready for it (>= 2.5)
   - Similarly Webpacker 5.x is an option on Rails 6 BUT since React can bundle itself, it's best to let it handle the production build while Rails serves it up
     - Note: Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
-    - Note for future upgrade: Rails includes `bin/rails webpacker:install` to handle changes. ActiveAdmin does too: `bin/rails g active_admin:install`
-    With one additional step of adding `config.use_webpacker = true` in config/initializers/active_admin.rb
-    - Sprockets handles activeAdmin just fine + is responsible for Sass, Css, images anyway (though Webpacker CAN handle them if properly configured)
+    - Note for future upgrade: Rails includes `bin/rails webpacker:install` to handle update to webpacker similar to how ActiveAdmin works using 
+    `bin/rails g active_admin:install` with one additional step of adding `config.use_webpacker = true` in config/initializers/active_admin.rb
+      - Sprockets handles activeAdmin Sass, Css, images just fine anyway for now 
 
 ## Notes to Remember! - October 2021
 ### Bundler
 - A nifty package manager for Ruby with two ways of updating
-  - `Bundle install` conservatively updates packages once you modify the Gemfile. It only will update based on changes
-  - `Bundle update` on the other hand, will update all packages to their latest versions, respecting the limits set by the Gemfile
+  - `bundle install` conservatively updates packages once you modify the Gemfile. It only will update based on changes
+  - `bundle update` on the other hand, will update all packages to their latest versions, respecting the limits set by the Gemfile
     BUT updating as much as it can nonetheless. This can be good and bad! It'll resolve any Gemfile lock issues as an example but may cause breaking changes
-  - `Bundle outdated --minor` particularly helpful for checking for smaller upgrades and preventing said breaking changes before running `bundle update`
+  - `bundle outdated --minor` particularly helpful for checking for smaller upgrades and preventing said breaking changes before running `bundle update`
     - On the other hand, just flat out using `bundle update --minor` guarantees only minor upgrades (e.g. 1.0 to 1.1) will happen if the Gemfile allows some gems to updated across major versions (e.g. 1.x to 2.x)
 ### Rails and its Commands
 - Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
@@ -39,15 +41,15 @@ While writing the two apps, I had plenty of time to think about the number of pr
   - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
   - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
 ### My Package.json Commands
-- Preface to next point, Facebook still uses yarn primarily BUT since yarn is installed via NPM, it's pretty easy to get confused. 
+- Preface to next point, Facebook still uses yarn primarily BUT since yarn is installed via NPM (on Heroku), it's pretty easy to get confused. 
   - `npx create-react-app app-name` still used to make a new React app. 
-  - Yarn commands are included in the README to handle the production build and testing, BUT it also includes `yarn start` which is identical to `npm start` 
-- When deploying to Heroku, heroku will auto-run `postbuild` which runs 2 custom commands `build` & `deploy`
+  - Yarn commands mentioned in the React README handle the production build + testing. Also includes `yarn start` identical in use to the typical `npm start`
+- When deploying to Heroku, Heroku will auto-run `postbuild` which runs 2 custom commands `build` & `deploy`
   - The `build` commands in the rails root 'package.json' is used to switch the current working directory to the react-client directory, install dependencies via `yarn install` and then use `yarn build` to make the production build for Rails to serve
-      - React uses `yarn build` to make the production build in its root 'build' dir. The one in the Rails root 'package.json' takes one extra step, dropping down a directory to use React's
+      - React uses `yarn build` to make the production build in its root 'build' dir. The one in the Rails root 'package.json' drops down a directory to use React's aforementioned version of the build command
   - The `deploy` commands in the rails root 'package.json' copies the production build dir from react-client into the rails public folder to serve up!
     - Note on ZSH/Bash: Normally using '-R' with copy command, one would expect to copy both the directory and the contents! But here the goal is to
-      copy JUST the contents of the build dir over not the build dir itself! For that reason a trailing '/.' is included. The target dir 
+      copy JUST the contents of the build dir over not the build dir itself! For that reason, a trailing '/.' is included. The target dir 
       (our rails public dir) doesn't need the trailing slash but it's included for symmetry
       - The '-a' flag used in 'deploy' works similarly! BUT added bonus of copying files EXACTLY as is (file dates and stats preserved)
       - Any files that match in name will be overwritten (source directory version will overwrite the target's version)
