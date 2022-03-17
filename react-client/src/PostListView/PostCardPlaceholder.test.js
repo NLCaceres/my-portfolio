@@ -23,8 +23,8 @@ describe("renders a placeholder for the post cards list", () => {
   test("calculating classNames based on class props for each placeholder card", () => {
     render(<PostCardListPlaceholder viewWidth={averageTabletViewWidth} />);
     const rows = screen.getAllByTestId('placeholder-row');
-    expect(rows[0]).toHaveClass('no-gutters cardRow row', { exact: true });
-    expect(rows[1]).toHaveClass('no-gutters cardRow row flex-row-reverse', { exact: true });
+    expect(rows[0]).toHaveClass('g-0 cardRow row', { exact: true });
+    expect(rows[1]).toHaveClass('g-0 cardRow row flex-row-reverse', { exact: true });
     expect(rows[0].parentElement).toHaveClass('postCard postCard mx-sm-4 card', { exact: true });
   })
 })

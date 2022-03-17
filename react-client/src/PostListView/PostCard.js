@@ -14,11 +14,11 @@ const PostCard = props => {
   return (
     //? data-testid = simple data attributes used in tests. Can remove via babel BUT no harm in being left in prod
     <Card className={`${PostCardCss.postCard} ${props.className || ''}`.trim()} data-testid="post-card">
-      <Row className={`no-gutters ${props.rowClasses || ''}`.trim()} data-testid="post-card-row">
+      <Row className={`g-0 ${props.rowClasses || ''}`.trim()} data-testid="post-card-row">
         <Col xs="12" md="3" lg="2" className="d-flex justify-content-center">
           <CardImage project={ props.project } viewWidth={ props.viewWidth } handleClick={ props.handleImgClick }/>
         </Col>
-        <Col xs="12" md="9" lg="10">
+        <Col xs="12" md="9" lg="10" className="px-1">
           <CardDetails project={ props.project } />
         </Col>
       </Row>
@@ -32,11 +32,13 @@ const CardImage = ({ project, viewWidth, handleClick }) => { //* Save a line & d
   if (Array.isArray(project.post_images) && project.post_images.length > 0) { //* Rails should ALWAYS send Arr but safer to check
     //* If multiple images (above) + small screen, then carousel. 
     //* Else big screen OR single image, then single (possibly clickable) image
+    const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450; //? Set height/width to ensure good aspect ratio
+    const width = (viewWidth > 767) ? 350 : (viewWidth > 575) ? 425 : (viewWidth > 359) ? 330 : 280;
     imageType = (viewWidth < 768 && project.post_images.length > 1) ? 
       <SimpleCarousel images={ project.post_images } viewWidth={ viewWidth } className='mt-3 mt-sm-0' /> :
       <img className={ cnames(`align-self-center mt-3 mt-sm-0 ${ PostCardCss.cardImg }`,
           { [PostCardCss.clickable]: viewWidth >= 992 && project.post_images.length > 1 }
-        )} onClick={ handleClick }
+        )} onClick={ handleClick } height={ height } width={ width }
         src={ project.post_images[0].image_url } alt={ project.post_images[0].alt_text } />
   } 
   else { imageType = <PlaceHolderImg /> } //* If no images then render placeholder

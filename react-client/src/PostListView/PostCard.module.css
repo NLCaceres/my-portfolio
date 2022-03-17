@@ -2,13 +2,18 @@
   background-color: #f9fae8;
 }
 
-/* If necessary min-height
-may be helpful at 250px instead */
-.cardImg {
-  min-height: 75%;
-  max-height: 400px;
+.cardImg { /* Handles mobile */ 
+  min-height: 250px;
+  max-height: 55vh; /* Goal: 500px mobile, 550px smallTablet */
   max-width: 100%;
 }
+@media only screen and (min-width: 768px) {
+  .cardImg { /* Handles tablets & desktop */ 
+    min-height: 300px;
+    max-height: 50vh;
+  }
+}
+
 .cardText {
   white-space: pre-wrap; /* Preserves whitespace, allow line breaks at newline, br tag, and at line end */
 }

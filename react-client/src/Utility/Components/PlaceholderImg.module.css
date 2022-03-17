@@ -6,6 +6,7 @@
   min-height: 250px;
   max-height: 50vh; /* Slightly neater looking than full 100% height */
   width: 100%;
+  min-width: 150px;
   max-width: 350px; /* Keeps placeholder from being too wide in mobile */
   align-self: center;
   background-color: rgb(207, 207, 207);

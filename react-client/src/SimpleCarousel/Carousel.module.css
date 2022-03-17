@@ -1,12 +1,16 @@
 /* Next 2 classes refer to img tags at different screen sizes */
 .slide {
-  max-height: 700px;
-  min-width: 100%;
-}
-.mobileSlide {
   min-height: 100%;
-  max-height: 400px;
-  min-width: 100%;
+  max-height: 55vh; /* Same goal as PostCard imgs */
+  display: block;
+  margin: auto;
+}
+@media only screen and (min-width: 768px) {
+  .slide { /* Handles tablets & desktop */ 
+    min-height: 300px;
+    max-height: 75vh; /* Goal: 700px in modal */
+    min-width: 100%;
+  }
 }
 
 .full {

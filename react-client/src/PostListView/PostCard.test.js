@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, prettyDOM } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import PostCard from './PostCard';
 import ProjectFactory, { ProjectImageFactory } from '../Utility/Functions/Tests/ProjectFactory';
-import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
+import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidth, smallDesktopViewWidth, mobileHighEndWidth, miniMobileHighEndWidth } from "../Utility/Constants/Viewports";
 
 describe('render a single PostCard', () => {
   const dumbImgClickFunc = () => 'void';
@@ -105,6 +105,25 @@ describe('render a single PostCard', () => {
       expect(screen.getByRole('img', { name: /barfooalt/i })).toHaveClass('clickable');
       await user.click(screen.getByRole('img', { name: /barfooalt/i }));
       expect(mockImgClickFunc).toHaveBeenCalledTimes(5);
+    })
+    test("calculating a good aspect ratio for images based on 5 viewports", () => {
+      const testProject = ProjectFactory.create(1); 
+      const { rerender } = render(<PostCard project={testProject} viewWidth={smallDesktopViewWidth} />);
+      const repImg = screen.getByRole('img');
+      expect(repImg).toBeInTheDocument(); //* 450/350 > 992px width
+      expect(repImg).toHaveAttribute('height', '450'); expect(repImg).toHaveAttribute('width', '350');
+      //* 500/350 at 991-768px width
+      rerender(<PostCard project={testProject} viewWidth={averageTabletViewWidth} />);
+      expect(repImg).toHaveAttribute('height', '500'); expect(repImg).toHaveAttribute('width', '350');
+      //* 550/425 at 767-576px width
+      rerender(<PostCard project={testProject} viewWidth={smallTabletHighEndWidth} />);
+      expect(repImg).toHaveAttribute('height', '550'); expect(repImg).toHaveAttribute('width', '425')
+      //* 450/330 at 575-360px width
+      rerender(<PostCard project={testProject} viewWidth={mobileHighEndWidth} />);
+      expect(repImg).toHaveAttribute('height', '450'); expect(repImg).toHaveAttribute('width', '330')
+      //* 450/280 < 360px width
+      rerender(<PostCard project={testProject} viewWidth={miniMobileHighEndWidth} />);
+      expect(repImg).toHaveAttribute('height', '450'); expect(repImg).toHaveAttribute('width', '280')
     })
   })
 

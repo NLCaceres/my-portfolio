@@ -37,6 +37,9 @@ class SimpleCarousel extends Component {
   }
 
   render() {
+    const height = (this.props.viewWidth > 991) ? 450 : (this.props.viewWidth > 767) ? 500 : 
+      (this.props.viewWidth > 575) ? 550 : 450; //? Set height/width to ensure good aspect ratio
+    const width = (this.props.viewWidth > 767) ? 350 : (this.props.viewWidth > 575) ? 425 : (this.props.viewWidth > 359) ? 330 : 280;
     return (
       <Carousel activeIndex={ this.state.activeIndex } onSelect={ this.goToIndex } controls={false}
         interval={null} data-testid="simple-carousel" className={ cnames(CarouselCss.full, `${this.props.className || ''}`, 
@@ -45,11 +48,9 @@ class SimpleCarousel extends Component {
             this.props.images.map(image => { //* Create an array of Carousel.Items to display
               return (
                 <Carousel.Item key={ image.image_url }>
-                  <img className={ cnames("img-fluid", this.props.viewWidth >= 768 ? CarouselCss.slide : CarouselCss.mobileSlide) }
-                    src={ image.image_url } alt={ image.alt_text } />
-                  { image.caption &&  
-                    <Carousel.Caption> <h3>{image.caption}</h3> </Carousel.Caption>
-                  }
+                  <img className={`img-fluid ${CarouselCss.slide}`} src={ image.image_url } alt={ image.alt_text } 
+                    height={ height } width={ width } />
+                  { image.caption && <Carousel.Caption> <h3>{ image.caption }</h3> </Carousel.Caption> }
                 </Carousel.Item>
               )}
             )

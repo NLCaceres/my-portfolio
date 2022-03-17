@@ -3,7 +3,7 @@ import { render, screen, prettyDOM } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import SimpleCarousel from "./SimpleCarousel";
 import { ProjectImageFactory } from '../Utility/Functions/Tests/ProjectFactory';
-import { averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
+import { averageTabletViewWidth, miniMobileHighEndWidth, mobileHighEndWidth, smallDesktopViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 
 describe('render a simple react-bootstrap carousel', () => {
   const imageSet = [ProjectImageFactory.create(), ProjectImageFactory.create()];
@@ -57,18 +57,25 @@ describe('render a simple react-bootstrap carousel', () => {
     }) */
   })
   //todo MAYBE Test out jest spies by swapping out interval callback?
-  test("displaying the right css classes for its root & image tags", () => {
-    const { rerender } = render(<SimpleCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)
+  test("calculating the right css classes for its root + aspect ratio for imgs", () => {
+    const { rerender } = render(<SimpleCarousel images={imageSet} viewWidth={smallDesktopViewWidth} />)
     const carouselRoot = screen.getByTestId('simple-carousel');
     expect(carouselRoot).toHaveClass('full carousel slide', { exact: true });
-    const carouselImageTags = screen.getAllByRole('img');
-    expect(carouselImageTags).toHaveLength(2);
-    for (let imageTag of carouselImageTags) expect(imageTag).toHaveClass('img-fluid slide');
 
-    rerender(<SimpleCarousel images={imageSet} viewWidth={smallTabletHighEndWidth} className="foobar" />);
+    const carouselImageTags = screen.getAllByRole('img');
+    expect(carouselImageTags).toHaveLength(2); //* Following is height/width aspect ratio check across 5 viewports, starting with 450/350 > 992px width
+    for (let imageTag of carouselImageTags) { expect(imageTag).toHaveAttribute('height', '450'); expect(imageTag).toHaveAttribute('width', '350') }
+    rerender(<SimpleCarousel images={imageSet} viewWidth={averageTabletViewWidth} className="foobar" />); //* 500/350 at 991-768px width
+    for (let imageTag of carouselImageTags) { expect(imageTag).toHaveAttribute('height', '500'); expect(imageTag).toHaveAttribute('width', '350') }
+
+    rerender(<SimpleCarousel images={imageSet} viewWidth={smallTabletHighEndWidth} className="foobar" />); //* 550/425 at 767-576px width
     expect(carouselRoot).toHaveClass('full carousel slide foobar', { exact: true });
-    expect(carouselImageTags).toHaveLength(2);
-    for (let imageTag of carouselImageTags) expect(imageTag).toHaveClass('img-fluid mobileSlide');
+    for (let imageTag of carouselImageTags) { expect(imageTag).toHaveAttribute('height', '550'); expect(imageTag).toHaveAttribute('width', '425') }
+
+    rerender(<SimpleCarousel images={imageSet} viewWidth={mobileHighEndWidth} className="foobar" />); //* 450/330 at 575-360px width
+    for (let imageTag of carouselImageTags) { expect(imageTag).toHaveAttribute('height', '450'); expect(imageTag).toHaveAttribute('width', '330') }
+    rerender(<SimpleCarousel images={imageSet} viewWidth={miniMobileHighEndWidth} className="foobar" />); //* 450/280 < 360px width
+    for (let imageTag of carouselImageTags) { expect(imageTag).toHaveAttribute('height', '450'); expect(imageTag).toHaveAttribute('width', '280') }
   })
   test("display captions if the property is available", () => {
     const { rerender } = render(<SimpleCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)

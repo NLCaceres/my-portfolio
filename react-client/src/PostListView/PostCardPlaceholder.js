@@ -31,7 +31,7 @@ const PostCardListPlaceholder = ({viewWidth, numPlaceholders = 4}) => {
 const PostCardPlaceholder = ({className, rowClasses}) => {
   return (
     <Card className={`${PostCardCss.postCard} ${PlaceholderCss.postCard} ${className || ''}`.trim()}>
-      <Row className={`no-gutters ${PlaceholderCss.cardRow} ${rowClasses || ''}`.trim()} data-testid="placeholder-row">
+      <Row className={`g-0 ${PlaceholderCss.cardRow} ${rowClasses || ''}`.trim()} data-testid="placeholder-row">
         <Col xs="12" md="3" lg="2" className="d-flex justify-content-center align-self-center"> 
           <PlaceHolderImg /> 
         </Col>
