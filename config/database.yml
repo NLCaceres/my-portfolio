@@ -23,7 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: resume_react_rails_development
+  database: resume_react_rails-development
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -57,7 +57,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: resume_react_rails_test
+  database: resume_react_rails-test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -80,7 +80,7 @@ test:
 #
 production:
   <<: *default
-  database: resume_react_rails_production
+  database: resume_react_rails-production
   # //? Following would work for running prod mode locally BUT
   # //? When a Rails app is sent up to Heroku MOST of this file doesn't matter
   # //? Heroku Rails apps default to the DB url set in Heroku's config vars, DATABASE_URL (without needing to appear or be set anywhere in the project)
