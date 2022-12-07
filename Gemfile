@@ -32,6 +32,7 @@ gem 'devise', '~> 4.8'
 gem 'activeadmin', '~> 2.10'
 # Rack-Attack (Adds throttling and blacklisting to Rack apps like Rails)
 gem 'rack-attack', '>= 6.5', '< 6.8' # Based on current pace, 6.8 would drop ruby 2.7 BUT Rails 7 may be ready + have Ruby 3 support
+gem 'net-http' # Correct issue w/ net-imap, a dependency of mail, which ActionMail depends on (Likely fixed by Ruby3)
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
