@@ -3,13 +3,14 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "^16.14.0",
-    "yarn": "^1.22.17",
-    "npm": "^8.5.4"
+    "node": "^18.9.0",
+    "yarn": "^1.22.19",
+    "npm": "^8.19.1"
   },
   "scripts": {
-    "build": "yarn --cwd react-client install && yarn --cwd react-client build",
-    "deploy": "cp -a react-client/build/. public/",
-    "heroku-postbuild": "yarn build && yarn deploy"
+    "railway-install": "yarn --cwd react-client install --frozen-lockfile",
+    "railway-build": "yarn --cwd react-client build",
+    "railway-copy": "cp -a react-client/build/. public/",
+    "railway-deploy": "yarn railway-build && yarn railway-copy"
   }
 }

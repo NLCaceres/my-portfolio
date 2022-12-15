@@ -22,7 +22,7 @@ const Footer = props => {
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text className={`mx-sm-1 text-dark fst-italic ${FooterCss.navbarText}`}>Built by Nick Caceres,</Navbar.Text>
           <Navbar.Text className={`mx-sm-1 text-dark fst-italic ${FooterCss.navbarText}`}>Crafted with React & Rails,</Navbar.Text>
-          <Navbar.Text className={`mx-sm-1 text-dark fst-italic ${FooterCss.navbarText}`}>Powered by Heroku</Navbar.Text>
+          <Navbar.Text className={`mx-sm-1 text-dark fst-italic ${FooterCss.navbarText}`}>Powered by Railway</Navbar.Text>
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,0 +1,11 @@
+[phases."node:setup"]
+nixPkgs = ['nodejs', 'yarn']
+
+[phases.install]
+cmds = ['bundle install --jobs 1']
+
+[phases."node:install"]
+cmds = ['yarn railway-install']
+
+[phases.build]
+cmds = ['yarn railway-deploy', 'bundle exec rake assets:precompile']
