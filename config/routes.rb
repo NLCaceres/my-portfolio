@@ -10,5 +10,6 @@ Rails.application.routes.draw do
 
   scope '/api' do
     resources :posts
+    get '/routes', to: 'application#routes', as: 'routes' # 'as' symbol help form route name (i.e. 'routes_url' or 'routes_path')
   end
 end
