@@ -2,6 +2,17 @@ require 'test_helper'
 
 #* Tests common redirect to React Frontend as well as GET RoutesList response
 class ApplicationControllerTest < ActionDispatch::IntegrationTest
+  test 'should notify user that server is unavailable or successfully perform dev redirect' do
+    get '/health-check'
+    if ENV['RAILS_ENV'] == 'production'
+      #* During tests (RailsServerConst = false || PumaProgramName = false && PumaServerConst = true)
+      #* Check therefore fails so GET unavailable response
+      assert_response :service_unavailable
+    else #* Following represents typical fallback_redirect development route
+      assert_response :redirect
+      assert_redirected_to 'http://www.example.com:3000/portfolio'
+    end
+  end
   test 'should redirect' do
     get '/foo' #* Fires off request on port 3001 but will always redirect to 3000
     if ENV['RAILS_ENV'] == 'production'

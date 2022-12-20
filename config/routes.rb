@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  get '/health-check', to: 'application#health_check'
   get '*path', to: 'application#fallback_redirect', constraints: ->(request) { !request.xhr? && request.format.html? }
 
   scope '/api' do
