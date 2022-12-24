@@ -32,6 +32,14 @@ While writing the two apps, I had plenty of time to think about the number of pr
     BUT updating as much as it can nonetheless. This can be good and bad! It'll resolve any Gemfile lock issues as an example but may cause breaking changes
   - `bundle outdated --minor` and `bundle outdated --filter-minor` particularly helpful for checking for smaller upgrades and preventing said breaking changes before running `bundle update`
     - BUT just flat out using `bundle update --minor` DOES guarantee only minor upgrades (e.g. 1.0 to 1.1) will happen if the Gemfile permits such updates to happen for certain packages (i.e. "~> 1.0" and "'>= 1.0', '< 2.0'" would both get minor updates!)
+- Bundler can be configured via a file named 'config' placed in a '.bundle' folder
+  - There is a TON of options to configure how Bundler runs. [For the keys, check out this 'bundler config' doc page](https://bundler.io/v2.3/man/bundle-config.1.html)
+    - BUT the most important key is 'path' which defines where Bundler installs gems
+      - To set it, run `bundle config set --local path vendor/bundle`
+      - Typically 'path' is set to vendor/bundle (same as running `bundle install --deployment`)
+      - Setting 'path' avoids installing gems to the global gem list, isolating your app
+  - To create a config file, just run `bundle config set --local <key> <value>`. By setting some config key, bundler will automatically create the config file with the new value all setup and ready to go.
+    - The local flag isn't technically needed since it's the default (as opposed to --global) BUT it's a useful reminder that you're configuring your local directory
 ### Rails and its Commands
 - Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
   - For list of commands, run `bin/rails` in the root rails dir
@@ -43,6 +51,36 @@ While writing the two apps, I had plenty of time to think about the number of pr
         - Patch updates (ex: 5.2.4 to 5.2.6) still make a new_framework_defaults file BUT in that case, config.load_defaults does not need to be updated ('config.load_defaults 5.2') and nothing should break.
   - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
   - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
+### Debugging Rails 6+ Apps on Ruby 3+ via Ruby's debug gem
+- Must use the VSCode rdbg extension to attach the gem to a process started by the `rdbg` command
+  - Ex: `bin/rdbg -n --open=vscode -c -- bin/rails s` to start the server process, letting it wait for a debugger to attach
+    - To use 'bin/rdbg', must generate a binstub for ruby/debug's rdbg via `bundler binstubs debug`
+  - THEN go to VSCode's `Run and Debug` Tab and launch `Attach rdbg` to start debugging!
+    - Launch.json Config: 
+      - `{ "type": "rdbg", "name": "Attach rdbg", "request": "attach", "rdbgPath": "${workspaceRoot}/path/to/exe/rdbg" }`
+    - rdbgPath ex: `"rdbgPath": "${workspaceRoot}/vendor/bundle/ruby/3.1.0/gems/debug-1.7.1/exe/rdbg"`
+- BUT to debug Rails tests, we need a bit more complex launch.json config as seen below!
+  ```
+  { 
+    "type": "rdbg", 
+    "request": "launch", 
+    "rdbgPath": "${workspaceRoot}/path/to/exe/rdbg", 
+    "command": "${workspaceRoot}/bin/rails", 
+    "script": "test", 
+    "args": []
+  }
+  ```
+  - Several key differences: 
+    - "request" must be set to launch
+    - "command" must be simply set to 'bin/rails'
+    - "script" set to 'test'
+    - Odd note: "Args" must be set but since we have no flags or args to include it simply is an empty array.
+  - ADDITIONALLY, MUST modify two files before starting the tests w/ debugger
+    - 'bin/rails' file must comment out line 2 to prevent Spring preloader from launching its own process since ruby/debug can't attach itself to Spring
+    - 'test_helper' file must run 'parallelize(workers: 1)' to prevent multiple processes from launching since they can force-complete the tests, skipping breakpoints
+- Why not use byebug or ruby-debug-ide?
+  - Byebug is a bit simple. Useful! but not powerful nor well integrated with VSCode
+  - ruby-debug-ide, on the other hand, as of Dec 2022, has issues running on MacOS due to debase 0.2.4 (that are seemingly unlikely to be fixed soon)
 ### My Package.json Commands
 - Preface to next point, Facebook still uses yarn primarily BUT since yarn is installed via NPM (on Railway), it's pretty easy to get confused. 
   - `npx create-react-app app-name` still used to make a new React app. 

@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.0'
+ruby '3.1.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.3', '>= 6.1.3.2' # '~> 6.0.2', '>= 6.0.2.1' 
@@ -34,11 +34,8 @@ gem 'activeadmin', '~> 2.10'
 gem 'rack-attack', '>= 6.5', '< 6.8' # Based on current pace, 6.8 would drop ruby 2.7 BUT Rails 7 may be ready + have Ruby 3 support
 gem 'net-http' # Correct issue w/ net-imap, a dependency of mail, which ActionMail depends on (Likely fixed by Ruby3)
 
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'ruby-debug-ide'
-  gem 'debase'
+group :development, :test do #? Replace byebug & ruby-debug+debase with Rails 7's choice Ruby's default: debug
+  gem 'debug', ">= 1.0.0", platforms: [:mri, :mingw, :x64_mingw]
 end
 
 group :development do

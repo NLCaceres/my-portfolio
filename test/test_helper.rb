@@ -7,6 +7,8 @@ class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors) #? Default grabs # of cores on your computer to parallelize work
   #? Any # above 1 will begin making copies of your test db (testdb-0, testdb-1, etc...)
+  #? Using 'workers: 1' + commenting out 'bin/rails' ln2 allows rdbg to debug tests in VSCode launch.json
+  #? Because multiple processes + Spring preloader can cause ruby/debug to detach
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
