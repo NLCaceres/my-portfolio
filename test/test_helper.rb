@@ -2,10 +2,11 @@ ENV['RAILS_ENV'] = 'test' #? Set to 'production' to imitate Railway (likely need
 require_relative '../config/environment'
 require 'rails/test_help'
 require 'test_helpers/redirect_assertions'
+require 'test_helpers/common_headers'
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
-  parallelize(workers: :number_of_processors) #? Default grabs # of cores on your computer to parallelize work
+  parallelize(workers: 1) #? Default arg, :number_of_processors, grabs # of cores on your computer to parallelize work
   #? Any # above 1 will begin making copies of your test db (testdb-0, testdb-1, etc...)
   #? Using 'workers: 1' + commenting out 'bin/rails' ln2 allows rdbg to debug tests in VSCode launch.json
   #? Because multiple processes + Spring preloader can cause ruby/debug to detach
@@ -20,4 +21,5 @@ end
 #? Also need to be sure to add "require 'test_helper'" at the top of the file!
 class ActionDispatch::IntegrationTest
   include RedirectAssertions
+  include CommonHeaders
 end

@@ -15,34 +15,34 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_redirect_to_react
   end
   test 'should send BAD_REQUEST if improper headers sent to API' do
-    get posts_url, headers: { 'ACCEPT' => '*/*' }
+    get posts_url, headers: accept_header('*/*')
     assert_response :bad_request
 
-    get post_url(Post.first), headers: { 'ACCEPT' => '*/*' }
+    get post_url(Post.first), headers: accept_header('*/*')
     assert_response :bad_request
 
     post posts_url
     assert_response :bad_request
 
-    post posts_url, headers: { 'ACCEPT' => '*/*' }
+    post posts_url, headers: accept_header('*/*')
     assert_response :bad_request
 
     put post_url(Post.first)
     assert_response :bad_request
 
-    put post_url(Post.first), headers: { 'ACCEPT' => '*/*' }
+    put post_url(Post.first), headers: accept_header('*/*')
     assert_response :bad_request
 
     delete post_url(Post.first)
     assert_response :bad_request
 
-    delete post_url(Post.first), headers: { 'ACCEPT' => '*/*' }
+    delete post_url(Post.first), headers: accept_header('*/*')
     assert_response :bad_request
   end
 
   #* Index GET requests
   test 'should GET index and return array' do
-    get posts_url, headers: { 'ACCEPT' => 'application/json' }
+    get posts_url, headers: accept_header
     assert_response :success #? Success symbol accounts for all 400-499 status codes
 
     all_posts = @response.parsed_body
@@ -54,7 +54,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
   test 'should GET index and return ONLY About post if query param is null' do
     about_post_only_url = "#{posts_url}?project_type=null"
-    get about_post_only_url, headers: { 'ACCEPT' => 'application/json' }
+    get about_post_only_url, headers: accept_header
     about_post_only = @response.parsed_body
     #? Only one Post should be returned, so 'to_json()' returns a hash, not an array
     assert_instance_of Hash, about_post_only
@@ -62,7 +62,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   end
   test 'should GET index and return filtered array of particular project type' do
     android_posts_only_url = "#{posts_url}?project_type=android"
-    get android_posts_only_url, headers: { 'ACCEPT' => 'application/json' }
+    get android_posts_only_url, headers: accept_header
     android_posts = @response.parsed_body
     #? Multiple Posts should be returned, so 'to_json()' returns an Arr
     assert_instance_of Array, android_posts
@@ -76,13 +76,13 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
   test 'should GET index and return an empty array if invalid query param values' do
     #* Test that unexpected params fail
     empty_list_url = "#{posts_url}?project_type=fail"
-    get empty_list_url, headers: { 'ACCEPT' => 'application/json' }
+    get empty_list_url, headers: accept_header
     no_posts = @response.parsed_body
     assert_instance_of Array, no_posts #? Empty Arr expected
     assert_equal 0, no_posts.length
 
     second_empty_list_url = "#{posts_url}?project_type=0"
-    get second_empty_list_url, headers: { 'ACCEPT' => 'application/json' }
+    get second_empty_list_url, headers: accept_header
     second_no_posts = @response.parsed_body
     assert_instance_of Array, second_no_posts
     assert_equal 0, second_no_posts.length
@@ -90,38 +90,38 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
   #* Show GET request
   test 'should GET show if resource exists' do
-    get post_url(Post.first), headers: { 'ACCEPT' => 'application/json' }
+    get post_url(Post.first), headers: accept_header
     assert_response :success
 
     only_post = @response.parsed_body
     assert_equal 'Barfoo', only_post['title'] #* Post.first seems to grab last listed fixture
 
-    get post_url(-1), headers: { 'ACCEPT' => 'application/json' }
+    get post_url(-1), headers: accept_header
     assert_response :not_found
   end
 
   #* Auth Filter
   test 'should ONLY authorize create update or delete for admins' do
     #* Missing auth
-    post posts_url, headers: { 'ACCEPT' => 'application/json' }
+    post posts_url, headers: accept_header
     assert_response :unauthorized
 
-    put post_url(Post.first), headers: { 'ACCEPT' => 'application/json' }
+    put post_url(Post.first), headers: accept_header
     assert_response :unauthorized
 
-    delete post_url(Post.first), headers: { 'ACCEPT' => 'application/json' }
+    delete post_url(Post.first), headers: accept_header
     assert_response :unauthorized
 
     #* With auth
     sign_in admin_users(:admin)
 
-    post posts_url, headers: { 'ACCEPT' => 'application/json' }, params: { post: { title: 'This title' } }
+    post posts_url, headers: accept_header, params: { post: { title: 'This title' } }
     assert_response :created
 
-    put post_url(Post.first), headers: { 'ACCEPT' => 'application/json' }, params: { post: { title: 'New Title' } }
+    put post_url(Post.first), headers: accept_header, params: { post: { title: 'New Title' } }
     assert_response :ok
 
-    delete post_url(Post.first), headers: { 'ACCEPT' => 'application/json' }
+    delete post_url(Post.first), headers: accept_header
     assert_response :no_content
   end
 end
