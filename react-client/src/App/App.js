@@ -13,14 +13,12 @@ import Footer from "../Footer/Footer";
 import UnavailableFeatureAlert from "../Utility/Components/AlertUnavailableFeature";
 //import * as serviceWorker from "./serviceWorker";
 
-class App extends Component { //todo Should refactor App as func component to show Recaptcha via improved ReactRouter hooks
+class App extends Component { //todo Should refactor App as func component to use improved ReactRouter hooks
   constructor(props) {
     super(props);
     this.state = {
       width: window.innerWidth,
       showModal: false,
-      //todo If App is a func Component then can show recaptcha via ReactRouter hooks in specific routes
-      showRecaptcha: false, 
       showAlert: false
     };
 
@@ -30,45 +28,10 @@ class App extends Component { //todo Should refactor App as func component to sh
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener("resize", throttle(this.updateWindowDimensions(), 500));
-    window.addEventListener("load", this.setRecaptchaBadge);
-    this.setRecaptchaBadge(); //* If already set, then no code run
   }
 
   componentWillUnmount() {
-    window.removeEventListener("load", this.setRecaptchaBadge);
-    this.recaptchaBadge = null; //? Ref React pattern would usually handle nulling for us
     window.removeEventListener("resize", throttle(this.updateWindowDimensions(), 500));
-  }
-
-  setRecaptchaBadge = () => { //? Arrow Functions are an alternative to using bind() in ES6 classes
-    if (!this.recaptchaBadge) {
-      const recaptchaBadgeCheck = document.getElementsByClassName('grecaptcha-badge'); //* returns Array
-      if (recaptchaBadgeCheck && recaptchaBadgeCheck.length > 0) {
-        this.recaptchaBadge = recaptchaBadgeCheck[0]; //* Should have 1 recaptcha so checking 0 index so should avoid undefined issue
-        if (window.location.pathname === '/contact-me') {
-          this.recaptchaBadge.style.display = 'block'
-          this.setState({ showRecaptcha: true });
-        } else {
-          this.recaptchaBadge.style.display = "none";
-          this.setState({ showRecaptcha: false });
-        }
-      }
-    }
-  }
-  showRecaptcha = (shouldShow) => {
-    if (this.recaptchaBadge) {
-      const showRecaptchaBadge = shouldShow ?? !this.state.showRecaptcha; //? Safe way to compute state based on prevState
-      this.setState({ showRecaptcha: showRecaptchaBadge }); //? Do NOT compute state based on prevState in setState call
-      if (showRecaptchaBadge) {
-        this.recaptchaBadge.style.display = "block"
-        //? Setting a CSS attr to "" removes the attr (if invalid) whereas 'auto' (the default)
-        //? OR 'initial' may keep the attr and unintendedly style element
-        this.recaptchaBadge.style['z-index'] = 1051 //? 1051 > 1050 for the modal z-index (so it's not shadowed)
-      } else {
-        this.recaptchaBadge.style.display = "none";
-        this.recaptchaBadge.style['z-index'] = ""; 
-      }
-    }
   }
 
   updateWindowDimensions = () => { //? Using arrow funcs eliminates the need for bind
@@ -77,7 +40,6 @@ class App extends Component { //todo Should refactor App as func component to sh
 
   modalOpen = (shouldShow = true) => { //* Called with false value by form submit method
     ConsoleLogger(`Opening modal ${shouldShow}`);
-    this.showRecaptcha(shouldShow);
     this.setState({ showModal: shouldShow });
   }
 
@@ -88,10 +50,9 @@ class App extends Component { //todo Should refactor App as func component to sh
     }
   }
 
-  submitContactForm = (event) => {
-    event.preventDefault(); event.stopPropagation(); //* Prevent page reload
+  submitContactForm = (successful) => {
     this.modalOpen(false);
-    this.showAlert();
+    if (process.env.REACT_APP_CONTACTABLE === 'false') { this.showAlert() }
   }
 
   render() {
@@ -101,7 +62,7 @@ class App extends Component { //todo Should refactor App as func component to sh
       <BrowserRouter> 
         <SimpleNavBar viewWidth={ this.state.width } />
       
-        <MainRoutes viewWidth={ this.state.width } showRecaptcha={ this.showRecaptcha }/>
+        <MainRoutes viewWidth={ this.state.width } />
         
         <UnavailableFeatureAlert show={ this.state.showAlert } setShow={ this.showAlert} />
         
@@ -130,7 +91,7 @@ const MainRoutes = props => {
       { mainRoutes }
       
       <Route exact path="/contact-me" >
-        <ContactPage onMount={ props.showRecaptcha } viewWidth={props.viewWidth} />
+        <ContactPage viewWidth={props.viewWidth} />
       </Route>
       <Route exact path="/" render={() => <Redirect to="/portfolio/about-me" />} /> 
       {/*//* Need above 'home' route before the next redirect, or always get 404. Shows importance of order of routes/redirects */}

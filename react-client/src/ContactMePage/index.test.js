@@ -3,14 +3,11 @@ import { render, screen } from '@testing-library/react';
 import ContactPage from '.';
 import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 
-//? jest.mock() hoists above imports so use jest.doMock() as a per test option
-jest.mock('../Utility/Hooks/UseRecaptcha', () => {
-  //? Only need a partial mock? Store jest.requireActual('dir') in originalModule var, then add '...originalModule' to following obj
-  return {
-    __esModule: true, 
-    default: () => 1,
-  }
-})
+//? jest.mock() hoists above imports which makes it file wide and work for every test below SO
+//? If a per-test option is needed, must use "jest.doMock()" (See ContactPageForm.test for example)
+jest.mock('../Utility/Components/TurnstileWidget', () => ({action, successCB, className }) => {
+  return (<div>Dummy Node</div>);
+}); 
 
 describe("renders a simple contact page with a form component", () => {
   test("that accepts a custom onMount + onUnmount function", () => {
@@ -20,12 +17,12 @@ describe("renders a simple contact page with a form component", () => {
     unmount();
     expect(mountingSpy).toHaveBeenCalledTimes(2);
   })
-  test("with an inline-styled container, form container with css modules, & form in dark mode", () => {
+  test("with a parent & form container using css modules, & form in dark mode", () => {
     render(<ContactPage />);
     const headerTag = screen.getByRole('heading', { name: /contact me page!/i });
     const parentContainer = headerTag.parentElement;
     expect(parentContainer).toBeInTheDocument();
-    expect(parentContainer).toHaveStyle('paddingLeft: 10px; paddingRight: 10px')
+    expect(parentContainer).toHaveClass('contact-page')
 
     const formParentContainer = headerTag.nextSibling;
     expect(formParentContainer).toBeInTheDocument();

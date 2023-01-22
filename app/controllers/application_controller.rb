@@ -3,22 +3,23 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def health_check
-    in_production = ENV['RAILS_ENV'] == 'production' #? If deployed then true! SO
-    not_serving = !rails_server? && !puma_server? #? Check if running migrations then not_serving == true!
-    in_production && not_serving ? (head :service_unavailable) : fallback_redirect #? Else Rails is ready, so run React Redirect
+    not_serving = !rails_server? && !puma_server? #? If running migrations, then not_serving == true!
+    production? && not_serving ? (head :service_unavailable) : fallback_redirect #? Else Rails' ready, so run Redirect
   end
 
-  #* Both root + "*path" routes (config/routes) point to the following method
+  #* Both root + "*path" routes (see config/routes) point to the following method
   def fallback_redirect
-    if ENV['RAILS_ENV'] == 'production' #? Send React app file in prod, else let it redirect
-      send_file "#{Rails.root}/public/index.html", type: 'text/html; charset=utf-8', disposition: 'inline', status: 200
+    set_csrf_cookie
+    if production? #? 'send_file' vs 'render file: 'public/index.html' = send_file is faster since no layout being used
+      #? On the other hand, w/out file or 'public' (i.e. render 'index') the application/index.html.erb layout is sent
+      #? Below: type sets mimeType, disposition either displays or downloads the file
+      send_file "#{Rails.root}/public/main.html", type: 'text/html; charset=utf-8', disposition: 'inline', status: 200
     else #? In dev + tests, redirect to 'localhost:3000/', so the React dev server can send the app
       redirect_to "#{request.protocol}#{request.host}:3000/portfolio"
     end
-    # render 'index' #? Would make a request to application/index.html.erb
   end
 
-  # Following route only occurs if specific headers included with GET request
+  #* Following route occurs only if specific headers included with GET request
   def routes
     if request.headers['Accept'] != 'application/json'
       render json: 'Invalid accept header', status: :bad_request
@@ -27,6 +28,16 @@ class ApplicationController < ActionController::Base
       Rails.application.routes.routes.each { |r| route_arr.push(route_hash(r)) if path_starts_with?(r, 'api') }
       render json: route_arr
     end
+  end
+
+  #* POST request to send email BUT 1st check with turnstile backend if human
+  def send_email
+    # puts "Request Origin = #{request.origin}"
+    # puts "Request Base URL = #{request.base_url}"
+    turnstile_res = turnstile_check(params[:cfToken], request.remote_ip)
+    http_status = turnstile_res['success'] == true ? :ok : :forbidden
+    #* Include email sending logic here via params[:email] and params[:message]
+    render json: turnstile_res, status: http_status
   end
 
   private
@@ -39,6 +50,10 @@ class ApplicationController < ActionController::Base
   #? BUT PROGRAM_NAME.include?('puma') == false && Puma.const_defined?('Server') == true
   def puma_server?
     $PROGRAM_NAME.include?('puma') && Puma.const_defined?('Server')
+  end
+
+  def production?
+    ENV['RAILS_ENV'] == 'production'
   end
 
   def path_starts_with?(route, prefix)
@@ -54,5 +69,25 @@ class ApplicationController < ActionController::Base
       controller: route.defaults[:controller].to_s,
       action: route.defaults[:action].to_s
     }
+  end
+
+  def set_csrf_cookie
+    csrf_token = { value: form_authenticity_token, same_site: :strict }
+    #? Domain does not consider 'localhost' OR '127.0.0.1' to be a valid domain
+    #? So don't use it NOR the 'secure' attribute in development
+    if production? #* If in production, add following to csrf token cookie
+      csrf_token[:secure] = true #? If also added httpOnly = true, then javascript couldn't access cookie in React
+      csrf_token[:domain] = 'caceres-portfolio.up.railway.app'
+    end
+    cookies['CSRF-TOKEN'] = csrf_token
+  end
+
+  def turnstile_check(cf_token, remote_ip)
+    uri = URI('https://challenges.cloudflare.com/turnstile/v0/siteverify')
+    res = Net::HTTP.post_form(uri, { 'secret' => ENV['TURNSTILE_SECRET_KEY'], 'response' => cf_token, 'remoteip' => remote_ip })
+    res_json = JSON.parse(res.body) #? Gets a HASH so remove other keys and return json object with key and value
+    res_json.delete('hostname')
+    res_json[:message] = res_json['success'] == true ? 'Successfully sent your email!' : 'Unable to send your email!'
+    res_json
   end
 end
