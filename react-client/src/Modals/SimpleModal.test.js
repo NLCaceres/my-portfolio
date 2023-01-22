@@ -52,7 +52,7 @@ describe("renders a react-bootstrap modal", () => {
     expect(modalBody).toBeInTheDocument();
   })
   
-  //* CSS class - content, header, title, body, footer
+  //* CSS class - dialogBox, content, header, title, body, footer
   test("each section able to pass in and calculate its CSS classes", () => {
     const { rerender } = render(
       <SimpleModal show={true} ID='foobar' contentClasses={'content-class'} headerClasses={'header-class'} bodyClasses={'body-class'}
@@ -60,7 +60,10 @@ describe("renders a react-bootstrap modal", () => {
           <h3>Barfoo</h3>
       </SimpleModal>
     );
-    const modalContent = screen.getByRole('dialog').firstChild.firstChild; //* Content within dialogBox which is in modal parent
+    const modalDialogBox = screen.getByRole('dialog').firstChild;
+    expect(modalDialogBox).toHaveClass('dialogBox');
+
+    const modalContent = modalDialogBox.firstChild; //* Content within dialogBox which is in modal parent
     expect(modalContent).toHaveClass('content-class');
     expect(modalContent).toHaveClass('modal-content content content-class', { exact: true });
 

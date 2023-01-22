@@ -2,6 +2,7 @@ import React from "react";
 import SimpleModalCss from "./SimpleModal.module.css";
 import Modal from 'react-bootstrap/Modal';
 import { CreateID } from "../Utility/Functions/ComputedProps";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 let modalCount = 0;
 const propIdOrModalId = id => {
@@ -24,7 +25,7 @@ const SimpleModal = props => {
   const computedID = propIdOrModalId(props.ID);
 
   return (
-    <Modal centered show={ props.show } onHide={ props.onHide }
+    <Modal centered show={ props.show } onHide={ props.onHide } dialogClassName={`${SimpleModalCss.dialogBox}`}
       aria-labelledby={computedID} contentClassName={`${SimpleModalCss.content} ${props.contentClasses || ''}`.trim()}>
         { props.title && 
           <ModalHeader ID={ computedID } className={`${props.headerClasses || ''}`} titleClasses={`${props.titleClasses || ''}`}>

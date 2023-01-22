@@ -6,21 +6,15 @@ import { averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Cons
 import { MemoryRouter } from 'react-router-dom';
 
 describe("renders a simple styled navbar", () => {
-  test("that reorders itself on smaller screens", () => {
-    const { rerender } = render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
+  test("that reorders itself on smaller screens via css modules", () => {
+    render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
     const collapseView = screen.getByTestId('nav-collapse');
-    expect(collapseView).not.toHaveClass('order-2')
+    expect(collapseView).toHaveClass('nav-collapse');
 
     const navItemContainer = collapseView.firstChild;
-    expect(navItemContainer).toHaveClass('flex-row')
-    expect(navItemContainer).not.toHaveClass('flex-column')
-
-    rerender(<SimpleNavbar viewWidth={smallTabletHighEndWidth}/>, { wrapper: MemoryRouter })
-    expect(collapseView).toHaveClass('order-2')
-    expect(navItemContainer).not.toHaveClass('flex-row')
-    expect(navItemContainer).toHaveClass('flex-column')
+    expect(navItemContainer).toHaveClass('nav-container');
   })
-  test("that sets up navBrand + 4 specific navLinks with a scroll up on click and parent navItem inline-styled", async () => {
+  test("that sets up navBrand + 4 specific navLinks with a scroll up on click and parent navItem using css modules", async () => {
     const scrollSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => 1);
     const user = userEvent.setup();
     render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
@@ -48,6 +42,5 @@ describe("renders a simple styled navbar", () => {
     
     const backEndNavItem = backEndNavLink.parentElement;
     expect(backEndNavItem).toHaveClass('navItem');
-    expect(backEndNavItem).toHaveStyle('height: 40px');
   })
 })

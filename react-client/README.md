@@ -16,6 +16,10 @@
 ## Recent Changes
 - Handle Railway changes
 - Bootstrap 5 + React-Bootstrap 2 migration
+  - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
+  - BUT use Bootstrap's helper classes if they provide multiple CSS rules at once
+    - Ex: 'display-2' under the hood is actually 'font-weight', 'font-size', and 'line-height' for a very specific look!
+    - On other hand, 'flex-grow-1' just adds 'flex-grow: 1', so instead use a CSS Module that combines it with other flex rules for that element
 - Update engines to Node 18, NPM 8, Yarn 1.22.19
 
 ## Quick Notes

@@ -17,6 +17,7 @@
 
 .navLink {
   font-weight: 550;
+  padding: 5px 15px 5px 15px;
 }
 .navLink:hover, .navLink:active {
   border-width: 2px;
