@@ -51,6 +51,11 @@ While writing the two apps, I had plenty of time to think about the number of pr
         - Patch updates (ex: 5.2.4 to 5.2.6) still make a new_framework_defaults file BUT in that case, config.load_defaults does not need to be updated ('config.load_defaults 5.2') and nothing should break.
   - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
   - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
+  - A weird quirk about Rails! Its root route only works if there is no index.html file in its public folder!
+    - Therefore if you want to run a controller action instead of serving that index.html file, you MUST rename the index.html file 
+    or simply delete it all together
+    - Since React creates a index.html file by default during its build process, it's important to rename it and serve our renamed file instead
+    so we can actually see React do its magic once served by the controller's action (in this case application#fallback_redirect)
 ### Debugging Rails 6+ Apps on Ruby 3+ via Ruby's debug gem
 - Must use the VSCode rdbg extension to attach the gem to a process started by the `rdbg` command
   - Ex: `bin/rdbg -n --open=vscode -c -- bin/rails s` to start the server process, letting it wait for a debugger to attach
