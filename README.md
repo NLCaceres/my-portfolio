@@ -42,6 +42,9 @@ While writing the two apps, I had plenty of time to think about the number of pr
     - The local flag isn't technically needed since it's the default (as opposed to --global) BUT it's a useful reminder that you're configuring your local directory
 ### Rails and its Commands
 - Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
+  - To make it easier to swap out Env variables while running Rails & the React Dev Server locally, use the `heroku local` command
+    - `heroku local -f Procfile.dev` 
+    - Any .env file will be auto-grabbed and used to run the commands inside the Procfile so they have access to the vars set inside it.
   - For list of commands, run `bin/rails` in the root rails dir
   - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
     - Running this command makes a 'new_framework_defaults' file, which lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (e.g. 6.0 to 6.1). 
