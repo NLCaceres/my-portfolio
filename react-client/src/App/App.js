@@ -1,7 +1,6 @@
-import throttle from "lodash/throttle";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 // import "./App.css";
-import React, { Component } from "react";
+import debounce from "lodash/debounce";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";
 import SimpleNavBar from "../SimpleNavbar/SimpleNavbar";
 import PostListView from "../PostListView/PostListView.js";
@@ -11,70 +10,48 @@ import ContactPageForm from "../ContactMePage/ContactPageForm";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import Footer from "../Footer/Footer";
 import UnavailableFeatureAlert from "../Utility/Components/AlertUnavailableFeature";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //import * as serviceWorker from "./serviceWorker";
 
-class App extends Component { //todo Should refactor App as func component to use improved ReactRouter hooks
-  constructor(props) {
-    super(props);
-    this.state = {
-      width: window.innerWidth,
-      showModal: false,
-      showAlert: false
-    };
+const App = () => { //todo Add ReactRouter hooks in PostList & NotFoundPage probably
+  const [width, setWidth] = useState(window.innerWidth);
+  const [showModal, setShowModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  useEffect(() => { //? Use debounce to group all resize events into a single setWidth call
+    const updateWidth = debounce(() => setWidth(window.innerWidth), 500); //? After 500ms passes w/out a new resize event
+    window.addEventListener("resize", updateWidth) //? Throttle would let the width be updated every 500ms
+    return () => { window.removeEventListener("resize", updateWidth) };
+  }, []);
 
-    this.recaptchaBadge = null //? Similar to React Ref pattern, store dom node here in instance prop rather than in state
+  const tempShowAlert = (shouldShow = true) => { //* Displays alert for 5 seconds BUT allows early dismissal
+    setShowAlert(shouldShow);
+    if (shouldShow) { setTimeout(() => setShowAlert(false), 5000) } //* Let dismiss after 5 seconds if no user interaction
   }
 
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", throttle(this.updateWindowDimensions(), 500));
+  const submitContactForm = (successful) => {
+    setShowModal(false);
+    tempShowAlert(); //todo Use following conditional call in the future or a more custom colored one based on success for better UX
+    // if (process.env.REACT_APP_CONTACTABLE === 'false') { tempShowAlert() }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("resize", throttle(this.updateWindowDimensions(), 500));
-  }
-
-  updateWindowDimensions = () => { //? Using arrow funcs eliminates the need for bind
-    return throttle(() => { this.setState({ width: window.innerWidth }) } );
-  }
-
-  modalOpen = (shouldShow = true) => { //* Called with false value by form submit method
-    ConsoleLogger(`Opening modal ${shouldShow}`);
-    this.setState({ showModal: shouldShow });
-  }
-
-  showAlert = (shouldShow = true) => {
-    this.setState({ showAlert: shouldShow });
-    if (shouldShow) { //* If not dismissed by user, it'll dismiss itself
-      let that = this; setTimeout(function() { that.setState({ showAlert: false }) }, 5000);
-    }
-  }
-
-  submitContactForm = (successful) => {
-    this.modalOpen(false);
-    if (process.env.REACT_APP_CONTACTABLE === 'false') { this.showAlert() }
-  }
-
-  render() {
-    //* Prevent double redirects BUT on initial viewing redirect to /portfolio
-    return (
-      //? React-Router works in 3 parts, Router > Switch > Route/Redirect. You ALWAYS need those 3 parts, nested like so
-      <BrowserRouter> 
-        <SimpleNavBar viewWidth={ this.state.width } />
+  //* Prevent double redirects BUT on initial viewing redirect to /portfolio
+  return (
+    //? React-Router works in 3 parts, Router > Switch > Route/Redirect. You ALWAYS need those 3 parts, nested like so
+    <BrowserRouter> 
+      <SimpleNavBar viewWidth={ width } />
+    
+      <MainRoutes viewWidth={ width } />
       
-        <MainRoutes viewWidth={ this.state.width } />
-        
-        <UnavailableFeatureAlert show={ this.state.showAlert } setShow={ this.showAlert} />
-        
-        <Footer viewWidth={ this.state.width } modalOpen={ () => this.modalOpen(true) }/>
-        
-        <SimpleModal ID="contact-me" show={ this.state.showModal } onHide={ () => this.modalOpen(false) } title="Send Me a Message!"
-          headerClasses={`pt-2 pb-1`} titleClasses={`fw-bolder text-white`}>
-            <ContactPageForm onSubmitForm={ this.submitContactForm } />
-        </SimpleModal>
-      </BrowserRouter>
-    );
-  }
+      <UnavailableFeatureAlert show={ showAlert } setShow={ tempShowAlert } />
+      
+      <Footer viewWidth={ width } modalOpen={ () => setShowModal(true) }/>
+      
+      <SimpleModal ID="contact-me" show={ showModal } onHide={ () => setShowModal(false) } title="Send Me a Message!"
+        headerClasses={`pt-2 pb-1`} titleClasses={`fw-bolder text-white`}>
+          <ContactPageForm onSubmitForm={ submitContactForm } />
+      </SimpleModal>
+    </BrowserRouter>
+  );
 }
 
 const MainRoutes = props => {

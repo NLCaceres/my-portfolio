@@ -4,7 +4,7 @@
 - JSX Dot Notation to simplify imports + name clarity
   - Ex: `<PostCard.Image> { children } </PostCard.Image>`
 - Fully Functional Components (i.e. not class based)
-  - App + Carousel still class based. Last two remaining to update.
+  - PostList + Carousel still class based. Last two remaining to update.
   - Could then upgrade to React-Router-Dom 6 and use its Hooks (useLocation + useParams)
 - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
   - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
@@ -14,6 +14,8 @@
 - RPG-based Homepage to reduce wall of text feeling
 
 ## Recent Changes
+- Main App Component now in Hook Functional Component form
+  - Still need to do PostList & Carousel then can add in React Router Hooks
 - Handle Railway changes
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
