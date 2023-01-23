@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import SimpleNavbar from "./SimpleNavbar";
-import { averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
+import { averageTabletViewWidth } from "../Utility/Constants/Viewports";
 import { MemoryRouter } from 'react-router-dom';
 
 describe("renders a simple styled navbar", () => {
@@ -42,5 +42,7 @@ describe("renders a simple styled navbar", () => {
     
     const backEndNavItem = backEndNavLink.parentElement;
     expect(backEndNavItem).toHaveClass('navItem');
+    
+    scrollSpy.mockRestore();
   })
 })
