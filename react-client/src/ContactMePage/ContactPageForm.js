@@ -6,7 +6,8 @@ import Spinner from 'react-bootstrap/Spinner'
 import TurnstileWidget from '../Utility/Components/TurnstileWidget';
 import cnames from "classnames";
 import ContactPageFormCss from "./ContactPageForm.module.css";
-import { ProcessTurnstileResponse, SendEmail } from '../Utility/Functions/Api';
+import { SendEmail } from '../Api/Common';
+import { ProcessTurnstileResponse } from "../Api/ThirdParty"
 import ConsoleLogger from '../Utility/Functions/LoggerFuncs';
 
 const ContactPageForm = ({ onSubmitForm, darkMode }) => {

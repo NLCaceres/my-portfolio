@@ -3,13 +3,19 @@ import PostListView from "./PostListView";
 import { render, screen, prettyDOM } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProjectFactory from '../Utility/Functions/Tests/ProjectFactory';
-import * as Api from '../Utility/Functions/Api';
+import * as GetPostList from "../Api/ProjectAPI";
 import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 
 describe("renders a list of bootstrap cards filled with post objs", () => {
+  let ApiMock;
+  beforeEach(() => {
+    ApiMock = jest.spyOn(GetPostList, "default")
+  })
+  afterEach(() => { ApiMock.mockRestore() })
+
   test("only if the list has a set of major or minor projects", async () => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
-    const ApiMock = jest.spyOn(Api, 'default').mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
+    ApiMock.mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
     const { unmount } = render(<PostListView />);
     expect(await screen.findByRole('heading', { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: /small projects/i })).toBeInTheDocument();
@@ -40,12 +46,10 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     const morePlaceHolderImgs = screen.getAllByRole('heading', { name: /project/i }); //* 4 with class 'placeholderText;
     expect(placeHolderImgs).toHaveLength(4); expect(morePlaceHolderImgs[0]).toHaveClass('placeholderText');
     expect(screen.queryByRole('heading', { name: /(major|small) projects/i })).not.toBeInTheDocument();
-
-    ApiMock.mockRestore();
   })
   test("that depends on viewWidth to render a modal, correct size title, & zigzag post cards", async () => {
     const twoImgProj = ProjectFactory.create(2); const noImgProj = ProjectFactory.create(); const oneImgProj = ProjectFactory.create(1);
-    const ApiMock = jest.spyOn(Api, 'default').mockImplementation(() => ({ majorProjects: [twoImgProj, noImgProj], minorProjects: [oneImgProj] }) );
+    ApiMock.mockImplementation(() => ({ majorProjects: [twoImgProj, noImgProj], minorProjects: [oneImgProj] }) );
     const OpenModalSpy = jest.spyOn(PostListView.prototype, 'openModal');
     const user = userEvent.setup();
     const urlLocation = { pathname: '/foobar-title' };
@@ -83,10 +87,10 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
 
     for (const postCardRow of screen.getAllByTestId('post-card-row')) expect(postCardRow).not.toHaveClass('flex-row-reverse')
 
-    ApiMock.mockRestore(); OpenModalSpy.mockRestore();
+    OpenModalSpy.mockRestore();
   })
   test("that depends on a url location prop to set headers", async () => {
-    const ApiMock = jest.spyOn(Api, 'default').mockImplementation(() => ({ majorProjects: [ProjectFactory.create()] }) );
+    ApiMock.mockImplementation(() => ({ majorProjects: [ProjectFactory.create()] }) );
     const urlLocation = { pathname: '/foobar' };
     const { rerender } = render(<PostListView location={urlLocation} />);
     const titleHeader = await screen.findByRole('heading', { name: 'Foobar' });
@@ -106,7 +110,5 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
 
     rerender(<PostListView />); //* W/out a location prop - title header is empty
     expect(titleHeader).not.toBeInTheDocument();
-
-    ApiMock.mockRestore();
   })
 })

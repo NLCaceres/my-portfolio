@@ -2,7 +2,8 @@ import React from "react";
 import { render, fireEvent, waitFor, screen, prettyDOM } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
-import * as API from "../Utility/Functions/Api";
+import * as CommonAPI from "../Api/Common";
+import * as TurnstileAPI from "../Api/ThirdParty";
 import SilenceWarning from "../Utility/Functions/Tests/WarningSilencer";
 
 const originalEnv = process.env;
@@ -136,8 +137,8 @@ describe("renders the form for the contact page", () => {
     })
   })
   test("that accepts a customizable onSubmit callback", async () => {
-    const emailSenderMock = jest.spyOn(API, 'SendEmail').mockImplementation(() => '123');
-    const turnstileResponseMock = jest.spyOn(API, 'ProcessTurnstileResponse').mockImplementation(() => '123');
+    const emailSenderMock = jest.spyOn(CommonAPI, 'SendEmail').mockImplementation(() => '123');
+    const turnstileResponseMock = jest.spyOn(TurnstileAPI, 'ProcessTurnstileResponse').mockImplementation(() => '123');
     //? preventDefault prevents a jest-dom form submit 'not-implemented' err (better solution may one day come BUT this seems easiest/best)
     //? ALSO this trick assumes usage in onClick or onSubmit that accepts an event param by default!, if the func isn't used in that type of prop
     //? usage will not match since the func call probably won't have any params (or maybe too many!) and jest will throw an error that is e is undefined

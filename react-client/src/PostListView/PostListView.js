@@ -1,9 +1,10 @@
 import React from "react";
 import PostCard from "./PostCard";
 import CardImageModal from "../Modals/CardImageModal/CardImageModal";
-import GetPostList from "../Utility/Functions/Api";
+import GetPostList from "../Api/ProjectAPI";
 import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
 import PostCardListPlaceholder from "./PostCardPlaceholder";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* 'Import' loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
 

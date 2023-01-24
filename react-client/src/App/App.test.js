@@ -3,7 +3,8 @@ import App from './App';
 import { screen, prettyDOM, render, act } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from '../Utility/Functions/Tests/ProjectFactory';
-import * as Api from "../Utility/Functions/Api";
+import * as GetPostList from '../Api/ProjectAPI';
+import * as CommonAPI from "../Api/Common"
 
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Dummy Node</button></div>);
@@ -13,7 +14,7 @@ describe("renders the whole app", () => {
   let ApiMock;
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
-    ApiMock = jest.spyOn(Api, 'default').mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
+    ApiMock = jest.spyOn(GetPostList, 'default').mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
   })
   afterEach(() => { jest.restoreAllMocks() })
   test("should control the opening of a contact-me modal onClick of the footer's contact me button", async () => {
@@ -35,7 +36,7 @@ describe("renders the whole app", () => {
     test("should show a danger alert if contact-me submit button fires without permission", async () => {
       const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime }); //? VERY IMPORTANT due to setTimeout being used internally!
       jest.useFakeTimers(); //? OTHERWISE jest's fakeTimers will freeze userEvents entirely (See line 61)
-      jest.spyOn(Api, 'SendEmail').mockImplementation(() => '123');
+      jest.spyOn(CommonAPI, 'SendEmail').mockImplementation(() => '123');
       render(<App />);
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
