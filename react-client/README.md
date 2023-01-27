@@ -1,11 +1,16 @@
 # My Portfolio in React!
 
 ## Future Changes
+- Update to React 18 + Testing-Library
+  - Updating Testing-Library allows testing Hooks
+    - Not sure if will keep UseOnMount since UseEffect w/ the right dependency array can be just as effective
+    - NOR UseAsync since useSWR likely better
+    - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling
 - JSX Dot Notation to simplify imports + name clarity
   - Ex: `<PostCard.Image> { children } </PostCard.Image>`
-- Fully Functional Components (i.e. not class based)
-  - PostList + Carousel still class based. Last two remaining to update.
-  - Could then upgrade to React-Router-Dom 6 and use its Hooks (useLocation + useParams)
+- Upgrade to React-Router-Dom 6 and use its Hooks
+  - NotFoundPage likely could benefit from useLocation
+- Allow App-Wide Alert to be recolored based on prop/message
 - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
   - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
     - Title can be laid out + styled as "h5.mx-2 + div.underline"
@@ -14,8 +19,7 @@
 - RPG-based Homepage to reduce wall of text feeling
 
 ## Recent Changes
-- Main App Component now in Hook Functional Component form
-  - Still need to do PostList & Carousel then can add in React Router Hooks
+- All Components now Functional + Hook based. No longer Class based!
 - Handle Railway changes
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled

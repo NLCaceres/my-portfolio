@@ -1,80 +1,51 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import PostCard from "./PostCard";
 import CardImageModal from "../Modals/CardImageModal/CardImageModal";
 import GetPostList from "../Api/ProjectAPI";
 import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
 import PostCardListPlaceholder from "./PostCardPlaceholder";
+import { useLocation } from "react-router-dom";
+import UseNullableAsync from "../Utility/Hooks/UseAsync";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* 'Import' loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
-class PostListView extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      width: window.innerWidth,
-      showModal: false,
-      modalProject: null,
-      projectList: {
-        majorProjects: [],
-        minorProjects: []
-      } //? Without initing all used state, will get errs
-    };
+const PostListView = ({viewWidth}) => {
+  //! React-Router hooks + its computed props
+  const location = useLocation();
+  const splitUrlPath = location.pathname.split('/') ?? ['']; //* Should split into 3 ['','portfolio','tab-name']
+  const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on '/' from url to get 3rd section, i.e. 'iOS', 'front-end', etc.
+  const title = KebabToUppercasePhrase(projectType);
 
-    //? These days with ES6 classes, Not sure bind() is needed anymore BUT it does seem to 
-    //? At the very least increase performance by ensuring funcs only created ONCE
-    this.openModal = this.openModal.bind(this);
-    this.fetchProjects = this.fetchProjects.bind(this);
+  //! State of this component: ModalState + ProjectList
+  const [projectList, setProjectList] = useState({ majorProjects: [], minorProjects: [] });
+  const [modalState, setModalState] = useState({ showModal: false, modalProject: null });
+  const openModal = (newProject) => {
+    if (viewWidth < 768) { return } //* No modal rendered for mobile so end func here
+    setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: newProject }));
   }
+  
+  UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate 'const' var like openModal
+    const qParams = (projectType === 'about-me') ? 'null' : projectType.replace('-', '_');
+    return GetPostList(qParams);
+  }, [projectType]), setProjectList);
 
-  componentDidMount() {
-    this.fetchProjects();
-  }
-
-  async componentDidUpdate(prevProps) { 
-    //* If url changes should update project list (and ideally only then)
-    if (this.props.location !== prevProps.location) {
-      this.fetchProjects();
-    }
-  }
-
-  async fetchProjects() {
-    const splitUrlPath = this.props.location?.pathname?.split('/') ?? ['']; //* Should split into 3 ['','portfolio','tab-name']
-    let qParams = (splitUrlPath[splitUrlPath.length - 1] === 'about-me') ? 'null' : splitUrlPath[splitUrlPath.length - 1].replace('-', '_');
-    const projectList = await GetPostList(qParams);
-    this.setState({ projectList: projectList }); //* Shallow merge projectList to projectList key with rest of state
-  }
-
-  openModal(project) {
-    if (this.props.viewWidth < 768) { return } //* No modal rendered for mobile so end func here
-    this.setState(prevState => ({
-      showModal: !prevState.showModal,
-      modalProject: project
-    }));
-  }
-
-  render() {
-    const splitUrlPath = this.props.location?.pathname?.split('/') ?? [''];
-    const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on '/' from url to get 3rd section, i.e. 'iOS', 'front-end', etc.
-    const title = KebabToUppercasePhrase(projectType);
-
-    return (
-      (this.state.projectList?.majorProjects?.length > 0 || this.state.projectList?.minorProjects?.length > 0) ?
-      (
-        <div>
-          { this.props.viewWidth >= 768 && (
-            <CardImageModal onHide={ () => this.openModal(null) } show={ this.state.showModal }
-              project={ this.state.modalProject } viewWidth={ this.props.viewWidth } />
-          )}
-          { title && <h1 className={`ms-2 mb-0 fw-normal ${(this.props.viewWidth > 768) ? 'display-3' : 'display-2'}`}>{ title }</h1> }
-          <ProjectList projectType={ projectType } projectList={ this.state.projectList }
-            viewWidth={ this.props.viewWidth } modalControl={ this.openModal } />
-        </div>
-      ) 
-      : <PostCardListPlaceholder viewWidth={ this.props.viewWidth } />
-    );
-  }
+  return (
+    (projectList?.majorProjects?.length > 0 || projectList?.minorProjects?.length > 0) ?
+    (
+      <div>
+        { viewWidth >= 768 && (
+          <CardImageModal onHide={ () => openModal(null) } show={ modalState.showModal }
+            project={ modalState.modalProject } viewWidth={ viewWidth } />
+        )}
+        { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? 'display-3' : 'display-2'}`}>{ title }</h1> }
+        <ProjectList projectType={ projectType } projectList={ projectList }
+          viewWidth={ viewWidth } modalControl={ openModal } />
+      </div>
+    ) 
+    : <PostCardListPlaceholder viewWidth={ viewWidth } />
+  );
 }
 
 //* ProjectList always returns an array of 2, the major projects list + the small projects list

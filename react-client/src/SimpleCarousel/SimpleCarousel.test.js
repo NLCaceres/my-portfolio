@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, prettyDOM } from '@testing-library/react';
+import { render, screen, act, waitFor, prettyDOM } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import SimpleCarousel from "./SimpleCarousel";
 import { ProjectImageFactory } from '../Utility/Functions/Tests/ProjectFactory';
@@ -19,7 +19,7 @@ describe('render a simple react-bootstrap carousel', () => {
       const carouselRootElem = screen.getByTestId('simple-carousel');
       expect(carouselRootElem).not.toHaveClass('hovered-indicators'); //* Starts invisible
       for (let i = 0; i < 6; i++) { //* 3 flashes of the indicators, on, off, on...
-        jest.advanceTimersByTime(750); //? ReactTestLib uses act() inside render() so rerenders from advanceTimers() work as expected!
+        act(() => { jest.advanceTimersByTime(750) }); //? act() needed since React components using hooks get called as timers advance
         (i % 2 === 0) ? expect(carouselRootElem).toHaveClass('hovered-indicators') : expect(carouselRootElem).not.toHaveClass('hovered-indicators');
       }
       expect(clearIntervalSpy).toHaveBeenCalledTimes(1); //* clearInterval called as hover hint animation finishes
@@ -31,20 +31,32 @@ describe('render a simple react-bootstrap carousel', () => {
       const { unmount: secondUnmount } = render(<SimpleCarousel images={imageSet} viewWidth={smallTabletHighEndWidth} />);
       expect(setIntervalSpy).toHaveBeenCalledTimes(1); //* Spies not called at mobile size
       expect(carouselRootElem).not.toHaveClass('hovered-indicators'); //* No flashes now or with timer advances
-      for (let i = 0; i < 6; i++) { jest.advanceTimersByTime(750); expect(carouselRootElem).not.toHaveClass('hovered-indicators'); }
+      for (let i = 0; i < 6; i++) { 
+        act(() => { jest.advanceTimersByTime(750) }); 
+        expect(carouselRootElem).not.toHaveClass('hovered-indicators');
+      }
       secondUnmount();
       expect(clearIntervalSpy).toHaveBeenCalledTimes(2); //* Spies not called at mobile size so remain at 2 total times called
       jest.useRealTimers(); setIntervalSpy.mockRestore(); clearIntervalSpy.mockRestore(); //* Cleanup
     })
     test("that handles index changes via indicator buttons", async () => {
-      const setStateMock = jest.spyOn(SimpleCarousel.prototype, 'setState');
       render(<SimpleCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)
       const user = userEvent.setup();
       const activeImgIndicators = screen.getAllByRole('button');
+      const currentImages = screen.getAllByAltText(/BarfooAlt/i).sort();
+      //* currentImages[0].alt should be BarfooAlt1 or simply smallest numbered altText value
+      //* currentImages[1].alt should be BarfooAlt2
+      expect(currentImages[0].parentElement.className).toBe("active carousel-item"); //* 1st is always active to start
+      expect(currentImages[1].parentElement.className).toBe("carousel-item"); //* Always starts deactivated
+
       await user.click(activeImgIndicators[1]);
+      expect(currentImages[0].parentElement.className).toBe("carousel-item"); //* Deactivated
+      //* Img #2 is activated next BUT using waitFor() className since CSS transition classes are applied first
+      await waitFor(() => { expect(currentImages[1].parentElement.className).toBe("active carousel-item") });
+      //? Possible all 4 expect() after the user.click() need waitFor() BUT only the newly active imgs seem to cause issues so far
       await user.click(activeImgIndicators[0]);
-      expect(setStateMock).toHaveBeenCalledTimes(2);
-      setStateMock.mockRestore();
+      await waitFor(() => { expect(currentImages[0].parentElement.className).toBe("active carousel-item") }); //* Reactivated
+      expect(currentImages[1].parentElement.className).toBe("carousel-item"); //* Deactivated again
     })
     /* 
     test("that displays on hover", async () => {
@@ -56,7 +68,6 @@ describe('render a simple react-bootstrap carousel', () => {
       expect(carouselIndicators).toHaveStyle('visibility: hidden')
     }) */
   })
-  //todo MAYBE Test out jest spies by swapping out interval callback?
   test("calculating the right css classes for its root + aspect ratio for imgs", () => {
     const { rerender } = render(<SimpleCarousel images={imageSet} viewWidth={smallDesktopViewWidth} />)
     const carouselRoot = screen.getByTestId('simple-carousel');

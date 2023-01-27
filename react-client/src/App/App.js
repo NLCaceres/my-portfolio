@@ -13,7 +13,7 @@ import UnavailableFeatureAlert from "../Utility/Components/AlertUnavailableFeatu
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //import * as serviceWorker from "./serviceWorker";
 
-const App = () => { //todo Add ReactRouter hooks in PostList & NotFoundPage probably
+const App = () => { //todo Add ReactRouter hooks in NotFoundPage probably
   const [width, setWidth] = useState(window.innerWidth);
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -40,7 +40,7 @@ const App = () => { //todo Add ReactRouter hooks in PostList & NotFoundPage prob
     <BrowserRouter> 
       <SimpleNavBar viewWidth={ width } />
     
-      <MainRoutes viewWidth={ width } />
+      <RouteSwitch viewWidth={ width } />
       
       <UnavailableFeatureAlert show={ showAlert } setShow={ tempShowAlert } />
       
@@ -54,23 +54,23 @@ const App = () => { //todo Add ReactRouter hooks in PostList & NotFoundPage prob
   );
 }
 
-const MainRoutes = props => {
+const RouteSwitch = ({viewWidth}) => {
   const paths = ['iOS', 'android', 'front-end', 'back-end', 'about-me'];
-  const mainRoutes = paths.map((pathStr) => {
-    return (
-      <Route exact path={`/portfolio/${pathStr}`} key={`/${pathStr}`} render={ routeProps =>
-        (<PostListView viewWidth={ props.viewWidth } location={ routeProps.location } />) }
-      />
-    )
-  });
   return (
     <Switch>
-      { mainRoutes }
+      { paths.map((pathStr) => {
+          return (
+            <Route exact path={`/portfolio/${pathStr}`} key={`/${pathStr}`}> 
+              <PostListView viewWidth={ viewWidth } />
+            </Route>
+          )
+        })
+      }
       
       <Route exact path="/contact-me" >
-        <ContactPage viewWidth={props.viewWidth} />
+        <ContactPage viewWidth={ viewWidth } />
       </Route>
-      <Route exact path="/" render={() => <Redirect to="/portfolio/about-me" />} /> 
+      <Route exact path="/" render={() => <Redirect to="/portfolio/about-me" />} /> {/*//* Preferred since v6 replaces <Redirect/> with <Navigate/> */}
       {/*//* Need above 'home' route before the next redirect, or always get 404. Shows importance of order of routes/redirects */}
 
       <Route exact path="/not-found" component={ NotFoundPage } />  {/*//? Use component prop if routeProps need to be injected */}
