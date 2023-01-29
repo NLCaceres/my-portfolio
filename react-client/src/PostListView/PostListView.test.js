@@ -39,7 +39,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     const { unmount: fourthUnmount } = render(<PostListView />, { wrapper: BrowserRouter }); //* Don't unmount since component is empty anyway
     const placeholders = await screen.findAllByRole('heading'); //* Need to await placeholder heading elems or the ln43 render sets off act() warning
     expect(placeholders.length).toBe(6); //* 6 headers are found -> 2 titles + 4 titles in individual placeholder cards
-    const placeholderImgs = screen.getAllByRole('heading', { name: /project/i }); //* Find 4 PlaceHolderImg components
+    const placeholderImgs = screen.getAllByRole('heading', { name: /project/i }); //* Find 4 PlaceholderImg components
     expect(placeholderImgs).toHaveLength(4); //* That render a div containing a h2 tag with "Project" written
     for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass('placeholderText') } //* All have the class 'placeholderText;
     expect(await screen.queryByRole('heading', { name: /(major|small) projects/i })).not.toBeInTheDocument(); //* No PostListView actually renders

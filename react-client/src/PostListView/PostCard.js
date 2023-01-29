@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import PlaceHolderImg from "../Utility/Components/PlaceholderImg";
+import PlaceholderImg from "../Utility/Components/PlaceholderImg";
 import SimpleCarousel from "../SimpleCarousel/SimpleCarousel";
 
 //@params: Following = Expected Props - className (root element classes)
@@ -41,7 +41,7 @@ const CardImage = ({ project, viewWidth, handleClick }) => { //* Save a line & d
         )} onClick={ handleClick } height={ height } width={ width }
         src={ project.post_images[0].image_url } alt={ project.post_images[0].alt_text } />
   } 
-  else { imageType = <PlaceHolderImg /> } //* If no images then render placeholder
+  else { imageType = <PlaceholderImg /> } //* If no images then render placeholder
 
   return imageType;
 }

@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PostCardCss from './PostCard.module.css';
 import PlaceholderCss from './PostCardPlaceholder.module.css';
-import PlaceHolderImg from "../Utility/Components/PlaceholderImg";
+import PlaceholderImg from "../Utility/Components/PlaceholderImg";
 
 // @params ViewWidth: Used to zigzag cards. 
 // @params: NumPlaceholders: Default is 4 cards rendered. Creates 4 item array + uses its indexes to map over
@@ -33,7 +33,7 @@ const PostCardPlaceholder = ({className, rowClasses}) => {
     <Card className={`${PostCardCss.postCard} ${PlaceholderCss.postCard} ${className || ''}`.trim()}>
       <Row className={`g-0 ${PlaceholderCss.cardRow} ${rowClasses || ''}`.trim()} data-testid="placeholder-row">
         <Col xs="12" md="3" lg="2" className="d-flex justify-content-center align-self-center"> 
-          <PlaceHolderImg /> 
+          <PlaceholderImg /> 
         </Col>
         <Col xs="12" md="9" lg="10">
           <Card.Body className="px-4 px-md-3">

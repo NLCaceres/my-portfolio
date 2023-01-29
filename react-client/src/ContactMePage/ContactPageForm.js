@@ -3,6 +3,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner'
+import AppSpinner from "../Utility/Components/AppSpinner";
 import TurnstileWidget from '../Utility/Components/TurnstileWidget';
 import cnames from "classnames";
 import ContactPageFormCss from "./ContactPageForm.module.css";
@@ -52,8 +53,7 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
         <TurnstileWidget action="Contact-Page-Form" successCB={turnstileSuccessCallback} />
 
         <Button className={`${ContactPageFormCss.submitButton}`} type="submit" disabled={ !IsContactable || isVerifying }>
-          { (isVerifying && IsContactable) //* Show loading spinner when verifying and NOT disabled
-            && <Spinner className="me-2" as="span" animation="border" size="sm" role="status" aria-hidden="true"/> }
+          { (isVerifying && IsContactable) && <AppSpinner tag="span" small /> } { /*//* Show when verifying and NOT disabled */ }
 
           { !IsContactable ? "Currently Unavailable" : //* Separate conditions to set text for button
             (isVerifying) ? "Checking You're Human!" : 
