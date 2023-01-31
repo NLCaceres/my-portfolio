@@ -3,13 +3,20 @@
   flex-grow: 1;
 }
 @media only screen and (min-width: 576px) {
-  .pupImage {
+  .loadingImage {
     max-width: 400px !important;
   }
+  .pupImage {
+    max-width: 400px !important; /*? backgroundImage css gets superseded by this media query (See line 19) */
+  }
+}
+.loadingImage {
+  max-height: 450px; /* Limits height */
+  border: 3.5px solid white;
 }
 .pupImage {
-  max-width: 90%;
-  background-color: #00E000;
+  max-height: 450px; /* Limits height */ /*? If width constraint needed MUST use '!important' or backgroundImage css will override it */
+  background-color: #00E000; /* Ensures alt text is readable if img fails to load */
   border: 3.5px solid white;
 }
 

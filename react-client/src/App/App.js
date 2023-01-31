@@ -13,7 +13,7 @@ import UnavailableFeatureAlert from "../Utility/Components/AlertUnavailableFeatu
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //import * as serviceWorker from "./serviceWorker";
 
-const App = () => { //todo Add ReactRouter hooks in NotFoundPage probably
+const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
