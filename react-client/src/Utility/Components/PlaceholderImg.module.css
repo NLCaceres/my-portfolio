@@ -14,4 +14,6 @@
 
 .placeholderText {
   color: rgb(151, 149, 149);
+  max-width: 60%; /* Better than using margins to center and reduce size with multi-line headers */
+  text-align: center;
 }
