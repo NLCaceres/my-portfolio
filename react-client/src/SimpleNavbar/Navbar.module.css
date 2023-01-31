@@ -16,9 +16,19 @@
   color: lime !important;
 }
 
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .brand { /* Adds extra space between brand + navLinks in tablets */
+    margin-right: 0 !important;
+  }
+}
+
 @media only screen and (max-width: 767px) {
   .nav-collapse {
     order: 2;
+  }
+  .nav-container {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -26,11 +36,10 @@
   .nav-container {
     margin-top: 1rem;
   }
-}
-@media only screen and (max-width: 767px) {
-  .nav-container {
-    display: flex;
-    flex-direction: column;
+  .brand { /* Must mark important or else Bootstrap overrides these values */
+    margin-right: -0.25rem !important;
+    padding-left: 0.35rem !important;
+    padding-right: 0.35rem !important;
   }
 }
 
