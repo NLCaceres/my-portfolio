@@ -1,0 +1,23 @@
+.container {
+  display: flex; /* Allows real image to be fit to container */
+  position: relative; /* Helps placeholder 'position: absolute' work as expected */
+  height: 100%;
+  min-height: 250px;
+  max-height: 50vh; /* Slightly neater looking than full 100% height */
+  width: 100%;
+  min-width: 150px;
+  max-width: 400px;
+}
+/* Important both placeholder & the real img fill their containers, so container specifies height/width as much as possible */
+.placeholder { /* When the parent of a div is specific about its dimensions, its children can use percentages to define height/width */
+  position: absolute;
+  min-height: 100%; /* Prevents shrinking if empty */
+  min-width: 100%; /* Prevents shrinking if empty */
+}
+/* Container is flex so 'flex-shrink: 0' prevents shrinking, helping it obey the dimensions */
+.photo {
+  flex-shrink: 0;
+  min-height: 100%;
+  min-width: 100%;
+  max-width: 100%; /* Should NEVER be bigger than container BUT may override styles passed in by parent so use '!important' in parent style if needed */
+}
