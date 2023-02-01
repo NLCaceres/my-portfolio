@@ -21,12 +21,12 @@ const NotFoundPage = () => {
   const puppyLoaded = (successful) => {
     if (!successful) { setPlaceholderText("Sorry! That Puppy is Tough to Fetch!") }
   }
-
+  
   return (
     <div className={`${NotFoundCss.container}`}>
       <h1>Sorry! Not Much to See Here!</h1>
       <BackgroundLoadImage src={imgSrc} alt="A Cute Pup!" placeholderText={`${placeholderText}`}
-        placeholderClass={`${NotFoundCss.loadingImage}`} onLoad={puppyLoaded} imgClass={`${NotFoundCss.pupImage}`} />
+        placeholderClass={`${NotFoundCss.image}`} onLoad={puppyLoaded} imgClass={`${NotFoundCss.image}`} />
       <h4 className={`${NotFoundCss.caption}`}>So Here's a Puppy to Make Up for It!</h4>
     </div>
   );
