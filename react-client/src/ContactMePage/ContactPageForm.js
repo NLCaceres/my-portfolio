@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner'
 import AppSpinner from "../Utility/Components/AppSpinner";
 import TurnstileWidget from '../Utility/Components/TurnstileWidget';
 import cnames from "classnames";
@@ -19,11 +18,10 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
   const [isVerifying, setIsVerifying] = useState(IsContactable);
 
   const [newEmail, setNewEmail] = useState({email: '', message: '', cfToken: ''});
-  const updateEmailValue = (key, value) => { setNewEmail(email => { email[key] = value; return email }) }; //* No useCallback needed
-
+  const updateEmailValue = (key, value) => { setNewEmail({ ...newEmail, [key]: value }) }; //* No useCallback needed
   const turnstileSuccessCallback = useCallback((token) => { //* Need useCallback to prevent turnstile widget re-rendering & double firing
     setIsVerifying(false) //* Done checking, either received an undefined token or a string token to send to backend
-    setNewEmail(email => { email.cfToken = token; return email });
+    setNewEmail(oldEmail => ({ ...oldEmail, cfToken: token })); //* Using an update func avoids requiring newEmail state in dependency array
   }, []);
   
   //! Form Handler
