@@ -19,6 +19,14 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(finalImg).not.toHaveAttribute("src");
     expect(finalImg).not.toHaveAttribute("alt");
   })
+  test("allowing the placeholder's text to be inserted and updated", () => {
+    const { rerender } = render(<BackgroundLoadImage placeholderText="Hello World!" />);
+    expect(screen.getByText("Hello World!")).toBeInTheDocument();
+
+    const someDiv = <div>Foobar</div>
+    rerender(<BackgroundLoadImage placeholderText={someDiv} />);
+    expect(screen.getByText("Foobar")).toBeInTheDocument(); //* Typescript could probably fix this, preventing a component from being passed into prop
+  })
   test("covering the image based on its load state, uncovering when successfully loaded or remaining if it fails, both firing a callback", () => {
     const loadCallback = jest.fn();
     const { rerender, unmount } = render(<BackgroundLoadImage onLoad={loadCallback} />);
