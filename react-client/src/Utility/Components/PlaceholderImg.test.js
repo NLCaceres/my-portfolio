@@ -27,14 +27,14 @@ describe("renders a div that looks like a placeholder img", () => {
   })
   test("with the option to render a spinner if an image is loading", () => {
     const { rerender } = render(<PlaceholderImg />);
-    const missingAlert = screen.queryByRole("status");
-    expect(missingAlert).not.toBeInTheDocument();
+    const missingSpinner = screen.queryByRole("status");
+    expect(missingSpinner).not.toBeInTheDocument();
 
     rerender(<PlaceholderImg loading={true} />);
-    const alertFound = screen.getByRole("status");
-    expect(alertFound).toBeInTheDocument();
+    const spinner = screen.getByRole("status");
+    expect(spinner).toBeInTheDocument();
 
     rerender(<PlaceholderImg />);
-    expect(alertFound).not.toBeInTheDocument();
+    expect(spinner).not.toBeInTheDocument();
   })
 })
