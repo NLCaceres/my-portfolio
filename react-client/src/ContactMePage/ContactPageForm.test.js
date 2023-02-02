@@ -8,7 +8,7 @@ import SilenceWarning from "../Utility/Functions/Tests/WarningSilencer";
 
 const originalEnv = process.env;
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
-  return (<div><button type="button" onClick={() => { successCB("123") }}>Dummy Node</button></div>);
+  return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
 })
 
 // const tokenTurnstileMock = ({action, successCB, className }) => { //? Useful if using doMock like in line 21
@@ -49,7 +49,7 @@ describe("renders the form for the contact page", () => {
       render(<ContactPageForm />); //* Contactable = true + isLoading = true (BUT useRecaptcha will setIsLoading(false) later!)
       const finalSubmitButtonSpinner = screen.getByRole('status', { hidden: true });
       expect(finalSubmitButtonSpinner).toBeInTheDocument();
-      await user.click(screen.getByRole('button', { name: /dummy node/i })); //* Click turnstile widget button
+      await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Click turnstile widget button
       expect(finalSubmitButtonSpinner).not.toBeInTheDocument();
     })
     test("an unavailable, verifying, & contact me state in the submit button", async () => {
@@ -61,7 +61,7 @@ describe("renders the form for the contact page", () => {
       //     __esModule: true, 
       //     default: ({action, successCB, className }) => {
       //       //* Why a button? Easiest way to activate callback + it matches the Turnstile Challenge button in terms of UX
-      //       return (<div><button type="button" onClick={() => { successCB("123") }}>Dummy Node</button></div>);
+      //       return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
       //     } 
       //   } 
       // });
@@ -81,7 +81,7 @@ describe("renders the form for the contact page", () => {
       const loadingSubmitButton = screen.getByRole('button', { name: /checking you're human!/i });
       expect(loadingSubmitButton).toBeInTheDocument(); //* Get 'loading' button, NOT 'unavailable' button
 
-      await user.click(screen.getByRole('button', { name: /dummy node/i })); //* Click turnstile widget button
+      await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Click turnstile widget button
       const contactMeButton = await screen.findByRole('button', { name: /contact me/i });
       expect(contactMeButton).toBeInTheDocument(); //* After verification succeeds and stops, "Contact Me" appears!
       expect(screen.queryByRole('button', { name: /checking you're human!/i })).not.toBeInTheDocument();
@@ -98,7 +98,7 @@ describe("renders the form for the contact page", () => {
     //       return { //? Since it doesn't know about the outside scope, we can't use tokenTurnstileMock
     //         __esModule: true, //? And must define a new mock below NO MATTER WHAT
     //         default: ({action, successCB, className }) => {
-    //           return (<div><button type="button" onClick={() => { successCB(undefined) }}>Dummy Node</button></div>);
+    //           return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
     //         }
     //       } 
     //     });
@@ -107,7 +107,7 @@ describe("renders the form for the contact page", () => {
     //     const ContactPageForm = ContactPageFormImport.default;
     //     render(<ContactPageForm />);
     //     expect(screen.queryByRole('button', { name: /checking you're human!/i })).toBeInTheDocument();
-    //     fireEvent.click(screen.getByRole('button', { name: /dummy node/i })); 
+    //     fireEvent.click(screen.getByRole('button', { name: /turnstile verification button/i })); 
     //? UserEvent.click() and findByRole seem to be the main issue BUT even w/out them, it suggests there's an async function pending
     //? that is causing the test to stop in its tracks and pretend the test passed (despite not calling the following expects)
     //     expect(screen.queryByRole('button', { name: /try again later/i })).toBeInTheDocument();
@@ -145,7 +145,7 @@ describe("renders the form for the contact page", () => {
     const onSubmitFunc = jest.fn();
     const user = userEvent.setup();
     const { rerender } = render(<ContactPageForm onSubmitForm={onSubmitFunc}/>)
-    await user.click(screen.getByRole('button', { name: /dummy node/i }));
+    await user.click(screen.getByRole('button', { name: /turnstile verification button/i }));
     const contactSubmitButton = await screen.findByRole('button', { name: /contact me/i });
     expect(onSubmitFunc).not.toBeCalled();
     

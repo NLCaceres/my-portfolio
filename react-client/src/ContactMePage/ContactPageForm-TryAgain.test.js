@@ -6,9 +6,9 @@ import userEvent from "@testing-library/user-event";
 //* Using jest.doMock() doesn't re-mock between tests BUT jest.resetModules() crashes tests making it useless
 //* jest.isolateModules() on the other hand seems to have trouble being used twice as well as 
 //* seems to have trouble w/ async methods like findByRole or user.click()
-//todo Maybe Jest 29 + React 18 will fix it
+//todo Maybe Jest 29 + React 18 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
-  return (<div><button type="button" onClick={() => { successCB(undefined) }}>Dummy Node</button></div>);
+  return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
 })
 
 describe("renders the form for the contact page", () => {
@@ -20,7 +20,7 @@ describe("renders the form for the contact page", () => {
       render(<ContactPageForm />);
 
       expect(screen.queryByRole('button', { name: /checking you're human!/i })).toBeInTheDocument();
-      await user.click(screen.getByRole('button', { name: /dummy node/i }));
+      await user.click(screen.getByRole('button', { name: /turnstile verification button/i }));
 
       expect(screen.queryByRole('button', { name: /try again later/i })).toBeInTheDocument();
       expect(screen.queryByRole('button', { name: /checking you're human!/i })).not.toBeInTheDocument();

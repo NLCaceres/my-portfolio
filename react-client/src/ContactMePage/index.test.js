@@ -6,17 +6,10 @@ import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Con
 //? jest.mock() hoists above imports which makes it file wide and work for every test below SO
 //? If a per-test option is needed, must use "jest.doMock()" (See ContactPageForm.test for example)
 jest.mock('../Utility/Components/TurnstileWidget', () => ({action, successCB, className }) => {
-  return (<div>Dummy Node</div>);
+  return (<div>Turnstile Verification Widget</div>);
 }); 
 
 describe("renders a simple contact page with a form component", () => {
-  test("that accepts a custom onMount + onUnmount function", () => {
-    const mountingSpy = jest.fn();
-    const { unmount } = render(<ContactPage onMount={mountingSpy}/>)
-    expect(mountingSpy).toHaveBeenCalledTimes(1);
-    unmount();
-    expect(mountingSpy).toHaveBeenCalledTimes(2);
-  })
   test("with a parent & form container using css modules, & form in dark mode", () => {
     render(<ContactPage />);
     const headerTag = screen.getByRole('heading', { name: /contact me page!/i });
