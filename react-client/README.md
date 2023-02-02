@@ -6,26 +6,34 @@
     - Not sure if will keep UseOnMount since UseEffect w/ the right dependency array can be just as effective
     - NOR UseAsync since useSWR likely better
     - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling
+  - React Router 6
+  - With Typescript?
 - JSX Dot Notation to simplify imports + name clarity
   - Ex: `<PostCard.Image> { children } </PostCard.Image>`
-- Upgrade to React-Router-Dom 6 and use its Hooks
-  - NotFoundPage likely could benefit from useLocation
-- Allow App-Wide Alert to be recolored based on prop/message
 - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
   - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
     - Title can be laid out + styled as "h5.mx-2 + div.underline"
     - Material Design with flip animation to switch between smaller image container and flip out into text container on tap for mobile.
       - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
 - RPG-based Homepage to reduce wall of text feeling
+- Validation in Contact Me Form
+- Add Intersectional-Observer Background-Loading image component for use in PostList Cards
+  - Base it off new BackgroundLoadImage component
+  - Use CSS 'transition' + 'animation' in both to accomplish smoother changes
 
 ## Recent Changes
 - All Components now Functional + Hook based. No longer Class based!
 - Handle Railway changes
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
+    - Fixes NavBar being oversized on very small mobile devices!
   - BUT use Bootstrap's helper classes if they provide multiple CSS rules at once
     - Ex: 'display-2' under the hood is actually 'font-weight', 'font-size', and 'line-height' for a very specific look!
     - On other hand, 'flex-grow-1' just adds 'flex-grow: 1', so instead use a CSS Module that combines it with other flex rules for that element
+  - Extend React-Bootstrap Components to be easily reused across my Portfolio with my own specifications and preferences
+    - App-Wide Alert made to be easily filled, displayed, and recolored based on message and color props
+    - App-Wide Spinner to easily ensure it's accessible whenever used
+- Background loading images for better user experience, reducing pop-in on images
 - Update engines to Node 18, NPM 8, Yarn 1.22.19
 
 ## Quick Notes
