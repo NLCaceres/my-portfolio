@@ -32,21 +32,21 @@ describe("renders the form for the contact page", () => {
     test("a spinner in the submit button when running an async task", async () => {
       expect(process.env.REACT_APP_CONTACTABLE).toBe('true');
       const user = userEvent.setup(); //? Best to call 1st or at least before render is called
-      const { unmount } = render(<ContactPageForm />) //* Contactable = true + isLoading = true
+      const { unmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
       const submitButtonSpinner = screen.getByRole('status', { hidden: true });
       expect(submitButtonSpinner).toBeInTheDocument();
 
       process.env = { ...originalEnv, REACT_APP_CONTACTABLE: 'false' }
       expect(process.env.REACT_APP_CONTACTABLE).toBe('false');
       unmount();
-      const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = false + isLoading = false
+      const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = false + isVerifying = false
       expect(screen.queryByRole('status', { hidden: true })).not.toBeInTheDocument();
 
       process.env = originalEnv;
       secondUnmount();
 
       //* Normal flow w/ mocked implementation
-      render(<ContactPageForm />); //* Contactable = true + isLoading = true (BUT useRecaptcha will setIsLoading(false) later!)
+      render(<ContactPageForm />); //* Contactable = true + isVerifying = true (BUT Turnstile widget's callback will run setIsVerifying(false) later!)
       const finalSubmitButtonSpinner = screen.getByRole('status', { hidden: true });
       expect(finalSubmitButtonSpinner).toBeInTheDocument();
       await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Click turnstile widget button
@@ -69,7 +69,7 @@ describe("renders the form for the contact page", () => {
       //* Currently Unavailable
       process.env = { ...originalEnv, REACT_APP_CONTACTABLE: 'false' }
       const user = userEvent.setup();
-      const { unmount } = render(<ContactPageForm />) //* Contactable = true + isLoading = true
+      const { unmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
       const unavailableSubmitButton = screen.getByRole('button', { name: /currently unavailable/i });
       expect(unavailableSubmitButton).toBeInTheDocument();
       unmount();
@@ -77,9 +77,9 @@ describe("renders the form for the contact page", () => {
       //* Checking You're Human then after Turnstile Challenge completed via button click, Contact Me appears in submit button
       process.env = originalEnv;
       expect(process.env.REACT_APP_CONTACTABLE).toBe('true');
-      const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = true + isLoading = true
-      const loadingSubmitButton = screen.getByRole('button', { name: /checking you're human!/i });
-      expect(loadingSubmitButton).toBeInTheDocument(); //* Get 'loading' button, NOT 'unavailable' button
+      const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
+      const verifyingSubmitButton = screen.getByRole('button', { name: /checking you're human!/i });
+      expect(verifyingSubmitButton).toBeInTheDocument(); //* Get 'verifying' button, NOT 'unavailable' button
 
       await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Click turnstile widget button
       const contactMeButton = await screen.findByRole('button', { name: /contact me/i });
@@ -130,9 +130,9 @@ describe("renders the form for the contact page", () => {
       process.env = originalEnv;
       unmount(); //* Need full unmount to reset isVerifying to true, rerender won't call useState again
       render(<ContactPageForm onSubmitForm={onSubmitFunc}/>);
-      const loadingSubmitButton = screen.getByRole('button', { name: /checking you're human/i});
+      const verifyingSubmitButton = screen.getByRole('button', { name: /checking you're human/i});
       expect(onSubmitFunc).not.toBeCalled(); //* Fresh render and still not called
-      await user.click(loadingSubmitButton);
+      await user.click(verifyingSubmitButton);
       expect(onSubmitFunc).not.toBeCalled(); //* In Verifying state, so still disabled, submitFunc still can't fire onClick
     })
   })
