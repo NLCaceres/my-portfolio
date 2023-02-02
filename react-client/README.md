@@ -3,9 +3,8 @@
 ## Future Changes
 - Update to React 18 + Testing-Library
   - Updating Testing-Library allows testing Hooks
-    - Not sure if will keep UseOnMount since UseEffect w/ the right dependency array can be just as effective
-    - NOR UseAsync since useSWR likely better
-    - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling
+    - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
+    - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
   - React Router 6
   - With Typescript?
 - JSX Dot Notation to simplify imports + name clarity
