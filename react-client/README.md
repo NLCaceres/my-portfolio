@@ -1,12 +1,12 @@
 # My Portfolio in React!
 
 ## Future Changes
-- Update to React 18 + Testing-Library
-  - Updating Testing-Library allows testing Hooks
-    - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
-    - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
-  - React Router 6
-  - With Typescript?
+- Take advantage of React 18's Suspense library?
+- Updating Testing-Library allows testing Hooks
+  - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
+  - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
+- React Router 6
+- Use Typescript?
 - JSX Dot Notation to simplify imports + name clarity
   - Ex: `<PostCard.Image> { children } </PostCard.Image>`
 - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
@@ -21,7 +21,8 @@
   - Use CSS 'transition' + 'animation' in both to accomplish smoother changes
 
 ## Recent Changes
-- All Components now Functional + Hook based. No longer Class based!
+- Upgraded to React 18!
+  - All Components now Functional + Hook based. No longer Class based!
 - Handle Railway changes
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
