@@ -1,6 +1,6 @@
 import React from 'react';
 import App from './App';
-import { screen, render, act } from '@testing-library/react';
+import { screen, render, act, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from '../Utility/Functions/Tests/ProjectFactory';
 import * as GetPostList from '../Api/ProjectAPI';
@@ -30,6 +30,7 @@ describe("renders the whole app", () => {
 
     const modalCloser = screen.getByLabelText("Close");
     await user.click(modalCloser);
+    await waitForElementToBeRemoved(() => screen.queryByLabelText("Close"));
     expect(modal).not.toBeInTheDocument();
   });
   describe("controls the opening of an app-wide alert element", () => {
@@ -70,7 +71,7 @@ describe("renders the whole app", () => {
 
       await submitContactForm(user); //* Despite invalid user, trying to submit anyway fails behind the scenes
 
-      const dangerAlert = screen.getByRole("alert") //* Failing behind the scenes, the alert appears, providing feedback that email wasn't sent
+      const dangerAlert = await screen.findByRole("alert") //* Failing behind the scenes, the alert appears, providing feedback that email wasn't sent
       expect(dangerAlert).toHaveClass("alert-danger"); //* Correct color red on unsuccessful
       expect(screen.getByText(/email wasn't sent/i)).toBeInTheDocument(); //* Email not sent title
       expect(screen.getByText(/back up and running/i)).toBeInTheDocument(); //* Not working as expected message
@@ -88,7 +89,7 @@ describe("renders the whole app", () => {
 
       await submitContactForm(user); //* User seems human so valid turnstile response received and email is sending
 
-      const successAlert = screen.getByRole("alert") //* After submitting the alert appears, providing feedback that email sent successfully!
+      const successAlert = await screen.findByRole("alert"); //* After submitting the alert appears, providing feedback that email sent successfully!
       expect(successAlert).toHaveClass("alert-success"); //* Correct color green on success
       expect(screen.getByText(/email sent/i)).toBeInTheDocument(); //* Email sent successfully title!
       expect(screen.getByText(/successfully sent/i)).toBeInTheDocument(); //* Successfully sent message

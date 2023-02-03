@@ -23,12 +23,15 @@ const AppAlert = ({title, message, color, onClose}) => {
     if (onClose) { onClose() } //* Call parent's callback
   }
 
-  return ( //* If a title or text prop is present, then show this alert, otherwise both must be undefined to hide it
-     <Alert className={`${FloatingAlertCss.floatingAlert}`} show={ show } variant={ color } onClose={ hideAlert } dismissible>
-        {title && <Alert.Heading>{ title }</Alert.Heading> /*//* Title required or don't render a title header */ }
-        {message &&  <p> { message } </p> /*//* Message required or don't render the 'p' tag */ }
-    </Alert>
-  )
+  //? Rather than use React-Bootstrap Alert's 'show' prop, let its onClose control this component's show state so
+  if (show) { //? If the show state is false, then return nothing (undefined)! Otherwise return my Alert!
+    return ( //* If a title or text prop is present, then show this alert, otherwise both must be undefined to hide it
+       <Alert className={`${FloatingAlertCss.floatingAlert}`} variant={ color } onClose={ hideAlert } dismissible>
+          {title && <Alert.Heading>{ title }</Alert.Heading> /*//* Title required or don't render a title header */ }
+          {message &&  <p> { message } </p> /*//* Message required or don't render the 'p' tag */ }
+      </Alert>
+    )
+  }
 } //? This component could be quite simple and skip out on useEffect and useState BUT it loses testability since
 //? aside from changes to its own props, it would depend on its parent rerendering to cause changes to react-bootstrap's Alert
 //? Alternatively useEffect without a dependency array would let it run after every render w/out necessarily causing infinite renders

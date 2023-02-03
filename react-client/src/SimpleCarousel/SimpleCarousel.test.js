@@ -50,13 +50,13 @@ describe('render a simple react-bootstrap carousel', () => {
       expect(currentImages[1].parentElement.className).toBe("carousel-item"); //* Always starts deactivated
 
       await user.click(activeImgIndicators[1]);
-      expect(currentImages[0].parentElement.className).toBe("carousel-item"); //* Deactivated
+      await waitFor(() => { expect(currentImages[0].parentElement.className).toBe("carousel-item") }); //* Deactivated
       //* Img #2 is activated next BUT using waitFor() className since CSS transition classes are applied first
       await waitFor(() => { expect(currentImages[1].parentElement.className).toBe("active carousel-item") });
-      //? Possible all 4 expect() after the user.click() need waitFor() BUT only the newly active imgs seem to cause issues so far
+      
       await user.click(activeImgIndicators[0]);
       await waitFor(() => { expect(currentImages[0].parentElement.className).toBe("active carousel-item") }); //* Reactivated
-      expect(currentImages[1].parentElement.className).toBe("carousel-item"); //* Deactivated again
+      await waitFor(() => { expect(currentImages[1].parentElement.className).toBe("carousel-item") }); //* Deactivated again
     })
     /* 
     test("that displays on hover", async () => {
