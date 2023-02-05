@@ -40,6 +40,13 @@ h4 {
   font-weight: 500 !important;
 }
 
+.will-change-contents { /* Providing this reusable class allows me to easily remove it when the animation has finished! */
+  will-change: contents; /* Alternatively could use the "custom-ident" option which takes any CSS property name */
+  /* Usually "custom-ident" is used with 'transform' or 'opacity' i.e. "will-change: transform, opacity;" */
+  /* Using 'will-change' is a last-resort BUT fairly common when using 'react-spring' since it's prepping the browser for future changes during rerenders */
+  /* Real Example in "NotFoundPage" where 'will-change' on the 'page container' anticipates the 'background loading image container' will be animated */
+}
+
 /* 
 5 Main colors of App:
 1. 00FF00 - Electric Green

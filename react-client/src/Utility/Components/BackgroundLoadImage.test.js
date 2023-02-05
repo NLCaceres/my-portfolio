@@ -1,6 +1,11 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { Globals } from '@react-spring/web'
 import BackgroundLoadImage from "./BackgroundLoadImage";
+
+beforeAll(() => { //? Run React-Spring animations BUT limit waitFor's waiting time
+  Globals.assign({ skipAnimation: true }); //? so tests run quick BUT aren't flaking due to animation timing
+})
 
 describe("renders an image with option to display a placeholder while loading", () => {
   test("requiring a src and alt to be passed in", () => {
@@ -19,22 +24,26 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(finalImg).not.toHaveAttribute("src");
     expect(finalImg).not.toHaveAttribute("alt");
   })
-  test("allowing the placeholder's text to be inserted and updated", () => {
-    const { rerender } = render(<BackgroundLoadImage placeholderText="Hello World!" />);
-    expect(screen.getByText("Hello World!")).toBeInTheDocument();
+  test("allowing the placeholder's text to be inserted, updated, and styled", () => {
+    const { rerender } = render(<BackgroundLoadImage placeholderText="Hello World!" placeholderTextStyle={{ opacity: 0 }} />);
+    const heading = screen.getByText("Hello World!");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveStyle({ opacity: 0 });
 
     const someDiv = <div>Foobar</div>
     rerender(<BackgroundLoadImage placeholderText={someDiv} />);
-    expect(screen.getByText("Foobar")).toBeInTheDocument(); //* Typescript could probably fix this, preventing a component from being passed into prop
+    const nonHeaderPlaceholderText = screen.getByText("Foobar");
+    expect(nonHeaderPlaceholderText).toBeInTheDocument(); //* Typescript could probably fix this, preventing a component from being passed into prop
+    expect(nonHeaderPlaceholderText).not.toHaveAttribute("style");
   })
-  test("covering the image based on its load state, uncovering when successfully loaded or remaining if it fails, both firing a callback", () => {
+  test("covering the image based on its load state, uncovering when successfully loaded or remaining if it fails, both firing a callback", async () => {
     const loadCallback = jest.fn();
     const { rerender, unmount } = render(<BackgroundLoadImage onLoad={loadCallback} />);
     const img = screen.getByRole("img");
     expect(img.previousElementSibling).toBeInTheDocument(); //* Should be placeholder;
     fireEvent.load(img); //* Image successfully loaded
     expect(img).toBeInTheDocument(); //* Img remains in doc
-    expect(img.previousElementSibling).not.toBeInTheDocument(); //* Placeholder div disappears
+    await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div disappears
     expect(loadCallback).toBeCalledTimes(1); //* It succeeded, check if callback added and call it!
     
     rerender(<BackgroundLoadImage />);
@@ -57,7 +66,11 @@ describe("renders an image with option to display a placeholder while loading", 
     const { rerender } = render(<BackgroundLoadImage />);
     const img = screen.getByRole("img");
     expect(img).toHaveClass("photo", { exact: true });
+
     expect(img.parentElement).toHaveClass("container ", { exact: true });
+    img.parentElement.setAttribute("style", "height: 250px; width: 250px;"); //* Unclear if useResize is adjusting them at all
+    expect(img.parentElement).toHaveStyle({ height: "250px", width: "250px" }); //* BUT style does match its expected output
+
     expect(img.previousElementSibling).toHaveClass("placeholderImg placeholder", { exact: true });
 
     rerender(<BackgroundLoadImage className="foo" placeholderClass="bar" imgClass="fizz" />)

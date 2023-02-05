@@ -1,23 +1,37 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { Globals } from '@react-spring/web'
 import NotFoundPage from "./NotFoundPage";
 
+beforeAll(() => {
+  //? Skips the interpolation of values in React-Spring animations BUT runs all expected animations still!
+  Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
+})
+
 describe("renders a basic but fun 'Not Found' Page", () => {
-  test("using a placeholder to cover the loading image before unveiling", () => {
+  test("using a placeholder to cover the loading image before unveiling", async () => {
     render(<NotFoundPage />);
     const placeholder = screen.getByRole("heading", { name: /puppy incoming/i }).parentElement;
+    expect(placeholder).toBeInTheDocument();
     fireEvent.load(screen.getByRole("img"));
-    expect(placeholder).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(placeholder);
   })
   test("with simple css modules for each element", () => {
     render(<NotFoundPage />);
     const titleTag = screen.getByText(/sorry/i);
+
     const containerTag = titleTag.parentElement;
     expect(containerTag).toHaveClass("container");
+
     const placeholder = screen.getByRole("heading", { name: /puppy incoming/i }).parentElement;
     expect(placeholder).toHaveClass("placeholderImg image");
+
+    const backgroundLoadingImageContainer = placeholder.parentElement;
+    expect(backgroundLoadingImageContainer).toHaveClass("container backgroundContainer", { exact: true });
+    
     const pupImage = screen.getByRole("img");
     expect(pupImage).toHaveClass("image");
+    
     const descriptionTag = screen.getByRole("heading", { name: /so here's a puppy to make up for it/i });
     expect(descriptionTag).toHaveClass("caption")
   })

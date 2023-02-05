@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { animated, config, useResize, useSpring } from "@react-spring/web"
 import PlaceholderImg from "./PlaceholderImg";
 import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
 import ConsoleLogger from "../Functions/LoggerFuncs";
@@ -13,34 +14,49 @@ import ConsoleLogger from "../Functions/LoggerFuncs";
 //@params Currently the container css should limit the placeholder & img to around 400 wide by 250 tall
 //@params Meanwhile parent elements can pass a class that sets a max-width and max-height to maintain aspect-ratio. 
 //@params If a container "className" prop is used then larger images can be displayed by setting new 'max-width/height !important'
-const BackgroundLoadImage = ({src, alt, placeholderText, onLoad, className, placeholderClass, imgClass}) => {
+const BackgroundLoadImage = ({src, alt, placeholderText, onLoad, className, placeholderClass, placeholderTextStyle, imgClass}) => {
+  //! Animation Setup
+  const containerRef = useRef(null);
+  const { height, width } = useResize({ container: containerRef, config: config.molasses }); //? Use a default tension/friction setting to control animation speed
+  const [fadeOutSpring, fadeOutAPI] = useSpring(() => ({ from: { opacity: 1 } })); //* Setup the spring to use later
+  const [fadeInSpring, fadeInAPI] = useSpring(() => ({ from: { opacity: 0 } })); //? Always use the start state BUT no 'to' key yet!
+  const resizeAnimations = () => { height.start(500); width.start(500) } //* Begin resizing container
+  const successAnimations = () => {
+    resizeAnimations();
+    const slowestSpring = { tension: 260 , friction: 260 };
+    fadeInAPI.start({ from: { opacity: 0 }, to: { opacity: 1 }, config: slowestSpring }); //* Fade in the img tag
+    //* ALSO fade out the placeholder THEN once it has faded out, unmount it by setLoading to false
+    fadeOutAPI.start({ from: { opacity: 1 }, to: { opacity: 0 }, config: slowestSpring, onRest: () => setLoading(false) })
+  }
+  //! Actual state
   const [loading, setLoading] = useState(false);
-  const [successfulLoad, setSuccessfulLoad] = useState(false)
-
-  useEffect(() => {
-    setLoading(true);
-  }, []);
+  const [successfulLoad, setSuccessfulLoad] = useState(false);
+  //! Lifecycle functions - useEffect called onMount + unmount. loadFinished called when img is ready. loadFailed called when an error occurs
+  useEffect(() => { setLoading(true) }, []); //? Only perform onMount and unmount
   const loadFinished = () => { //* event param not needed but can add in future if needed
     setSuccessfulLoad(true); //* If loadFinished runs, we should have a visible image, so mark it and remove placeholder cover
-    setLoading(false); //* Loading completed
-    if (onLoad) { onLoad(true) }
+    successAnimations();
+    if (onLoad) { onLoad(true) } //* Run parent's callback with success flag
   }
-  const loadFailed = () => { 
-    setLoading(false);
-    if (onLoad) { onLoad(false) }
+  const loadFailed = () => {
+    resizeAnimations(); //* Just resize the placeholder
+    setLoading(false); //* Let the hidden failed image behind it unmount, completely unseen
+    if (onLoad) { onLoad(false) } //* Run parent's callback with fail flag
   }
 
   return (
-    <div className={`${BackgroundLoadImageCss.container} ${className || ""}`}>
+    <animated.div className={`${BackgroundLoadImageCss.container} ${className || ""}`} style={{ height, width }}>
       { (loading || !successfulLoad) && /*//* Cover img tag when loading and display as backup if load failed or threw errors */
-        <PlaceholderImg loading={loading} className={`${BackgroundLoadImageCss.placeholder} ${placeholderClass || ""}`}> 
-          { placeholderText }
+        <PlaceholderImg loading={loading} className={`${BackgroundLoadImageCss.placeholder} ${placeholderClass || ""}`} 
+          style={fadeOutSpring} textStyle={placeholderTextStyle}> 
+            { placeholderText }
         </PlaceholderImg>
       }
-      { (loading || successfulLoad) && /*//* Once loading, let the image load! If the src url fails, then remove the img! */
-        <img src={src} alt={alt} onLoad={loadFinished} onError={loadFailed} className={`${BackgroundLoadImageCss.photo} ${imgClass || ""}`} />
+      { (loading || successfulLoad) && /*//* Once loading is set true, let the image load! If the src url fails, then remove the img! */
+        <animated.img src={src} alt={alt} onLoad={loadFinished} onError={loadFailed} 
+          className={`${BackgroundLoadImageCss.photo} ${imgClass || ""}`} style={fadeInSpring} />
       }
-    </div>
+    </animated.div>
   )
 }
 

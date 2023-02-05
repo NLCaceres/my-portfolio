@@ -2,6 +2,16 @@
   padding: 5px 10px 5px 10px;
   flex-grow: 1;
 }
+.backgroundContainer {
+  min-width: 250px !important;
+}
+@media only screen and (max-width: 575px) {
+  .backgroundContainer {
+    min-width: 225px !important;
+    max-width: 85% !important;
+    max-height: 300px !important;
+  }
+}
 @media only screen and (min-width: 576px) {
   .image {
     max-width: 400px !important; /*? backgroundImage css gets superseded by this media query (See line 19) */
