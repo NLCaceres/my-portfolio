@@ -30,7 +30,7 @@ describe("renders the whole app", () => {
 
     const modalCloser = screen.getByLabelText("Close");
     await user.click(modalCloser);
-    await waitForElementToBeRemoved(() => screen.queryByLabelText("Close"));
+    await waitForElementToBeRemoved(modalCloser);
     expect(modal).not.toBeInTheDocument();
   });
   describe("controls the opening of an app-wide alert element", () => {
