@@ -1,8 +1,11 @@
+/* Sticky elems ONLY stick to their containing parent, and will disappear once their parent ends. 
+  SO for a navbar, the parent should either be <body> or a <div> containing all content (likely one that stretches across the entire viewport) */
 .header {
-  background-color: #00E000;
-  /* ONLY sticky within parent, then disappears. So for a navbar, parent needs to grow/contain all content! */
-  position: sticky;
   color: #000 !important;
+  background-color: #00E000;
+  position: sticky;
+  top: 0; /* 'position: sticky', 'top: 0', and 'z-index: 1020' form to make Bootstrap's "sticky-top" class */
+  z-index: 1020;
 }
 
 .brand {
@@ -11,6 +14,7 @@
   font-weight: bold;
   border: 2px solid #000;
   border-radius: 0.25rem;
+  padding: 0 1rem;
 }
 .brand:hover {
   color: lime !important;
@@ -30,6 +34,10 @@
     display: flex;
     flex-direction: column;
   }
+  .navItem {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
 }
 
 @media only screen and (max-width: 575px) {
@@ -45,6 +53,7 @@
 
 .navItem {
   height: 40px;
+  margin: 0.25rem;
 }
 
 .navItem:hover, .navItem:active {
@@ -56,10 +65,15 @@
 .navButton {
   color: #000 !important;
   font-weight: 550;
+  white-space: normal;
+  width: 100%;
+  height: 100%;
   display: flex;
-  border-radius: 0.15rem !important; /* Change BS 5 links' default + prevent odd gap when links in button */
   justify-content: center; /* horizontal text align */
   align-items: center; /* Vertical text align */
+  padding-left: 1rem !important; /* Adding '!important' ensures this padding is applied to provide just enough extra space to not look cramped  */
+  padding-right: 1rem !important;
+  border-radius: 0.15rem !important; /* Change BS 5 links' default border + prevent odd gap when links in button */
 }
 
 .navButton:hover {

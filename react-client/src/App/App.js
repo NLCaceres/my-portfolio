@@ -1,7 +1,7 @@
 // import "./App.css";
 import debounce from "lodash/debounce";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import SimpleNavBar from "../SimpleNavbar/SimpleNavbar";
 import PostListView from "../PostListView/PostListView.js";
 import SimpleModal from "../Modals/SimpleModal.js";
@@ -23,6 +23,7 @@ const App = () => {
     return () => { window.removeEventListener("resize", updateWidth) };
   }, []);
 
+  //! App Alert Functionality
   const showAlertBriefly = (newState) => { //* Displays alert for 5 seconds BUT allows early dismissal
     const alertTimeout = setTimeout(() => setShowAlert({}), 5000) //* Auto-dismiss after 5 seconds
     setShowAlert({ ...newState, timeout: alertTimeout }); //* Set timeout so it can be cleared in case the user dismisses alert early
@@ -34,6 +35,12 @@ const App = () => {
     setShowAlert({});
   }
 
+  //! Contact Button Functionality
+  const navigate = useNavigate();
+  const contactButtonClicked = () => {
+    if (width >= 576) { setShowModal(true) }
+    else { navigate("contact-me") }
+  }
   const submitContactForm = (successful) => {
     setShowModal(false);
     //! In the future, may need REACT_APP_CONTACTABLE env var but currently ContactPageForm component handles it
@@ -47,48 +54,42 @@ const App = () => {
     }
   }
 
-  //* Prevent double redirects BUT on initial viewing redirect to /portfolio
   return (
-    //? React-Router works in 3 parts, Router > Switch > Route/Redirect. You ALWAYS need those 3 parts, nested like so
-    <BrowserRouter> 
-      <SimpleNavBar viewWidth={ width } />
+    <> 
+      <SimpleNavBar />
     
-      <RouteSwitch viewWidth={ width } />
+      <AppRouting viewWidth={ width } submitContactForm={submitContactForm} />
       
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
       
-      <Footer viewWidth={ width } modalOpen={ () => setShowModal(true) }/>
+      <Footer contactButtonOnClick={contactButtonClicked} />
       
       <SimpleModal ID="contact-me" show={ showModal } onHide={ () => setShowModal(false) } title="Send Me a Message!"
-        headerClasses={`pt-2 pb-1`} titleClasses={`fw-bolder text-white`}>
+        headerClasses="pt-2 pb-1" titleClasses="fw-bolder text-white">
           <ContactPageForm onSubmitForm={ submitContactForm } />
       </SimpleModal>
-    </BrowserRouter>
+    </>
   );
 }
 
-const RouteSwitch = ({viewWidth}) => {
+const AppRouting = ({ viewWidth, submitContactForm }) => {
   const paths = ['iOS', 'android', 'front-end', 'back-end', 'about-me'];
-  return (
-    <Switch>
-      { paths.map((pathStr) => {
-          return (
-            <Route exact path={`/portfolio/${pathStr}`} key={`/${pathStr}`}> 
-              <PostListView viewWidth={ viewWidth } />
-            </Route>
-          )
+  return ( //? 'Routes' must exist nested in a Router somewhere upstream. <Route /> must exist nested in a 'Routes' somewhere upstream
+    //? This ensures simple relative pathways where the base 'Routes' = "/" and all 'Routes' inside a <Route path="user"> takes on the prefix "/user"
+    <Routes>
+      { paths.map((pathStr) => { //? Route component dropped 'exact' prop + uses 'element' prop instead of 'children' or 'render' prop for components
+          return <Route path={`portfolio/${pathStr}`} key={pathStr} element={<PostListView viewWidth={ viewWidth } />} /> 
         })
       }
       
-      <Route exact path="/contact-me" >
-        <ContactPage viewWidth={ viewWidth } />
-      </Route>
-      <Route exact path="/" render={() => <Redirect to="/portfolio/about-me" />} /> {/*//* Preferred since v6 replaces <Redirect/> with <Navigate/> */}
-      {/*//* Need above 'home' route before the next redirect, or always get 404. Shows importance of order of routes/redirects */}
+      <Route path="contact-me" element={<ContactPage viewWidth={ viewWidth } onSubmitForm={ submitContactForm } />} />
+      {/*//? 'path' doesn't require leading slash except in the Home: "/" path */}
+      <Route path="/" element={<Navigate to="portfolio/about-me" replace />} /> {/*//? Navigate w/ 'replace' replicates old Redirect functionality */}
+      {/*//* Need above 'home' route before the next Navigate, or always get 404, highlights the importance of order of routes */}
 
-      <Route exact path="/not-found" component={ NotFoundPage } />  {/*//? Use component prop if routeProps need to be injected */}
-      <Route render={() => <Redirect to="/not-found"/>} /> {/*//? Redirects placed last act as fallbacks */}
-    </Switch>
+      <Route path="not-found" element={ <NotFoundPage /> } /> {/*//? Used for following wildcard "*" fallback route */}
+      <Route path="*" element={<Navigate to="not-found" replace/>} /> {/*//? Navigate runs a useEffect to nav to "/not-found" */}
+    </Routes>
   );
 };
 

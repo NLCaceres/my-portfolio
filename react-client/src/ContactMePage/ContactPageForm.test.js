@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor, screen, prettyDOM } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
 import * as CommonAPI from "../Api/Common";
@@ -19,37 +19,37 @@ describe("renders the form for the contact page", () => {
   // beforeEach(() => { jest.resetModules(); }) //* As of Jest 27, resetModules() seems bugged, crashing Functional React Components using Hooks
   test("that has a toggleable dark mode", async () => {
     //? If just mocking the default export (and not importing any others) then the following works! OTHERWISE: See line 56
-    //* jest.doMock('../Utility/Components/TurnstileWidget', () => tokenTurnstileMock);
+    //* jest.doMock("../Utility/Components/TurnstileWidget", () => tokenTurnstileMock);
     // const ContactPageForm = (await import("./ContactPageForm")).default; //? Must re-import ContactPageForm component every doMock test
     const { rerender } = render(<ContactPageForm />);
-    const formContainer = screen.getByTestId('form-container');
-    expect(formContainer).not.toHaveClass('dark');
+    const formContainer = screen.getByTestId("form-container");
+    expect(formContainer).not.toHaveClass("dark");
 
     rerender(<ContactPageForm darkMode={true} />);
-    expect(formContainer).toHaveClass('dark');
+    expect(formContainer).toHaveClass("dark");
   })
   describe("that depends on '_CONTACTABLE' env var for conditionally rendering", () => {
     test("a spinner in the submit button when running an async task", async () => {
-      expect(process.env.REACT_APP_CONTACTABLE).toBe('true');
+      expect(process.env.REACT_APP_CONTACTABLE).toBe("true");
       const user = userEvent.setup(); //? Best to call 1st or at least before render is called
       const { unmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
-      const submitButtonSpinner = screen.getByRole('status', { hidden: true });
+      const submitButtonSpinner = screen.getByRole("status", { hidden: true });
       expect(submitButtonSpinner).toBeInTheDocument();
 
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: 'false' }
-      expect(process.env.REACT_APP_CONTACTABLE).toBe('false');
+      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" }
+      expect(process.env.REACT_APP_CONTACTABLE).toBe("false");
       unmount();
       const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = false + isVerifying = false
-      expect(screen.queryByRole('status', { hidden: true })).not.toBeInTheDocument();
+      expect(screen.queryByRole("status", { hidden: true })).not.toBeInTheDocument();
 
       process.env = originalEnv;
       secondUnmount();
 
       //* Normal flow w/ mocked implementation
       render(<ContactPageForm />); //* Contactable = true + isVerifying = true (BUT Turnstile widget's callback will run setIsVerifying(false) later!)
-      const finalSubmitButtonSpinner = screen.getByRole('status', { hidden: true });
+      const finalSubmitButtonSpinner = screen.getByRole("status", { hidden: true });
       expect(finalSubmitButtonSpinner).toBeInTheDocument();
-      await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Click turnstile widget button
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Click turnstile widget button
       expect(finalSubmitButtonSpinner).not.toBeInTheDocument();
     })
     test("an unavailable, verifying, & contact me state in the submit button", async () => {
@@ -67,25 +67,25 @@ describe("renders the form for the contact page", () => {
       // });
       // const ContactPageForm = (await import("./ContactPageForm")).default;
       //* Currently Unavailable
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: 'false' }
+      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" }
       const user = userEvent.setup();
       const { unmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
-      const unavailableSubmitButton = screen.getByRole('button', { name: /currently unavailable/i });
+      const unavailableSubmitButton = screen.getByRole("button", { name: /currently unavailable/i });
       expect(unavailableSubmitButton).toBeInTheDocument();
       unmount();
 
       //* Checking You're Human then after Turnstile Challenge completed via button click, Contact Me appears in submit button
       process.env = originalEnv;
-      expect(process.env.REACT_APP_CONTACTABLE).toBe('true');
+      expect(process.env.REACT_APP_CONTACTABLE).toBe("true");
       const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
-      const verifyingSubmitButton = screen.getByRole('button', { name: /checking you're human!/i });
+      const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human!/i });
       expect(verifyingSubmitButton).toBeInTheDocument(); //* Get 'verifying' button, NOT 'unavailable' button
 
-      await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Click turnstile widget button
-      const contactMeButton = await screen.findByRole('button', { name: /contact me/i });
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Click turnstile widget button
+      const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
       expect(contactMeButton).toBeInTheDocument(); //* After verification succeeds and stops, "Contact Me" appears!
-      expect(screen.queryByRole('button', { name: /checking you're human!/i })).not.toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: /currently unavailable/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /checking you're human!/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
       secondUnmount();
     })
     //! Moved actual testable version of this test to another file to allow mock to work as expected
@@ -118,11 +118,11 @@ describe("renders the form for the contact page", () => {
     //   })
     // })
     test("a disabled submit button that can't fire the submitFunc prop if '_CONTACTABLE' = false OR 'isVerifying' = true", async () => {
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: 'false' }
+      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" }
       const user = userEvent.setup();
       const onSubmitFunc = jest.fn(e => e.preventDefault());
       const { unmount } = render(<ContactPageForm onSubmitForm={onSubmitFunc}/>);
-      const submitButton = screen.getByRole('button', { name: /currently unavailable/i});
+      const submitButton = screen.getByRole("button", { name: /currently unavailable/i});
       expect(onSubmitFunc).not.toBeCalled(); //* No click tried so naturally not called!
       await user.click(submitButton) //* If used fireEvent for a submit event, form would fire the func anyway!
       expect(onSubmitFunc).not.toBeCalled(); //* BUT even after a click, it's still not called due to disabled
@@ -130,26 +130,26 @@ describe("renders the form for the contact page", () => {
       process.env = originalEnv;
       unmount(); //* Need full unmount to reset isVerifying to true, rerender won't call useState again
       render(<ContactPageForm onSubmitForm={onSubmitFunc}/>);
-      const verifyingSubmitButton = screen.getByRole('button', { name: /checking you're human/i});
+      const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human/i});
       expect(onSubmitFunc).not.toBeCalled(); //* Fresh render and still not called
       await user.click(verifyingSubmitButton);
       expect(onSubmitFunc).not.toBeCalled(); //* In Verifying state, so still disabled, submitFunc still can't fire onClick
     })
   })
   test("that accepts a customizable onSubmit callback", async () => {
-    const emailSenderMock = jest.spyOn(CommonAPI, 'SendEmail').mockImplementation(() => '123');
-    const turnstileResponseMock = jest.spyOn(TurnstileAPI, 'ProcessTurnstileResponse').mockImplementation(() => '123');
+    const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123");
+    const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockImplementation(() => "123");
     //? preventDefault prevents a jest-dom form submit 'not-implemented' err (better solution may one day come BUT this seems easiest/best)
     //? ALSO this trick assumes usage in onClick or onSubmit that accepts an event param by default!, if the func isn't used in that type of prop
     //? usage will not match since the func call probably won't have any params (or maybe too many!) and jest will throw an error that is e is undefined
     const onSubmitFunc = jest.fn();
     const user = userEvent.setup();
     const { rerender } = render(<ContactPageForm onSubmitForm={onSubmitFunc}/>)
-    await user.click(screen.getByRole('button', { name: /turnstile verification button/i }));
-    const contactSubmitButton = await screen.findByRole('button', { name: /contact me/i });
+    await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
+    const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i });
     expect(onSubmitFunc).not.toBeCalled();
     
-    fireEvent.submit(screen.getByTestId('form-container')) //* Not async BUT the callback using onSubmitFunc IS
+    fireEvent.submit(screen.getByTestId("form-container")) //* Not async BUT the callback using onSubmitFunc IS
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(1)); //* So must await it to finish & update mock's # of calls
     
     fireEvent.submit(contactSubmitButton)
@@ -160,7 +160,7 @@ describe("renders the form for the contact page", () => {
 
     const origErrorConsole = SilenceWarning(); //* Temp form submit not implemented error ignore
     rerender(<ContactPageForm />)
-    fireEvent.submit(screen.getByTestId('form-container'))
+    fireEvent.submit(screen.getByTestId("form-container"))
     //* submitFunc prop now null, so it shouldn't be called anymore!
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
 

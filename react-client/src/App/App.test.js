@@ -1,9 +1,10 @@
-import React from 'react';
-import App from './App';
-import { screen, render, act, waitForElementToBeRemoved } from '@testing-library/react';
+import React from "react";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+import { screen, render, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ProjectFactory from '../Utility/Functions/Tests/ProjectFactory';
-import * as GetPostList from '../Api/ProjectAPI';
+import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
+import * as GetPostList from "../Api/ProjectAPI";
 import * as CommonAPI from "../Api/Common"
 
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
@@ -14,28 +15,13 @@ describe("renders the whole app", () => {
   let ApiMock;
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
-    ApiMock = jest.spyOn(GetPostList, 'default').mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
+    ApiMock = jest.spyOn(GetPostList, "default").mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
   })
   afterEach(() => { jest.restoreAllMocks() })
-  test("should control the opening of a contact-me modal onClick of the footer's contact me button", async () => {
-    const user = userEvent.setup();
-    render(<App />);
-    //* Following ensures stubs have been inserted into DOM at '/portfolio/about-me'
-    expect(ApiMock).toHaveBeenCalledTimes(1);
-
-    const contactMeButton = await screen.findByRole('button', { name: /contact me/i });
-    await user.click(contactMeButton);
-    const modal = screen.getByRole("dialog");
-    expect(modal).toBeInTheDocument();
-
-    const modalCloser = screen.getByLabelText("Close");
-    await user.click(modalCloser);
-    await waitForElementToBeRemoved(modalCloser);
-    expect(modal).not.toBeInTheDocument();
-  });
   describe("controls the opening of an app-wide alert element", () => {
+    //! Helper Functions
     const submitContactForm = async (user) => { //* Provide a reusable way of firing the contact form
-      const contactMeButton = screen.getByRole('button', { name: /contact me/i });
+      const contactMeButton = screen.getByRole("button", { name: /contact me/i });
       await user.click(contactMeButton); //* Open Contact Form Modal
       const modal = screen.getByRole("dialog");
       expect(modal).toBeInTheDocument();
@@ -48,10 +34,10 @@ describe("renders the whole app", () => {
       await user.type(messageInput, "Hello World!");
       expect(messageInput).toHaveValue("Hello World!");
 
-      await user.click(screen.getByRole('button', { name: /turnstile verification button/i })); //* Verify user is human
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Verify user is human
 
-      const contactButtons = screen.getAllByRole('button', { name: /contact me/i }); //* Find the modal form's submit button
-      const correctContactButton = (contactButtons[0].className === 'submitButton btn btn-primary') ? contactButtons[0] : contactButtons[1];
+      const contactButtons = screen.getAllByRole("button", { name: /contact me/i }); //* Find the modal form's submit button
+      const correctContactButton = (contactButtons[0].className === "submitButton btn btn-primary") ? contactButtons[0] : contactButtons[1];
       await user.click(correctContactButton); //* Click the actual submit button (not the button used to open the modal)
     }
     const completeAlertTimeoutDismiss = () => { //! This tests if alert disappears on a 5s timeout
@@ -62,11 +48,13 @@ describe("renders the whole app", () => {
       jest.runOnlyPendingTimers();
       jest.useRealTimers();
     }
+    
+    //! Tests
     test("showing a danger alert if contact-me submit button fires without permission", async () => {
       const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime }); //? VERY IMPORTANT due to setTimeout being used internally!
       jest.useFakeTimers(); //? OTHERWISE jest's fakeTimers will freeze userEvents entirely (like in line 58)
-      jest.spyOn(CommonAPI, 'SendEmail').mockImplementation(() => '123'); //* Invalid response so Turnstile thinks user is a computer
-      render(<App />);
+      jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123"); //* Invalid response so Turnstile thinks user is a computer
+      render(<App />, { wrapper: BrowserRouter });
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); //* Despite invalid user, trying to submit anyway fails behind the scenes
@@ -81,10 +69,10 @@ describe("renders the whole app", () => {
     test("showing a success alert if contact-me submit button fires when expected", async () => {
       const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime }); //? VERY IMPORTANT due to setTimeout being used internally!
       jest.useFakeTimers(); //? OTHERWISE jest's fakeTimers will freeze userEvents entirely
-      jest.spyOn(CommonAPI, 'SendEmail').mockImplementation(() => { //* Must return a valid response for Turnstile to provide a success response
+      jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => { //* Must return a valid response for Turnstile to provide a success response
         return { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       });
-      render(<App />);
+      render(<App />, { wrapper: BrowserRouter });
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); //* User seems human so valid turnstile response received and email is sending

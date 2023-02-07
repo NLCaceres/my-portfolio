@@ -1,4 +1,5 @@
 .contact-page {
+  flex-grow: 1;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -6,4 +7,5 @@
   border: 4px solid #00E000;
   border-radius: 5px;
   background-color: #fdf5e8;
+  padding: 0.5rem 1rem;
 }

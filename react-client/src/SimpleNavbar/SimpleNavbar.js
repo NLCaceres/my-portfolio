@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../logo.svg";
-import { NavLink } from "react-router-dom";
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar'
-import Nav from 'react-bootstrap/Nav'
 import NavbarCss from "./Navbar.module.css";
+import Logo from "../logo.svg";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar"
+import Nav from "react-bootstrap/Nav"
+import { Link, NavLink } from "react-router-dom";
 
-/* //? Repackaging of React-bootstrap navbar into something a bit more convenient 
-@params viewWidth - Passed through to add CSS */
+/* //? Repackaging of React-bootstrap navbar into something a bit more convenient */
 const SimpleNavbar = () => {
   const [expanded, setExpanded] = useState(false); //* Init state = false
   useEffect(() => {
     function expansionListener(event) { //? Contains() works on DomNodes + better supported than String.includes()
-      (event.target.classList.contains('navbar-toggler') || event.target.className === 'navbar-toggler-icon') ?
+      (event.target.classList.contains("navbar-toggler") || event.target.className === "navbar-toggler-icon") ?
         setExpanded(!expanded) : setExpanded(false) //* If not the toggler or icon, then click must close nav
     }
-    document.addEventListener('click', expansionListener)
-    return () => { document.removeEventListener('click', expansionListener) } //* Cleanup listener
+    document.addEventListener("click", expansionListener)
+    return () => { document.removeEventListener("click", expansionListener) } //* Cleanup listener
   })
   return (
-    <Navbar className={`${NavbarCss.header} sticky-top`} expand="md" expanded={expanded}>
+    <Navbar className={NavbarCss.header} expand="md" expanded={expanded}>
       <Container fluid>
         <Navbar.Toggle className="align-self-start mt-1" aria-controls="basic-navbar-nav" />
         <FullNav />      
@@ -36,10 +35,11 @@ const FullNav = () => {
           <NavButtons />
         </Nav>
       </Navbar.Collapse>
-      <Navbar.Brand className={`${NavbarCss.brand} px-3 py-0`} href="/" >
+      {/*//? Imitate Bootstrap Navbar Brand BUT navigate via React-Router, not via the browser */}
+      <Link className={`${NavbarCss.brand} navbar-brand`} to="/">
         Nick Caceres
         <img src={Logo} className="ms-2" width="45" height="45" alt="Brand Logo"></img>
-      </Navbar.Brand>
+      </Link>
     </>
   );
 };
@@ -48,19 +48,19 @@ const NavButtons = () => {
   const tabProperNames = { iOS: "iOS", android: "Android", 
     "front-end": "Front-End Web", "back-end": "Back-End Web" };
   const tabKeyNames = Object.keys(tabProperNames);
+  //? Must pass this func to React-Router-Dom's NavLink so it can apply certain classes when it's the active/matching route
+  const isActiveClasses = ({isActive}) => //? Must include 'nav-link' class to adopt Bootstrap styles
+    `nav-link ${NavbarCss.navButton} ${(isActive) ? NavbarCss.activeNavButton : ""}`.trim()
 
   return [...Array(tabKeyNames.length)].map((_, i) => {
     const tabKeyName = tabKeyNames[i];
     return (
-      <Nav.Item className={`mx-3 mx-md-1 my-1 border border-dark rounded ${NavbarCss.navItem}`}
+      <Nav.Item className={`border border-dark rounded ${NavbarCss.navItem}`}
         key={ tabProperNames[tabKeyName] }>
-          {/* //? Can use ReactRouter's NavLinks w/ 'to' prop thanks to react-bootstrap's Nav.Link's 'as' prop */}
-          <Nav.Link as={NavLink} to={`/portfolio/${tabKeyName}`}
-            className={`${NavbarCss.navButton} text-wrap px-3 w-100 h-100`}
-            activeClassName={ NavbarCss.activeNavButton }
-            onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }) } }>
+          <NavLink to={`portfolio/${tabKeyName}`} className={isActiveClasses}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
               { tabProperNames[tabKeyName] }
-          </Nav.Link>
+          </NavLink>
       </Nav.Item>
     );
   });

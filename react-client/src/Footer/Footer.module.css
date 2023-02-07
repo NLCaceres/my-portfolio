@@ -1,5 +1,10 @@
 .navFooter {
   background-color: #00E000;
+  margin-top: 1.5rem;
+}
+
+.navbarText {
+  font-style: italic;
 }
 
 @media only screen and (min-width: 992px) {
@@ -7,22 +12,17 @@
     font-weight: 500;
   }
 }
-
 @media only screen and (min-width: 576px) and (max-width: 991px) {
   .navbarText {
     font-weight: 400;
     font-size: 0.85rem;
   }
 }
-
-.navLink {
-  font-weight: 550;
-  padding: 5px 15px 5px 15px;
-}
-.navLink:hover, .navLink:active {
-  border-width: 2px;
-  border-color: white;
-  color: black;
+@media (min-width: 576px) {
+  .navbarText {
+    margin-right: 0.25rem;
+    margin-left: 0.25rem;
+  }
 }
 
 .contactButton {

@@ -1,38 +1,35 @@
 import React from "react";
-import { render, screen } from '@testing-library/react';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Footer from "./Footer";
-import { mobileHighEndWidth, smallTabletViewWidth } from "../Utility/Constants/Viewports"
+import { mobileHighEndWidth } from "../Utility/Constants/Viewports"
 
 describe("renders a footer using a nav", () => {
-  test("that uses a navLink on thinner views and button on wider views", () => {
-    //* NavLink to contact page
-    const { rerender } = render(<Footer viewWidth={mobileHighEndWidth} />)
-    const navLinkFound = screen.getByRole('link', { name: /contact me/i });
-    expect(navLinkFound).toBeInTheDocument();
+  test("accepting a contact button click callback", async () => {
+    const user = userEvent.setup();
+    const contactButtonClickCallback = jest.fn();
+    const { rerender } = render(<Footer contactButtonOnClick={contactButtonClickCallback} />)
+    
+    await user.click(screen.getByRole("button", { name: /contact me/i }))
+    expect(contactButtonClickCallback).toHaveBeenCalledTimes(1);
 
-    //* Normal button to open contact me modal
-    rerender(<Footer viewWidth={smallTabletViewWidth} />)
-    const modalButtonFound = screen.getByRole('button', { name: /contact me/i });
-    expect(modalButtonFound).toBeInTheDocument();
+    rerender(<Footer />);
+    await user.click(screen.getByRole("button", { name: /contact me/i }))
+    expect(contactButtonClickCallback).toHaveBeenCalledTimes(1);
   })
-  test('with specific css modules', () => {
-    const { rerender } = render(<Footer viewWidth={mobileHighEndWidth} />)
-    const navParent = screen.getByRole('navigation');
-    expect(navParent).toHaveClass('navFooter');
+  test("with specific css modules", () => {
+    render(<Footer viewWidth={mobileHighEndWidth} />)
+    const navParent = screen.getByRole("navigation");
+    expect(navParent).toHaveClass("navFooter navbar navbar-expand-md navbar-dark", { exact: true });
 
-    const navLink = screen.getByRole('link', { name: /contact me/i });
-    expect(navLink).toHaveClass('navLink');
-    expect(navLink).toHaveAttribute('href', '/contact-me');
-
-    rerender(<Footer viewWidth={smallTabletViewWidth} />)
-    const modalButton = screen.getByRole('button', { name: /contact me/i });
-    expect(modalButton).toHaveClass('contactButton');
+    const navLinkModalButton = screen.getByRole("button", { name: /contact me/i });
+    expect(navLinkModalButton).toHaveClass("contactButton btn btn-outline-dark", { exact: true });
 
     const nameSpan = screen.getByText(/built by/i);
-    expect(nameSpan).toHaveClass('navbarText');
+    expect(nameSpan).toHaveClass("navbar-text navbarText text-dark", { exact: true });
     const reactSpan = screen.getByText(/crafted with/i);
-    expect(reactSpan).toHaveClass('navbarText');
+    expect(reactSpan).toHaveClass("navbar-text navbarText text-dark", { exact: true });
     const herokuSpan = screen.getByText(/powered by/i);
-    expect(herokuSpan).toHaveClass('navbarText');
+    expect(herokuSpan).toHaveClass("navbar-text navbarText text-dark", { exact: true });
   })
 })
