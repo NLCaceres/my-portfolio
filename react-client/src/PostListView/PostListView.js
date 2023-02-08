@@ -13,9 +13,10 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
 const PostListView = ({viewWidth}) => {
   //! React-Router hooks + its computed props
-  const location = useLocation();
-  const splitUrlPath = location.pathname.split('/') ?? ['']; //* Should split into 3 ['','portfolio','tab-name']
-  const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on '/' from url to get 3rd section, i.e. 'iOS', 'front-end', etc.
+  const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
+  const path = (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname;
+  const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
+  const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
   const title = KebabToUppercasePhrase(projectType);
 
   //! State of this component: ModalState + ProjectList
@@ -26,8 +27,8 @@ const PostListView = ({viewWidth}) => {
     setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: newProject }));
   }
   
-  UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate 'const' var like openModal
-    const qParams = (projectType === 'about-me') ? 'null' : projectType.replace('-', '_');
+  UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate "const" var like openModal
+    const qParams = (projectType === "about-me") ? "null" : projectType.replace("-", "_");
     return GetPostList(qParams);
   }, [projectType]), setProjectList);
 
@@ -39,7 +40,7 @@ const PostListView = ({viewWidth}) => {
           <CardImageModal onHide={ () => openModal(null) } show={ modalState.showModal }
             project={ modalState.modalProject } viewWidth={ viewWidth } />
         )}
-        { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? 'display-3' : 'display-2'}`}>{ title }</h1> }
+        { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ title }</h1> }
         <ProjectList projectType={ projectType } projectList={ projectList }
           viewWidth={ viewWidth } modalControl={ openModal } />
       </div>
@@ -52,13 +53,13 @@ const PostListView = ({viewWidth}) => {
 //* EXCEPT in the case of the AboutMe page where it's the 1 section & gets a special header
 const ProjectList = props => {
   return Object.keys(props.projectList).map((projectKey) => {
-    const projectSize = CamelCaseToUppercasePhrase((projectKey === 'minorProjects') ? 'smallProjects' : projectKey);
+    const projectSize = CamelCaseToUppercasePhrase((projectKey === "minorProjects") ? "smallProjects" : projectKey);
     const aboutMeTitle = props.projectType === "about-me" ? "Nicholas L. Caceres" : null;
 
     //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT obj/class props = best
     return ( props.projectList[projectKey].length > 0 && (
         <div key={`${props.projectType} ${projectSize}`}>
-          <h1 className={`ms-2 my-1 fw-normal ${(props.viewWidth > 768) ? 'display-3' : 'display-2'}`}>{ aboutMeTitle || projectSize }</h1>
+          <h1 className={`ms-2 my-1 fw-normal ${(props.viewWidth > 768) ? "display-3" : "display-2"}`}>{ aboutMeTitle || projectSize }</h1>
           <ProjectSection postCardClasses="mx-sm-4" projects={ props.projectList[projectKey] }
             viewWidth={ props.viewWidth } modalControl={ props.modalControl }/>
         </div>
@@ -73,7 +74,7 @@ const ProjectList = props => {
 const ProjectSection = props => {
   return (Array.isArray(props.projects) && props.projects?.length > 0) && //* Rails will ALWAYS return array (even if only 1 post returned)
     props.projects.map((project, i) => {
-      const reversed = (props.viewWidth < 768 || i % 2 === 0) ? '' : 'flex-row-reverse';
+      const reversed = (props.viewWidth < 768 || i % 2 === 0) ? "" : "flex-row-reverse";
       const modalRendered = (props.viewWidth >= 768 && project.post_images?.length > 1);
       return <PostCard className={ props.postCardClasses } rowClasses={ reversed }
         project={ project } viewWidth={ props.viewWidth } key={ project.title } 
