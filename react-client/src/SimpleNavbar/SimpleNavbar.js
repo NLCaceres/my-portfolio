@@ -36,7 +36,7 @@ const FullNav = () => {
         </Nav>
       </Navbar.Collapse>
       {/*//? Imitate Bootstrap Navbar Brand BUT navigate via React-Router, not via the browser */}
-      <Link className={`${NavbarCss.brand} navbar-brand`} to="/">
+      <Link className={`${NavbarCss.brand} navbar-brand`} to="/portfolio/about-me">
         Nick Caceres
         <img src={Logo} className="ms-2" width="45" height="45" alt="Brand Logo"></img>
       </Link>
