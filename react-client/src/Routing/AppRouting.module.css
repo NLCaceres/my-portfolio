@@ -1,0 +1,5 @@
+.animator {
+  /* flex: (grow shrink basis) so '1' here ensures our .animator grows WHILE '0' ensures it DOESN'T shrink. 'auto' is the default value for basis  */
+  flex: 1 0 auto; /* Therefore no height or width required, this does the trick! */
+  will-change: transform, opacity; /* Prep to alter these values for animation purposes */
+}
