@@ -1,7 +1,8 @@
 import React from "react";
 import App from "./App";
-import { BrowserRouter } from "react-router-dom";
-import { screen, render, waitForElementToBeRemoved } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { Globals } from "@react-spring/web";
+import { screen, render, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
 import * as GetPostList from "../Api/ProjectAPI";
@@ -9,6 +10,10 @@ import { mobileHighEndWidth } from "../Utility/Constants/Viewports";
 
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
+})
+
+beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
+  Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
 })
 
 describe("renders the whole app", () => {
@@ -20,7 +25,7 @@ describe("renders the whole app", () => {
   afterEach(() => { jest.restoreAllMocks() })
   test("controls the opening of a 'Contact Me' modal or navigation to '/contact-me' onClick of the footer's contact me button", async () => {
     const user = userEvent.setup();
-    const { unmount } = render(<App />, { wrapper: BrowserRouter });
+    const { unmount } = render(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App /> </MemoryRouter>);
     //* Following ensures stubs have been inserted into DOM at '/portfolio/about-me'
     expect(ApiMock).toHaveBeenCalledTimes(1);
 
@@ -41,10 +46,12 @@ describe("renders the whole app", () => {
     //? So not really sure anything else would work to test "innerWidth" in App aside from this, separating the files
     //? Other components can have width easily inserted via prop
     Object.defineProperty(window, "innerWidth", { writable: true, configurable: true, value: mobileHighEndWidth });
-    render(<App />, { wrapper: BrowserRouter });
+    render(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App /> </MemoryRouter>);
     const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
     await user.click(contactMeButtonLink); //* Now should work as a link, moving to "/contact-me"
-    expect(screen.getByRole("heading", { name: /contact me/i, level: 1 })).toBeInTheDocument();
+    //? Without location prop applied to <Routes>, <Routes> updates BEFORE it leaves all while a duplicate is entering
+    await waitFor(() => { expect(screen.getAllByRole("heading", { name: /contact me!/i, level: 1 })).toHaveLength(1) }) //? So must wait for original to leave
+    expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 })).toBeInTheDocument(); //? Now only have one "Contact Me!"
 
     window.innerWidth = 1024 //* Reset to default Jest width
   });

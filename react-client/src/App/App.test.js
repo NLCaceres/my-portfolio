@@ -1,6 +1,7 @@
 import React from "react";
 import App from "./App";
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
+import { Globals } from '@react-spring/web';
 import { screen, render, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
@@ -9,6 +10,10 @@ import * as CommonAPI from "../Api/Common"
 
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
+})
+
+beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
+  Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
 })
 
 describe("renders the whole app", () => {
@@ -54,7 +59,7 @@ describe("renders the whole app", () => {
       const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime }); //? VERY IMPORTANT due to setTimeout being used internally!
       jest.useFakeTimers(); //? OTHERWISE jest's fakeTimers will freeze userEvents entirely (like in line 58)
       jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123"); //* Invalid response so Turnstile thinks user is a computer
-      render(<App />, { wrapper: BrowserRouter });
+      render(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App /> </MemoryRouter>);
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); //* Despite invalid user, trying to submit anyway fails behind the scenes
@@ -72,7 +77,7 @@ describe("renders the whole app", () => {
       jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => { //* Must return a valid response for Turnstile to provide a success response
         return { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       });
-      render(<App />, { wrapper: BrowserRouter });
+      render(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App /> </MemoryRouter>);
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); //* User seems human so valid turnstile response received and email is sending
