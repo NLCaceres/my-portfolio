@@ -11,7 +11,7 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 // import iOSProjects from "../TabPanelData/iOS.json";
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
-const PostListView = ({viewWidth}) => {
+const PostListView = ({ viewWidth }) => {
   //! React-Router hooks + its computed props
   const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
   const path = (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname;
