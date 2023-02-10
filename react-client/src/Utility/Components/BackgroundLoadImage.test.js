@@ -1,6 +1,6 @@
 import React from "react";
 import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
-import { Globals } from '@react-spring/web'
+import { Globals } from "@react-spring/web";
 import BackgroundLoadImage from "./BackgroundLoadImage";
 
 beforeAll(() => { //? Run React-Spring animations BUT limit waitFor's waiting time
