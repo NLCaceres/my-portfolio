@@ -1,9 +1,10 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import SimpleNavbar from "./SimpleNavbar";
 import { averageTabletViewWidth } from "../Utility/Constants/Viewports";
-import { MemoryRouter } from "react-router-dom";
+import SimpleNavbar from "./SimpleNavbar";
+import * as Scroll from "../Utility/Functions/Browser";
 
 describe("renders a simple styled navbar", () => {
   test("that reorders itself on smaller screens via css modules", () => {
@@ -38,7 +39,7 @@ describe("renders a simple styled navbar", () => {
       expect(backEndNavLink.parentElement).toBeInTheDocument(); //* NavItem parent
     })
     test("with a scroll up on click of a link", async () => {
-      const scrollSpy = jest.spyOn(window, "scrollTo").mockImplementation(() => 1);
+      const scrollSpy = jest.spyOn(Scroll, "SmoothScroll");
       const user = userEvent.setup();
       render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
 
@@ -48,7 +49,7 @@ describe("renders a simple styled navbar", () => {
       scrollSpy.mockRestore();
     })
     test("with specific CSS attributes", async () => {
-      const scrollSpy = jest.spyOn(window, "scrollTo").mockImplementation(() => 1); //* Prevents "scrollTo not implemented" error
+      const scrollSpy = jest.spyOn(Scroll, "SmoothScroll"); //* Prevents "scrollTo not implemented" error
       const user = userEvent.setup();
       render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
 

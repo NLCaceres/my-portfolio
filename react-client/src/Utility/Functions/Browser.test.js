@@ -1,4 +1,4 @@
-import { GetCookie } from "./Browser";
+import { GetCookie, SmoothScroll } from "./Browser";
 
 describe("provides common functions used by the browser ", () => {
 
@@ -17,5 +17,18 @@ describe("provides common functions used by the browser ", () => {
       const token = GetCookie("CSRF-TOKEN");
       expect(token).toBe("some-token");
     })
+  })
+
+  test("running a scroll to the top on 350 millisecond timeout", () => {
+    jest.useFakeTimers();
+    const scrollSpy = jest.spyOn(window, "scroll").mockImplementation(() => 1);
+
+    SmoothScroll();
+    
+    jest.advanceTimersByTime(350);
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(scrollSpy).toHaveBeenLastCalledWith({ top: 0, left: 0, behavior: "smooth" });
+    
+    jest.useRealTimers();
   })
 });

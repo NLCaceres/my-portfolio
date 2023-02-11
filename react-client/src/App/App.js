@@ -8,6 +8,7 @@ import AppAlert from "../Utility/Components/AppAlert";
 import Footer from "../Footer/Footer";
 import AppRouting from "../Routing/AppRouting";
 import debounce from "lodash/debounce";
+import { SmoothScroll } from "../Utility/Functions/Browser";
 //import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
@@ -36,7 +37,10 @@ const App = () => {
   const navigate = useNavigate();
   const contactButtonClicked = () => {
     if (width >= 576) { setShowModal(true) }
-    else { navigate("contact-me") }
+    else { 
+      SmoothScroll();
+      navigate("contact-me");
+    }
   }
   const submitContactForm = (successful) => {
     setShowModal(false);

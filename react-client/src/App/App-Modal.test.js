@@ -5,8 +5,9 @@ import { Globals } from "@react-spring/web";
 import { screen, render, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
-import * as GetPostList from "../Api/ProjectAPI";
 import { mobileHighEndWidth } from "../Utility/Constants/Viewports";
+import * as GetPostList from "../Api/ProjectAPI";
+import * as Scroll from "../Utility/Functions/Browser";
 
 jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
@@ -24,6 +25,7 @@ describe("renders the whole app", () => {
   })
   afterEach(() => { jest.restoreAllMocks() })
   test("controls the opening of a 'Contact Me' modal or navigation to '/contact-me' onClick of the footer's contact me button", async () => {
+    const scrollSpy = jest.spyOn(Scroll, "SmoothScroll");
     const user = userEvent.setup();
     const { unmount } = render(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App /> </MemoryRouter>);
     //* Following ensures stubs have been inserted into DOM at '/portfolio/about-me'
@@ -33,6 +35,7 @@ describe("renders the whole app", () => {
     await user.click(contactMeButton); //* Should work as a button opening a modal
     const modal = screen.getByRole("dialog");
     expect(modal).toBeInTheDocument();
+    expect(scrollSpy).not.toHaveBeenCalled(); //* No scroll needed, just open the modal
 
     const modalCloser = screen.getByLabelText("Close");
     await user.click(modalCloser);
@@ -52,6 +55,7 @@ describe("renders the whole app", () => {
     //? Without location prop applied to <Routes>, <Routes> updates BEFORE it leaves all while a duplicate is entering
     await waitFor(() => { expect(screen.getAllByRole("heading", { name: /contact me!/i, level: 1 })).toHaveLength(1) }) //? So must wait for original to leave
     expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 })).toBeInTheDocument(); //? Now only have one "Contact Me!"
+    expect(scrollSpy).toHaveBeenCalledTimes(1); //* Smooth scroll occurs on route transition, NOT modal opening
 
     window.innerWidth = 1024 //* Reset to default Jest width
   });

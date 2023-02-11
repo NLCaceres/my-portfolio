@@ -9,3 +9,8 @@ export function GetCookie(name) {
   //* Then splits the key and value into a [key, value] arr, 
   return foundCookie.split('=')[1]; //* Take only the value from index 1
 }
+
+//? Adding slight delay allows Firefox/Safari to properly scroll to top of document
+export function SmoothScroll() { //? 100 works for Firefox BUT Safari is SUPER slow so 350 works best
+  setTimeout(() => window.scroll({ top: 0, left: 0, behavior: "smooth" }), 350);
+} //? Could also use this function in AppRouting useTransition's onRest event BUT it seems a bit too delayed

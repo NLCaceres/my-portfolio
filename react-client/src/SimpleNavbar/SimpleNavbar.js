@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavbarCss from "./Navbar.module.css";
 import Logo from "../logo.svg";
+import { SmoothScroll } from "../Utility/Functions/Browser";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
@@ -21,7 +22,7 @@ const SimpleNavbar = () => {
     <Navbar className={NavbarCss.header} expand="md" expanded={expanded}>
       <Container fluid>
         <Navbar.Toggle className="align-self-start mt-1" aria-controls="basic-navbar-nav" />
-        <FullNav />      
+        <FullNav />
       </Container>
     </Navbar>
   )
@@ -36,7 +37,7 @@ const FullNav = () => {
         </Nav>
       </Navbar.Collapse>
       {/*//? Imitate Bootstrap Navbar Brand BUT navigate via React-Router, not via the browser */}
-      <Link className={`${NavbarCss.brand} navbar-brand`} to="/portfolio/about-me">
+      <Link className={`${NavbarCss.brand} navbar-brand`} to="/portfolio/about-me" onClick={ SmoothScroll }>
         Nick Caceres
         <img src={Logo} className="ms-2" width="45" height="45" alt="Brand Logo"></img>
       </Link>
@@ -57,8 +58,7 @@ const NavButtons = () => {
     return (
       <Nav.Item className={`border border-dark rounded ${NavbarCss.navItem}`}
         key={ tabProperNames[tabKeyName] }>
-          <NavLink to={`portfolio/${tabKeyName}`} className={isActiveClasses}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <NavLink to={`portfolio/${tabKeyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
               { tabProperNames[tabKeyName] }
           </NavLink>
       </Nav.Item>
