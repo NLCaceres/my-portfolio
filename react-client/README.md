@@ -1,35 +1,40 @@
 # My Portfolio in React!
 
 ## Future Changes
-- Take advantage of React 18's Suspense library?
-- Drop React-Bootstrap and use React Portal to provide modal + a fancier carousel?
-  - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "Tailwind look"
-- Updating Testing-Library allows testing Hooks
-  - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
-  - BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
-    - Could help conditionally shrink Turnstile Widget into compact form for very small mobile devices (<320px)
-- Use Typescript?
-- JSX Dot Notation to simplify imports + name clarity
-  - Ex: `<PostCard.Image> { children } </PostCard.Image>`
-- Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
-  - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
-    - Title can be laid out + styled as "h5.mx-2 + div.underline"
-    - Material Design with flip animation to switch between smaller image container and flip out into text container on tap for mobile.
-      - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
-- RPG-based Homepage to reduce wall of text feeling
-- Validation in Contact Me Form
-- Add Intersectional-Observer Background-Loading image component for use in PostList Cards
-  - Base it off new BackgroundLoadImage component
-  - Use CSS 'transition' + 'animation' in both to accomplish smoother changes
-  - Could use React-Spring's useInView hook?
-- React-Spring animations may be packable into hooks that can be reused
-  - Currently have the following animations: fadeIn, fadeOut, windup + fling
+- React 18 based changes
+  - Suspense Library?
+  - Typescript?
+  - Vite?
+  - JSX Dot Notation to simplify imports + name clarity?
+    - Ex: `<PostCard.Image> { children } </PostCard.Image>`
+  - Hook Updates
+    - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
+    - IMPORTANT: BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
+      - MORE IMPORTANT: Could help conditionally shrink Turnstile Widget into compact form for very small mobile devices (<320px)
+- General Design
+  - Drop React-Bootstrap and use React Portals to provide modal + a fancier carousel?
+    - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "Tailwind look"
+  - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
+    - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
+      - Title can be laid out + styled as "h5.mx-2 + div.underline"
+      - Material Design with flip animation to switch between smaller image container and flip out into text container on tap for mobile.
+        - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
+  - RPG-based Homepage to reduce wall of text feeling
+- Changes Coming Soon
+  - Validation in Contact Me Form
+  - Add Intersectional-Observer Background-Loading image component for use in PostList Cards
+    - Base it off new BackgroundLoadImage component
+    - Could use React-Spring's useInView hook?
+  - React-Spring animations may be packable into hooks that can be reused
+    - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
+    - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
+      - "position: absolute" likely should always be used in Transitions since they usually deal with lists
 
 ## Recent Changes
 - Upgraded to React 18!
   - All Components now Functional + Hook based. No longer Class based!
+    - Easily able to test hooks now thanks to renderHook from testing-library/react
   - React Router 6
-- Handle Railway changes
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!
@@ -39,10 +44,14 @@
   - Extend React-Bootstrap Components to be easily reused across my Portfolio with my own specifications and preferences
     - App-Wide Alert made to be easily filled, displayed, and recolored based on message and color props
     - App-Wide Spinner to easily ensure it's accessible whenever used
-- Background loading images for better user experience, reducing pop-in on images
-  - Using React-Spring to animate the growth from placeholder to actual image, fading out placeholder. 
-    - Fling animation text swap if placeholder is required due to error loading the actual image
-- Update engines to Node 18, NPM 8, Yarn 1.22.19
+- React-Spring for animations
+  - Background loading images for better user experience, 
+    - Reducing pop-in on images by slickly growing with image, and fading away placeholder
+    - If image cannot load, fade image tag in the background, fling away loading text and render placeholder text
+  - Use transitions when navigating from route to route
+    - Exiting route fades and moves toward the left
+    - Meanwhile entering route launches to the left and into frame, bouncing into place
+- Update engines to Node 18, NPM 8, Yarn 1.22.19 and move from Heroku to Railway for deployments
 
 ## Quick Notes
 - React 17 decided to put its testing dependencies in package.json's normal dependencies list. Why?
