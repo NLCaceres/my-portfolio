@@ -14,7 +14,9 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 const PostListView = ({ viewWidth }) => {
   //! React-Router hooks + its computed props
   const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
-  const path = (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname;
+  if (location.pathname === "/") { window.history.replaceState(null, "", "/portfolio/about-me") }
+  const path = (location.pathname === "/") ? "/portfolio/about-me" : //* Handle coming from "/" route. Else handle trailing "/portfolio/foo/"
+    (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname; //* Else all other "/portfolio/foo" routes
   const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
   const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
   const title = KebabToUppercasePhrase(projectType);

@@ -2,6 +2,7 @@ import React from "react";
 import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
 import { Globals } from "@react-spring/web";
 import NotFoundPage from "./NotFoundPage";
+import { BrowserRouter } from "react-router-dom";
 
 beforeAll(() => {
   //? Skips the interpolation of values in React-Spring animations BUT runs all expected animations still!
@@ -10,14 +11,14 @@ beforeAll(() => {
 
 describe("renders a basic but fun 'Not Found' Page", () => {
   test("using a placeholder to cover the loading image before unveiling", async () => {
-    render(<NotFoundPage />);
+    render(<NotFoundPage />, { wrapper: BrowserRouter });
     const placeholder = screen.getByRole("heading", { name: /puppy incoming/i }).parentElement;
     expect(placeholder).toBeInTheDocument();
     fireEvent.load(screen.getByRole("img"));
     await waitForElementToBeRemoved(placeholder);
   })
   test("with simple css modules for each element", () => {
-    render(<NotFoundPage />);
+    render(<NotFoundPage />, { wrapper: BrowserRouter });
     const titleTag = screen.getByText(/sorry/i);
 
     const containerTag = titleTag.parentElement;
@@ -36,18 +37,18 @@ describe("renders a basic but fun 'Not Found' Page", () => {
     expect(descriptionTag).toHaveClass("caption")
   })
   test("keeping its img across basic rerenders", () => {
-    const { rerender } = render(<NotFoundPage />);
+    const { rerender } = render(<NotFoundPage />, { wrapper: BrowserRouter });
     const puppyImgTag = screen.getByRole("img", { name: /a cute pup/i });
     expect(puppyImgTag).toHaveClass("image");
     const oldPuppyImgSrc = puppyImgTag.src
-    rerender(<NotFoundPage />); //* If same url (no navigation), a rerender won't change the img
+    rerender(<NotFoundPage />, { wrapper: BrowserRouter }); //* If same url (no navigation), a rerender won't change the img
     expect(puppyImgTag.src).toMatch(oldPuppyImgSrc);
     //* Could expect() a new img via unmount or a new render BUT 
     //* 1 in 10 odds the same img appears anyway so no real certainty the test passes
     //* So by rendering 3 more NotFoundPage components, the odds (now 1 in 10,000) decrease that all 4 images use the same src
-    render(<NotFoundPage />);
-    render(<NotFoundPage />);
-    render(<NotFoundPage />);
+    render(<NotFoundPage />, { wrapper: BrowserRouter });
+    render(<NotFoundPage />, { wrapper: BrowserRouter });
+    render(<NotFoundPage />, { wrapper: BrowserRouter });
     //* Once rendered, grab all the images, and check if one src is different than the other
     const imgTags = screen.getAllByRole("img", { name: /a cute pup/i });
     let foundDifferentImages = false; //* Flip this bool if the previous img src is different than current one

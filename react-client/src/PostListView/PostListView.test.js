@@ -1,11 +1,11 @@
 import React from "react";
-import PostListView from "./PostListView";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
-import * as GetPostList from "../Api/ProjectAPI";
 import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import PostListView from "./PostListView";
+import * as GetPostList from "../Api/ProjectAPI";
 
 describe("renders a list of bootstrap cards filled with post objs", () => {
   let ApiMock;
@@ -17,26 +17,27 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
   test("only if the list has a set of major or minor projects", async () => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     ApiMock.mockImplementation(() => ({ majorProjects: [majProject], minorProjects: [minProject] }) );
-    const { unmount } = render(<PostListView />, { wrapper: BrowserRouter });
+    //* Need to use MemoryRouter with "/portfolio/iOS" to make major/small projects headers appear or else get "About me" headings
+    const { unmount } = render(<MemoryRouter initialEntries={["/portfolio/iOS"]}> <PostListView /> </MemoryRouter>);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     unmount();
 
     ApiMock.mockImplementation(() => ({ majorProjects: [majProject] }) );
-    const { unmount: secondUnmount } = render(<PostListView />, { wrapper: BrowserRouter });
+    const { unmount: secondUnmount } = render(<MemoryRouter initialEntries={["/portfolio/iOS"]}> <PostListView /> </MemoryRouter>);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /small projects/i })).not.toBeInTheDocument();
     secondUnmount();
 
     //* Following set fails because ln81 (not using key to set title, using index from Object.values()!)
     ApiMock.mockImplementation(() => ({ minorProjects: [minProject] }) );
-    const { unmount: thirdUnmount } = render(<PostListView />, { wrapper: BrowserRouter });
+    const { unmount: thirdUnmount } = render(<MemoryRouter initialEntries={["/portfolio/iOS"]}> <PostListView /> </MemoryRouter>);
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
     thirdUnmount();
 
     ApiMock.mockImplementation(() => ({ majorProjects: [], minorProjects: [] }) );
-    const { unmount: fourthUnmount } = render(<PostListView />, { wrapper: BrowserRouter }); //* Don't unmount since component is empty anyway
+    const { unmount: fourthUnmount } = render(<MemoryRouter initialEntries={["/portfolio/iOS"]}> <PostListView /> </MemoryRouter>);
     const placeholders = await screen.findAllByRole("heading"); //* Need to await placeholder heading elems or the ln43 render sets off act() warning
     expect(placeholders.length).toBe(6); //* 6 headers are found -> 2 titles + 4 titles in individual placeholder cards
     const placeholderImgs = screen.getAllByRole("heading", { name: /project/i }); //* Find 4 PlaceholderImg components
@@ -46,7 +47,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     fourthUnmount();
 
     ApiMock.mockImplementation(() => ({}) );
-    render(<PostListView />, { wrapper: BrowserRouter }); //* Same as with empty arrays. Just get placeholders
+    render(<MemoryRouter initialEntries={["/portfolio/iOS"]}> <PostListView /> </MemoryRouter>); //* Same as with empty arrays. Just get placeholders
     expect((await screen.findAllByRole("heading")).length).toBe(6); //* Still expect 6 titles heading elems
     const morePlaceholderImgs = screen.getAllByRole("heading", { name: /project/i }); //* 4 with class 'placeholderText'
     expect(morePlaceholderImgs).toHaveLength(4);
@@ -130,10 +131,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(screen.getByRole("heading", { name: /nicholas/i }));
     finalUnmount();
 
-    render(<MemoryRouter initialEntries={[""]}> <PostListView /> </MemoryRouter>); //* W/out a location prop - title header is empty
-    const projectList = await screen.findByRole("heading", { name: "Major Projects" }) //* Should still render ProjectList component
-    const title = projectList.parentElement.previousElementSibling || projectList.parentElement.nextElementSibling; 
-    expect(title).toBe(null) //* prevElem & nextElem above should BOTH return null since projectList's container div won't have its usual title sibling
-    //* If render had a viewWidth prop w/ >= 768, then prevSibling might return CardImgModal BUT w/ an undefined viewWidth, its render condition fails
+    render(<MemoryRouter initialEntries={[""]}> <PostListView /> </MemoryRouter>); //* "" or "/" simulate a redirect to "/portfolio/about-me"
+    await screen.findByRole("heading", { name: "About Me" }) //* Instead will get "About Me" header
+    expect(screen.getByRole("heading", { name: /nicholas/i })); //* And just below it, "Nicholas" appears as expected
   })
 })
