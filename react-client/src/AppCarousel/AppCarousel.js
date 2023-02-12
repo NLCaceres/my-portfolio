@@ -4,7 +4,7 @@ import CarouselCss from "./Carousel.module.css";
 import cnames from "classnames";
 
 //! Bootstrap Carousel with defaults set - no control arrows or interval
-const SimpleCarousel = ({images, className, viewWidth}) => {
+const AppCarousel = ({ images, className, viewWidth }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   //? Set height/width to ensure good aspect ratio for images in the Carousel
   const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450;
@@ -30,7 +30,7 @@ const SimpleCarousel = ({images, className, viewWidth}) => {
 
   return (
     <Carousel activeIndex={ activeIndex } onSelect={ goToIndex } controls={false}
-      interval={null} data-testid="simple-carousel" className={ cnames(CarouselCss.full, `${className || ''}`, 
+      interval={null} data-testid="app-carousel" className={ cnames(CarouselCss.full, `${className || ''}`, 
       {"hovered-indicators": usingHoverClass }) }>
         { //? React-bootstrap expects 'Carousel.Item's so abstracting this block to a Func component DOESN'T work
           images.map(image => { //* Create an array of Carousel.Items to display
@@ -47,4 +47,4 @@ const SimpleCarousel = ({images, className, viewWidth}) => {
   );
 }
 
-export default SimpleCarousel;
+export default AppCarousel;

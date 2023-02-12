@@ -8,7 +8,7 @@ import Nav from "react-bootstrap/Nav"
 import { Link, NavLink } from "react-router-dom";
 
 /* //? Repackaging of React-bootstrap navbar into something a bit more convenient */
-const SimpleNavbar = () => {
+const AppNavbar = () => {
   const [expanded, setExpanded] = useState(false); //* Init state = false
   useEffect(() => {
     function expansionListener(event) { //? Contains() works on DomNodes + better supported than String.includes()
@@ -66,4 +66,4 @@ const NavButtons = () => {
   });
 };
 
-export default SimpleNavbar;
+export default AppNavbar;

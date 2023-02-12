@@ -2,9 +2,9 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
-import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 import PostListView from "./PostListView";
+import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
+import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 import * as GetPostList from "../Api/ProjectAPI";
 
 describe("renders a list of bootstrap cards filled with post objs", () => {

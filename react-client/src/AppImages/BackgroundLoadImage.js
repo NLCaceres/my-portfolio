@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { animated, config, useResize, useSpring } from "@react-spring/web"
 import PlaceholderImg from "./PlaceholderImg";
 import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
-import ConsoleLogger from "../Functions/LoggerFuncs";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //* Creates a cover via PlaceholderImg, allowing image to load behind it, then remove the cover once the image's onLoad says it has completed
 //* Therefore many of these params are needed to make the unveiling feel natural

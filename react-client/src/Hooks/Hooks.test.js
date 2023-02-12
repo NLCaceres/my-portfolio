@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import UseNullableAsync from "./UseAsync";
 
-
 describe("enables async fetch requests and their callbacks to be cancelled if component rerenders", () => {
   let asyncFuncMock; let callbackMock;
   beforeEach(() => {

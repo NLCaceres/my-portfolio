@@ -34,6 +34,7 @@
 - Upgraded to React 18!
   - All Components now Functional + Hook based. No longer Class based!
     - Easily able to test hooks now thanks to renderHook from testing-library/react
+    - Reorganize folders to be oriented around individual components and their usage
   - React Router 6
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled

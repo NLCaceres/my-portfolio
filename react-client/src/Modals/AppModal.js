@@ -1,5 +1,5 @@
 import React from "react";
-import SimpleModalCss from "./SimpleModal.module.css";
+import AppModalCss from "./AppModal.module.css";
 import Modal from 'react-bootstrap/Modal';
 import { CreateID } from "../Utility/Functions/ComputedProps";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
@@ -21,12 +21,12 @@ const propIdOrModalId = id => {
 //@params headerClasses = header section CSS class, titleClasses = title section CSS class
 //@params bodyClasses = body section CSS class, footerClasses = footer section CSS class
 //@params footer = Like React children prop. Pass any element or string into Footer
-const SimpleModal = props => {
+const AppModal = props => {
   const computedID = propIdOrModalId(props.ID);
 
   return (
-    <Modal centered show={ props.show } onHide={ props.onHide } dialogClassName={`${SimpleModalCss.dialogBox}`}
-      aria-labelledby={computedID} contentClassName={`${SimpleModalCss.content} ${props.contentClasses || ''}`.trim()}>
+    <Modal centered show={ props.show } onHide={ props.onHide } dialogClassName={`${AppModalCss.dialogBox}`}
+      aria-labelledby={computedID} contentClassName={`${AppModalCss.content} ${props.contentClasses || ''}`.trim()}>
         { props.title && 
           <ModalHeader ID={ computedID } className={`${props.headerClasses || ''}`} titleClasses={`${props.titleClasses || ''}`}>
             { props.title }
@@ -59,4 +59,4 @@ const ModalFooter = props => {
   )
 }
 
-export default SimpleModal;
+export default AppModal;

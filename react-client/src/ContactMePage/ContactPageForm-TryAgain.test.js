@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, prettyDOM } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 //* Unfortunately, jest.doMock() nor jest.isolateModules() seem to work as expected 
@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 //* jest.isolateModules() on the other hand seems to have trouble being used twice as well as 
 //* seems to have trouble w/ async methods like findByRole or user.click()
 //todo Maybe Jest 29 + React 18 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
-jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
 })
 

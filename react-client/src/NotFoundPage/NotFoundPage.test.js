@@ -1,8 +1,8 @@
 import React from "react";
 import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
 import NotFoundPage from "./NotFoundPage";
-import { BrowserRouter } from "react-router-dom";
 
 beforeAll(() => {
   //? Skips the interpolation of values in React-Spring animations BUT runs all expected animations still!

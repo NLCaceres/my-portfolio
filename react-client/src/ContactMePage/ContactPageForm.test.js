@@ -2,12 +2,12 @@ import React from "react";
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
+import SilenceWarning from "../Utility/TestHelpers/WarningSilencer";
 import * as CommonAPI from "../Api/Common";
 import * as TurnstileAPI from "../Api/ThirdParty";
-import SilenceWarning from "../Utility/Functions/Tests/WarningSilencer";
 
 const originalEnv = process.env;
-jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
 })
 
@@ -19,7 +19,7 @@ describe("renders the form for the contact page", () => {
   // beforeEach(() => { jest.resetModules(); }) //* As of Jest 27, resetModules() seems bugged, crashing Functional React Components using Hooks
   test("that has a toggleable dark mode", async () => {
     //? If just mocking the default export (and not importing any others) then the following works! OTHERWISE: See line 56
-    //* jest.doMock("../Utility/Components/TurnstileWidget", () => tokenTurnstileMock);
+    //* jest.doMock("../ThirdParty/TurnstileWidget", () => tokenTurnstileMock);
     // const ContactPageForm = (await import("./ContactPageForm")).default; //? Must re-import ContactPageForm component every doMock test
     const { rerender } = render(<ContactPageForm />);
     const formContainer = screen.getByTestId("form-container");
@@ -56,7 +56,7 @@ describe("renders the form for the contact page", () => {
       //? If multiple imports needed from file, then must return an object w/ following syntax (__esModule key is very important!)
       //? Only want to partially mock the file? THEN Run 'const originalModule = jest.requireActual('dir/path/from/here')', 
       //? then add '...originalModule' to below returned obj, only overriding what's necessary
-      // jest.doMock('../Utility/Components/TurnstileWidget', () => { 
+      // jest.doMock('../ThirdParty/TurnstileWidget', () => { 
       //   return { 
       //     __esModule: true, 
       //     default: ({action, successCB, className }) => {
@@ -94,7 +94,7 @@ describe("renders the form for the contact page", () => {
     //   jest.isolateModules(async () => { //! BUT isolateModules SOMETIMES seems to work in its place to change a mock mid-test
     //     //? The one problem w/ isolateModules is it CANNOT contain anything from the outside scope
     //     console.log("Starting try again state test")
-    //     jest.doMock('../Utility/Components/TurnstileWidget', () => {
+    //     jest.doMock('../ThirdParty/TurnstileWidget', () => {
     //       return { //? Since it doesn't know about the outside scope, we can't use tokenTurnstileMock
     //         __esModule: true, //? And must define a new mock below NO MATTER WHAT
     //         default: ({action, successCB, className }) => {

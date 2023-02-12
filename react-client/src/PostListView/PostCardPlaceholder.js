@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PostCardCss from './PostCard.module.css';
 import PlaceholderCss from './PostCardPlaceholder.module.css';
-import PlaceholderImg from "../Utility/Components/PlaceholderImg";
+import PlaceholderImg from "../AppImages/PlaceholderImg";
 
 // @params ViewWidth: Used to zigzag cards. 
 // @params: NumPlaceholders: Default is 4 cards rendered. Creates 4 item array + uses its indexes to map over

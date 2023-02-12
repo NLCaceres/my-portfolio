@@ -7,7 +7,7 @@ import * as TurnstileAPI from "../Api/ThirdParty";
 
 //? jest.mock() hoists above imports which makes it file wide and work for every test below SO
 //? If a per-test option is needed, must use "jest.doMock()" (See ContactPageForm.test for example)
-jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div>Turnstile Verification Widget</div>);
 }); 
 

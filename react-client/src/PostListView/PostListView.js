@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import PostCard from "./PostCard";
-import CardImageModal from "../Modals/CardImageModal/CardImageModal";
+import CardImageModal from "../Modals/CardImageModal";
 import GetPostList from "../Api/ProjectAPI";
 import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
 import PostCardListPlaceholder from "./PostCardPlaceholder";

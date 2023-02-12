@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSpring } from "@react-spring/web";
 import NotFoundCss from "./NotFoundPage.module.css"
-import BackgroundLoadImage from "../Utility/Components/BackgroundLoadImage";
+import BackgroundLoadImage from "../AppImages/BackgroundLoadImage";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //* NotFoundPage that renders a fun image on redirect/fallback from an unknown URL

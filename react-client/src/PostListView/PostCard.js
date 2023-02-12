@@ -4,8 +4,8 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import PlaceholderImg from "../Utility/Components/PlaceholderImg";
-import SimpleCarousel from "../SimpleCarousel/SimpleCarousel";
+import PlaceholderImg from "../AppImages/PlaceholderImg";
+import AppCarousel from "../AppCarousel/AppCarousel";
 
 //@params: Following = Expected Props - className (root element classes)
 //@params: rowClasses (Row container classes), viewWidth (helps add responsive behavior in children)
@@ -35,7 +35,7 @@ const CardImage = ({ project, viewWidth, handleClick }) => { //* Save a line & d
     const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450; //? Set height/width to ensure good aspect ratio
     const width = (viewWidth > 767) ? 350 : (viewWidth > 575) ? 425 : (viewWidth > 359) ? 330 : 280;
     imageType = (viewWidth < 768 && project.post_images.length > 1) ? 
-      <SimpleCarousel images={ project.post_images } viewWidth={ viewWidth } className='mt-3 mt-sm-0' /> :
+      <AppCarousel images={ project.post_images } viewWidth={ viewWidth } className='mt-3 mt-sm-0' /> :
       <img className={ cnames(`align-self-center mt-3 mt-sm-0 ${ PostCardCss.cardImg }`,
           { [PostCardCss.clickable]: viewWidth >= 992 && project.post_images.length > 1 }
         )} onClick={ handleClick } height={ height } width={ width }

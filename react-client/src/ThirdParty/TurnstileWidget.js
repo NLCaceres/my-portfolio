@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import TurnstileWidgetCss from "./TurnstileWidget.module.css";
-import ConsoleLogger from "../Functions/LoggerFuncs";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 const TurnstileWidget = ({ action, successCB, className }) => {
   useEffect(() => {

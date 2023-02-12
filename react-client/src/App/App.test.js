@@ -4,11 +4,11 @@ import { MemoryRouter } from "react-router-dom";
 import { Globals } from '@react-spring/web';
 import { screen, render, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ProjectFactory from "../Utility/Functions/Tests/ProjectFactory";
+import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import * as GetPostList from "../Api/ProjectAPI";
 import * as CommonAPI from "../Api/Common"
 
-jest.mock("../Utility/Components/TurnstileWidget", () => ({action, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
 })
 

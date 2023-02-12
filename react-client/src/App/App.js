@@ -1,10 +1,10 @@
 // import "./App.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SimpleNavBar from "../SimpleNavbar/SimpleNavbar";
-import SimpleModal from "../Modals/SimpleModal.js";
+import AppAlert from "../AppAlert/AppAlert";
+import AppModal from "../Modals/AppModal.js";
+import AppNavbar from "../AppNavbar/AppNavbar";
 import ContactPageForm from "../ContactMePage/ContactPageForm";
-import AppAlert from "../Utility/Components/AppAlert";
 import Footer from "../Footer/Footer";
 import AppRouting from "../Routing/AppRouting";
 import debounce from "lodash/debounce";
@@ -57,7 +57,7 @@ const App = () => {
 
   return (
     <> 
-      <SimpleNavBar />
+      <AppNavbar />
     
       <AppRouting viewWidth={ width } submitContactForm={submitContactForm} />
       
@@ -65,10 +65,10 @@ const App = () => {
       
       <Footer contactButtonOnClick={contactButtonClicked} />
       
-      <SimpleModal ID="contact-me" show={ showModal } onHide={ () => setShowModal(false) } title="Send Me a Message!"
+      <AppModal ID="contact-me" show={ showModal } onHide={ () => setShowModal(false) } title="Send Me a Message!"
         headerClasses="pt-2 pb-1" titleClasses="fw-bolder text-white">
           <ContactPageForm onSubmitForm={ submitContactForm } />
-      </SimpleModal>
+      </AppModal>
     </>
   );
 }

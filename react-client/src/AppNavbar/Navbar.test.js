@@ -2,13 +2,13 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import AppNavbar from "./AppNavbar";
 import { averageTabletViewWidth } from "../Utility/Constants/Viewports";
-import SimpleNavbar from "./SimpleNavbar";
 import * as Scroll from "../Utility/Functions/Browser";
 
 describe("renders a simple styled navbar", () => {
   test("that reorders itself on smaller screens via css modules", () => {
-    render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
+    render(<AppNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
     const collapseView = screen.getByTestId("nav-collapse");
     expect(collapseView).toHaveClass("nav-collapse");
 
@@ -17,7 +17,7 @@ describe("renders a simple styled navbar", () => {
   })
   describe("setting up a navBrand + 4 specific navLinks", () => {
     test("via a mapping function", () => {
-      render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
+      render(<AppNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
 
       const navBrand = screen.getByRole("link", { name: /brand logo/i });
       expect(navBrand).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe("renders a simple styled navbar", () => {
     test("with a scroll up on click of a link", async () => {
       const scrollSpy = jest.spyOn(Scroll, "SmoothScroll");
       const user = userEvent.setup();
-      render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
+      render(<AppNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
 
       await user.click(screen.getByText("Back-End Web"));
       expect(scrollSpy).toHaveBeenCalled();  
@@ -51,7 +51,7 @@ describe("renders a simple styled navbar", () => {
     test("with specific CSS attributes", async () => {
       const scrollSpy = jest.spyOn(Scroll, "SmoothScroll"); //* Prevents "scrollTo not implemented" error
       const user = userEvent.setup();
-      render(<SimpleNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
+      render(<AppNavbar viewWidth={averageTabletViewWidth}/>, { wrapper: MemoryRouter })
 
       const navBrand = screen.getByRole("link", { name: /brand logo/i });
       expect(navBrand).toHaveClass("brand navbar-brand", { exact: true });

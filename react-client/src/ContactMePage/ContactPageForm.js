@@ -2,8 +2,8 @@ import React, { useCallback, useState } from "react";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button";
-import AppSpinner from "../Utility/Components/AppSpinner";
-import TurnstileWidget from "../Utility/Components/TurnstileWidget";
+import AppSpinner from "../AppSpinner/AppSpinner";
+import TurnstileWidget from "../ThirdParty/TurnstileWidget";
 import cnames from "classnames";
 import ContactPageFormCss from "./ContactPageForm.module.css";
 import { SendEmail } from "../Api/Common";

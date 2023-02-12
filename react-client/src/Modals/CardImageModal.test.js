@@ -1,9 +1,9 @@
 import React from 'react';
 import CardImageModal from './CardImageModal';
-import { render, screen, prettyDOM } from '@testing-library/react';
-import ProjectFactory, { ProjectImageFactory } from "../../Utility/Functions/Tests/ProjectFactory";
-import { averageTabletViewWidth } from '../../Utility/Constants/Viewports';
-import { CleanAndKebabString } from '../../Utility/Functions/ComputedProps';
+import { render, screen } from '@testing-library/react';
+import ProjectFactory, { ProjectImageFactory } from "../Utility/TestHelpers/ProjectFactory";
+import { averageTabletViewWidth } from '../Utility/Constants/Viewports';
+import { CleanAndKebabString } from '../Utility/Functions/ComputedProps';
 
 const voidFunc = () => 'void';
 describe("renders modal using my simple-modal component to display project's title + image set", () => {
@@ -31,7 +31,7 @@ describe("renders modal using my simple-modal component to display project's tit
     //* Now have multi imgs (>= 2), now carousel instead of direct img
     projectWithoutImgs.post_images = [ProjectImageFactory.create(), ProjectImageFactory.create()];
     rerender(<CardImageModal project={projectWithoutImgs} viewWidth={averageTabletViewWidth} show={true} onHide={voidFunc}/>);
-    const imageCarouselTag = screen.getByTestId('simple-carousel');
+    const imageCarouselTag = screen.getByTestId('app-carousel');
     expect(imageCarouselTag).toBeInTheDocument();
     const carouselItems = imageCarouselTag.lastChild.childNodes; //* Carousel root -> carousel-inner -> 2 * carousel-items
     expect(carouselItems).toHaveLength(2); //* Counting the carousel-items rather than specifically the imgs inside of them

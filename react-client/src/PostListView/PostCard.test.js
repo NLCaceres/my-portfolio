@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, screen, prettyDOM } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import PostCard from './PostCard';
-import ProjectFactory, { ProjectImageFactory } from '../Utility/Functions/Tests/ProjectFactory';
+import ProjectFactory, { ProjectImageFactory } from '../Utility/TestHelpers/ProjectFactory';
 import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidth, smallDesktopViewWidth, mobileHighEndWidth, miniMobileHighEndWidth } from "../Utility/Constants/Viewports";
 
 describe('render a single PostCard', () => {
@@ -49,17 +49,17 @@ describe('render a single PostCard', () => {
       //* Still single rep img at desktop (993px) width + multiple images
       testProject.post_images.push(ProjectImageFactory.create()); //* So more than 1 image
       rerender(<PostCard project={testProject} viewWidth={smallDesktopLowEndWidth} handleImgClick={dumbImgClickFunc} />)
-      expect(screen.queryByTestId('simple-carousel')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('app-carousel')).not.toBeInTheDocument();
       expect(screen.getByRole('img', { name: /barfooalt/i })).toBeInTheDocument(); //* Still rep img
       //* Multiple images + 768px tablet (low end for single rep img)
       rerender(<PostCard project={testProject} viewWidth={averageTabletViewWidth} handleImgClick={dumbImgClickFunc} />)
-      expect(screen.queryByTestId('simple-carousel')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('app-carousel')).not.toBeInTheDocument();
       expect(screen.getByRole('img', { name: /barfooalt/i })).toBeInTheDocument(); //* Still rep img
       //? Jest turns css modules into simple to find classes 'PostCardCss.clickable' = 'clickable'
       // expect(screen.getByRole('img', { name: /barfooalt/i })).toHaveClass('clickable');
       //! Carousel appears at 767px tablet (and lower) w/ multiple images
       rerender(<PostCard project={testProject} viewWidth={smallTabletHighEndWidth} handleImgClick={dumbImgClickFunc} />)
-      expect(screen.getByTestId('simple-carousel')).toBeInTheDocument();
+      expect(screen.getByTestId('app-carousel')).toBeInTheDocument();
       expect(screen.getAllByRole('img', { name: /barfooalt/i })).toHaveLength(2) //* Imgs technically still there! but in carousel!
     })
     test("that hints + allows clicks at right viewWidth", async () => {
