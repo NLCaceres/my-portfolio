@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import Carousel from 'react-bootstrap/Carousel';
 import CarouselCss from "./Carousel.module.css";
 import cnames from "classnames";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //! Bootstrap Carousel with defaults set - no control arrows or interval
-const AppCarousel = ({ images, className, viewWidth }) => {
+const AppCarousel = ({ children, images, ItemComponent, className, viewWidth }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  //? Set height/width to ensure good aspect ratio for images in the Carousel
-  const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450;
-  const width = (viewWidth > 767) ? 350 : (viewWidth > 575) ? 425 : (viewWidth > 359) ? 330 : 280;
 
   const goToIndex = (newIndex, e) => {
     setActiveIndex(newIndex);
@@ -32,19 +30,34 @@ const AppCarousel = ({ images, className, viewWidth }) => {
     <Carousel activeIndex={ activeIndex } onSelect={ goToIndex } controls={false}
       interval={null} data-testid="app-carousel" className={ cnames(CarouselCss.full, `${className || ''}`, 
       {"hovered-indicators": usingHoverClass }) }>
-        { //? React-bootstrap expects 'Carousel.Item's so abstracting this block to a Func component DOESN'T work
-          images.map(image => { //* Create an array of Carousel.Items to display
+        {
+          children ||
+          images?.map(image => { //* Create an array of Carousel.Items to display
             return (
               <Carousel.Item key={ image.image_url }>
-                <img className={`img-fluid ${CarouselCss.slide}`} src={ image.image_url } alt={ image.alt_text } 
-                  height={ height } width={ width } />
-                { image.caption && <Carousel.Caption> <h3>{ image.caption }</h3> </Carousel.Caption> }
+                { (ItemComponent) ?
+                    <ItemComponent src={ image.image_url } alt={ image.alt_text } /> : 
+                    <DefaultItem src={ image.image_url } alt={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} /> 
+                }
               </Carousel.Item>
             )}
           )
         }
     </Carousel>
   );
+}
+
+const DefaultItem = ({ src, alt, caption, viewWidth }) => {
+  //? Set height/width to ensure good aspect ratio for images in the Carousel
+  const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450;
+  const width = (viewWidth > 767) ? 350 : (viewWidth > 575) ? 425 : (viewWidth > 359) ? 330 : 280;
+
+  return (
+    <>
+      <img className={`img-fluid ${CarouselCss.slide}`} src={ src } alt={ alt } height={ height } width={ width } />
+      { caption && <Carousel.Caption> <h3>{ caption }</h3> </Carousel.Caption> }
+    </>
+  )
 }
 
 export default AppCarousel;

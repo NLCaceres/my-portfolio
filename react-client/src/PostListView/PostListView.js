@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
+import { useLocation } from "react-router-dom";
 import PostCard from "./PostCard";
 import CardImageModal from "../Modals/CardImageModal";
+import PostCardListPlaceholder from "./PostCardPlaceholder";
+import UseNullableAsync from "../Hooks/UseAsync";
 import GetPostList from "../Api/ProjectAPI";
 import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
-import PostCardListPlaceholder from "./PostCardPlaceholder";
-import { useLocation } from "react-router-dom";
-import UseNullableAsync from "../Hooks/UseAsync";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* 'Import' loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
@@ -38,7 +38,7 @@ const PostListView = ({ viewWidth }) => {
     (projectList?.majorProjects?.length > 0 || projectList?.minorProjects?.length > 0) ?
     (
       <div>
-        { viewWidth >= 768 && (
+        { viewWidth >= 768 && ( //? ImageModal is completely unmounted until img click mounts it then injects project images list
           <CardImageModal onHide={ () => openModal(null) } show={ modalState.showModal }
             project={ modalState.modalProject } viewWidth={ viewWidth } />
         )}
@@ -80,7 +80,7 @@ const ProjectSection = props => {
       const modalRendered = (props.viewWidth >= 768 && project.post_images?.length > 1);
       return <PostCard className={ props.postCardClasses } rowClasses={ reversed }
         project={ project } viewWidth={ props.viewWidth } key={ project.title } 
-        handleImgClick={ () => { if (modalRendered) props.modalControl(project) } } />
+        onImgClick={ () => { if (modalRendered) props.modalControl(project) } } />
     }
   )
 };

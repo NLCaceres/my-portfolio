@@ -2,15 +2,49 @@
   background-color: #f9fae8;
 }
 
-.cardImg { /* Handles mobile */ 
-  min-height: 250px;
-  max-height: 55vh; /* Goal: 500px mobile, 550px smallTablet */
-  max-width: 100%;
+/* This base .cardImgContainer class handles very small mobile devices height/width + defaults for alignment & margin */
+/* Using the parent selector (.postCard class) ensures higher precedence w/out using "!important" */
+/* PLUS reduce jank when changing images in a carousel by setting min/max width/height for consistent sizing, no overflow & good 3:4 aspect-ratio */
+.postCard .cardImgContainer {
+  min-width: 280px;
+  max-width: 280px;
+  max-height: 375px;
+  min-height: 375px;
+  align-self: center;
 }
-@media only screen and (min-width: 768px) {
-  .cardImg { /* Handles tablets & desktop */ 
-    min-height: 300px;
-    max-height: 50vh;
+/* As a bonus, at small sizes, ensure height is ready regardless if carousel or simple img */
+@media only screen and (min-width: 360px) and (max-width: 575px) {
+  .postCard .cardImgContainer {
+    min-width: 330px;
+    max-width: 330px;
+    max-height: 450px;
+    min-height: 450px;
+  }
+}
+/* As an extra bonus! At tablet sizes, let width grow for cool horizontal scrolling projector effect */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+  .postCard .cardImgContainer {
+    max-width: 425px;
+    max-height: 550px;
+    min-height: 550px;
+  }
+}
+/* For bigger viewports (tablet/desktop) ensure height isn't too small or too big SO
+  still get consistent sizing but avoid stretching aspect-ratio. Overflow isn't really a concern */
+@media only screen and (min-width: 768px)  {
+  .postCard .cardImgContainer {
+    min-height: 200px;
+    max-height: 425px;
+    min-width: 100%
+  }
+}
+
+.imgTopMargin {
+  margin-top: 1rem;
+}
+@media only screen and (min-width: 576px) {
+  .imgTopMargin { 
+    margin-top: 0;
   }
 }
 

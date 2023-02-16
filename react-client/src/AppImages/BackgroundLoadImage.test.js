@@ -1,5 +1,6 @@
 import React from "react";
-import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Globals } from "@react-spring/web";
 import BackgroundLoadImage from "./BackgroundLoadImage";
 
@@ -36,31 +37,70 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(nonHeaderPlaceholderText).toBeInTheDocument(); //* Typescript could probably fix this, preventing a component from being passed into prop
     expect(nonHeaderPlaceholderText).not.toHaveAttribute("style");
   })
-  test("covering the image based on its load state, uncovering when successfully loaded or remaining if it fails, both firing a callback", async () => {
-    const loadCallback = jest.fn();
-    const { rerender, unmount } = render(<BackgroundLoadImage onLoad={loadCallback} />);
-    const img = screen.getByRole("img");
-    expect(img.previousElementSibling).toBeInTheDocument(); //* Should be placeholder;
-    fireEvent.load(img); //* Image successfully loaded
-    expect(img).toBeInTheDocument(); //* Img remains in doc
-    await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div disappears
-    expect(loadCallback).toBeCalledTimes(1); //* It succeeded, check if callback added and call it!
-    
-    rerender(<BackgroundLoadImage />);
-    expect(img).toBeInTheDocument();
-    fireEvent.load(img); //* Image successfully loaded but no callback passed in
-    expect(img.previousElementSibling).not.toBeInTheDocument();
-    expect(loadCallback).toBeCalledTimes(1); //* Not used, so the check fails and it's not called
-    unmount();
+  test("allowing an onclick callback to be put on the true img tag", async () => {
+    const clickCallback = jest.fn();
+    const { rerender } = render(<BackgroundLoadImage onImgClick={clickCallback} />);
+    const user = userEvent.setup();
 
-    render(<BackgroundLoadImage onLoad={loadCallback}/>);
-    const failImg = screen.getByRole("img");
-    const placeholder = screen.getByRole('heading', { level: 2 });
-    expect(placeholder.parentElement).toBeInTheDocument();
-    fireEvent.error(failImg); //* Image fails to load
-    expect(failImg).not.toBeInTheDocument(); //* Make image disappear!
-    expect(placeholder).toBeInTheDocument(); //* Let placeholder remain
-    expect(loadCallback).toBeCalledTimes(2); //* Still call parent's callback!
+    await user.click(screen.getByRole("img")); //* Callback called one time
+    expect(clickCallback).toHaveBeenCalledTimes(1);
+
+    rerender(<BackgroundLoadImage />); //* Remove callback
+    await user.click(screen.getByRole("img"))
+    expect(clickCallback).toHaveBeenCalledTimes(1); //* So mock still only has been called 1 time
+  })
+  describe("using load state", () => {
+    test("to cover the image", async () => {
+      const { unmount } = render(<BackgroundLoadImage />);
+      const img = screen.getByRole("img"); //* Img in the doc
+      expect(img.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc;
+      fireEvent.load(img); //* Image successfully loaded
+      expect(img).toBeInTheDocument(); //* Img remains in doc
+      await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div disappears
+
+      unmount();
+
+      render(<BackgroundLoadImage />);
+      const failImg = screen.getByRole("img"); //* This img will fail to load
+      const placeholder = screen.getByRole('heading', { level: 2 }); //* Placeholder present so its heading is visible
+      expect(placeholder.parentElement).toBeInTheDocument(); //* Placeholder itself is its container
+      fireEvent.error(failImg); //* Image fails to load
+      expect(failImg).not.toBeInTheDocument(); //* Image now will disappear due to failed loading
+      expect(placeholder).toBeInTheDocument(); //* Placeholder gets to stay
+    })
+    test("to fire a parent callback regardless of success or failure", async () => {
+      const loadCallback = jest.fn();
+      const { rerender, unmount } = render(<BackgroundLoadImage onLoad={loadCallback} />);
+      const img = screen.getByRole("img"); //* Img begins loading in background
+      fireEvent.load(img); //* Image successfully loaded
+      expect(loadCallback).toBeCalledTimes(1); //* It succeeded, check if callback added and call it!
+      
+      rerender(<BackgroundLoadImage />);
+      expect(img).toBeInTheDocument(); //* Image still there
+      fireEvent.load(img); //* Image successfully loaded again but no callback passed in
+      expect(loadCallback).toBeCalledTimes(1); //* No callback used so nothing to run upon loading success
+      unmount();
+
+      render(<BackgroundLoadImage onLoad={loadCallback}/>); //* Re-add the callback
+      const failImg = screen.getByRole("img"); //* Image will fail to load correctly
+      fireEvent.error(failImg); //* Image fails to load
+      expect(loadCallback).toBeCalledTimes(2); //* Still call parent's callback!
+    })
+    test("that resets if the image src changes", async () => {
+      const { rerender } = render(<BackgroundLoadImage src="foobar.jpeg" />);
+      const img = screen.getByRole("img"); //* Img begins loading in background
+      expect(img.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc;
+      fireEvent.load(img); //* Image successfully loaded
+      expect(img).toBeInTheDocument(); //* Img remains in doc
+      await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div disappears
+
+      rerender(<BackgroundLoadImage src="barfoo.jpeg" />);
+      const newImg = screen.getByRole("img"); //* Img starts to reload with new src
+      expect(newImg.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc again
+      fireEvent.load(newImg);
+      expect(newImg).toBeInTheDocument(); //* Img remains in doc
+      await waitForElementToBeRemoved(newImg.previousElementSibling); //* Placeholder div disappears
+    })
   })
   test("with custom css options for each of its 3 tags", () => {
     const { rerender } = render(<BackgroundLoadImage />);
@@ -77,5 +117,13 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(img.parentElement).toHaveClass("container foo", { exact: true });
     expect(img.previousElementSibling).toHaveClass("placeholderImg placeholder bar", { exact: true });
     expect(img).toHaveClass("photo fizz", { exact: true });
+  })
+  test("enabling ref forwarding via 'parentRef' prop", async () => {
+    const parentRef = React.createRef();
+    const { rerender } = render(<BackgroundLoadImage parentRef={parentRef} />);
+    await waitFor(() => expect(parentRef.current).toHaveClass("container")); //* parentRef adds the containing div as its 'current' prop
+
+    rerender(<BackgroundLoadImage />);
+    expect(parentRef.current).toBe(null); //* And once removed from the prop, the ref's current tag becomes null
   })
 })

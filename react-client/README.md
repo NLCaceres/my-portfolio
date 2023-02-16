@@ -4,6 +4,7 @@
 - React 18 based changes
   - Suspense Library?
   - Typescript?
+    - Will need to update files containing JSX from '.js' files to '.jsx' then '.tsx' ('.tsx' is mandatory when using Typescript)
   - Vite?
   - JSX Dot Notation to simplify imports + name clarity?
     - Ex: `<PostCard.Image> { children } </PostCard.Image>`
@@ -52,6 +53,9 @@
   - Use transitions when navigating from route to route
     - Exiting route fades and moves toward the left
     - Meanwhile entering route launches to the left and into frame, bouncing into place
+  - Lazy load images on intersection via useInView hook
+    - Even Carousel lazy loads in mobile image section of Card 
+    - Desktop modal does not lazy load BUT maybe it should given some projects have 8+ imgs that would load at once
 - Update engines to Node 18, NPM 8, Yarn 1.22.19 and move from Heroku to Railway for deployments
 
 ## Quick Notes

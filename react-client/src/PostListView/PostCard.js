@@ -1,4 +1,3 @@
-import cnames from "classnames";
 import PostCardCss from './PostCard.module.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -6,54 +5,66 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PlaceholderImg from "../AppImages/PlaceholderImg";
 import AppCarousel from "../AppCarousel/AppCarousel";
+import IntersectLoadImage from "../AppImages/IntersectLoadImage";
+import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //@params: Following = Expected Props - className (root element classes)
 //@params: rowClasses (Row container classes), viewWidth (helps add responsive behavior in children)
-//@params: project (a data prop), handleImgClick (img elem click hook)
-const PostCard = props => {
+//@params: project (a data prop), onImgClick (img elem click hook)
+const PostCard = ({ project, onImgClick, className, rowClasses, viewWidth }) => {
   return (
     //? data-testid = simple data attributes used in tests. Can remove via babel BUT no harm in being left in prod
-    <Card className={`${PostCardCss.postCard} ${props.className || ''}`.trim()} data-testid="post-card">
-      <Row className={`g-0 ${props.rowClasses || ''}`.trim()} data-testid="post-card-row">
+    <Card className={`${PostCardCss.postCard} ${className || ''}`.trim()} data-testid="post-card">
+      <Row className={`g-0 ${rowClasses || ''}`.trim()} data-testid="post-card-row">
         <Col xs="12" md="3" lg="2" className="d-flex justify-content-center">
-          <CardImage project={ props.project } viewWidth={ props.viewWidth } handleClick={ props.handleImgClick }/>
+          <CardImage project={ project } viewWidth={ viewWidth } onImgClick={ onImgClick }/>
         </Col>
         <Col xs="12" md="9" lg="10" className="px-1">
-          <CardDetails project={ props.project } />
+          <CardDetails project={ project } />
         </Col>
       </Row>
     </Card>
   );
 };
 
-//@params: Passed down props - project, viewWidth, handleImgClick
-const CardImage = ({ project, viewWidth, handleClick }) => { //* Save a line & destructure props param in the func call! 
-  let imageType; 
-  if (Array.isArray(project.post_images) && project.post_images.length > 0) { //* Rails should ALWAYS send Arr but safer to check
-    //* If multiple images (above) + small screen, then carousel. 
-    //* Else big screen OR single image, then single (possibly clickable) image
-    const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450; //? Set height/width to ensure good aspect ratio
-    const width = (viewWidth > 767) ? 350 : (viewWidth > 575) ? 425 : (viewWidth > 359) ? 330 : 280;
-    imageType = (viewWidth < 768 && project.post_images.length > 1) ? 
-      <AppCarousel images={ project.post_images } viewWidth={ viewWidth } className='mt-3 mt-sm-0' /> :
-      <img className={ cnames(`align-self-center mt-3 mt-sm-0 ${ PostCardCss.cardImg }`,
-          { [PostCardCss.clickable]: viewWidth >= 992 && project.post_images.length > 1 }
-        )} onClick={ handleClick } height={ height } width={ width }
-        src={ project.post_images[0].image_url } alt={ project.post_images[0].alt_text } />
-  } 
-  else { imageType = <PlaceholderImg /> } //* If no images then render placeholder
+//@params: Passed down props - project, viewWidth, onImgClick
+const CardImage = ({ project, viewWidth, onImgClick }) => { //* Save a line & destructure props param in the func call!
+  const placeholderText = (project.id?.toString() === process.env.REACT_APP_ABOUT_ME_ID) ? "My Photo" : "Project Photo"
+  //* If receiving an empty array or no images in the array then render placeholder (Likely Rails will always send at least an empty [])
+  if (!Array.isArray(project.post_images) || project.post_images.length === 0) { return <PlaceholderImg children={placeholderText} /> }
 
-  return imageType;
+  if (viewWidth < 768 && project.post_images.length > 1) { //* If received multiple images + small screen, then just render a carousel
+    return (
+      <AppCarousel viewWidth={ viewWidth } className={ PostCardCss.imgTopMargin }> 
+        { project.post_images.map(image => {
+          return (
+            <div className="carousel-item" key={ image.image_url }> 
+              <IntersectLoadImage src={ image.image_url } alt={ image.alt_text } placeholderText={ placeholderText }
+                className={`${PostCardCss.cardImgContainer} mx-auto`} /> 
+            </div>
+          )
+        })}
+      </AppCarousel>
+    )
+  }
+
+  let classString = `${PostCardCss.cardImgContainer} ${PostCardCss.imgTopMargin}`; //* Base classList
+  if (viewWidth >= 992 && project.post_images.length > 1) { classString += ` ${PostCardCss.clickable}` } //* Add in CSS at specific viewport width
+  return ( //* At desktop sizes, render a single image that can open a modal if the project has multiple imgs
+    <IntersectLoadImage src={ project.post_images[0].image_url } alt={ project.post_images[0].alt_text }
+      placeholderText={ placeholderText } onImgClick={onImgClick} className={classString} />
+  )
+
 }
 
 //@params: Passed down props - project, viewWidth
-const CardDetails = ({project}) => {
+const CardDetails = ({ project }) => {
   return (
     <Card.Body>
       <Card.Title as="h5" className="ms-2 fw-bold">
         { project.title }
       </Card.Title>
-      <Card.Text className={ cnames(PostCardCss.cardText) }>
+      <Card.Text className={ PostCardCss.cardText }>
         { project.description }
       </Card.Text>
       <Button href={ project.github_url } className={`${PostCardCss.githubLink} ${PostCardCss.blockButton}

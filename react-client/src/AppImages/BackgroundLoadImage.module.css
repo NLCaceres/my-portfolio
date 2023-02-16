@@ -19,6 +19,7 @@
 .photo {
   flex-shrink: 0;
   min-height: 100%;
+  max-height: 100%; /* Don't allow image to outgrow it's container or cut off its image, effectively killing the aspect-ratio */
   min-width: 100%;
   max-width: 100%; /* Should NEVER be bigger than container BUT may override styles passed in by parent so use '!important' in parent style if needed */
 }
