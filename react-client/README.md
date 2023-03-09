@@ -3,8 +3,6 @@
 ## Future Changes
 - React 18 based changes
   - Suspense Library?
-  - Typescript?
-    - Will need to update files containing JSX from '.js' files to '.jsx' then '.tsx' ('.tsx' is mandatory when using Typescript)
   - Vite?
   - JSX Dot Notation to simplify imports + name clarity?
     - Ex: `<PostCard.Image> { children } </PostCard.Image>`
@@ -21,15 +19,14 @@
       - Material Design with flip animation to switch between smaller image container and flip out into text container on tap for mobile.
         - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
   - RPG-based Homepage to reduce wall of text feeling
-- Changes Coming Soon
-  - Validation in Contact Me Form
-  - Add Intersectional-Observer Background-Loading image component for use in PostList Cards
-    - Base it off new BackgroundLoadImage component
-    - Could use React-Spring's useInView hook?
-  - React-Spring animations may be packable into hooks that can be reused
-    - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
-    - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
-      - "position: absolute" likely should always be used in Transitions since they usually deal with lists
+#### Changes Coming Soon
+- Typescript
+  - 1st: A Validator for the "Contact Me" Form data
+  - 2nd: Update files containing JSX from '.js' files to '.jsx' then '.tsx' ('.tsx' is mandatory when using Typescript)
+- React-Spring animations may be packable into hooks that can be reused
+  - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
+  - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
+    - "position: absolute" likely should always be used in Transitions since they usually deal with lists
 
 ## Recent Changes
 - Upgraded to React 18!
@@ -37,6 +34,7 @@
     - Easily able to test hooks now thanks to renderHook from testing-library/react
     - Reorganize folders to be oriented around individual components and their usage
   - React Router 6
+  - Beginning Typescript Migration
 - Bootstrap 5 + React-Bootstrap 2 migration
   - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!
