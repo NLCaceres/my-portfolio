@@ -9,7 +9,6 @@
   - Hook Updates
     - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
     - IMPORTANT: BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
-      - MORE IMPORTANT: Could help conditionally shrink Turnstile Widget into compact form for very small mobile devices (<320px)
 - General Design
   - Drop React-Bootstrap and use React Portals to provide modal + a fancier carousel?
     - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "Tailwind look"
@@ -21,12 +20,13 @@
   - RPG-based Homepage to reduce wall of text feeling
 #### Changes Coming Soon
 - Typescript
-  - 1st: A Validator for the "Contact Me" Form data
-  - 2nd: Update files containing JSX from '.js' files to '.jsx' then '.tsx' ('.tsx' is mandatory when using Typescript)
-- React-Spring animations may be packable into hooks that can be reused
-  - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
-  - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
-    - "position: absolute" likely should always be used in Transitions since they usually deal with lists
+  - Update files containing JSX from '.js' files to '.jsx' then '.tsx' ('.tsx' is mandatory when using Typescript)
+- React-Spring
+  - UseViewWidth to swap Turnstile Widget with compact form in very small viewports (<320px)
+  - React-Spring animations may be packable into hooks that can be reused
+    - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
+    - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
+      - "position: absolute" likely should always be used in Transitions since they usually deal with lists
 
 ## Recent Changes
 - Upgraded to React 18!
@@ -36,12 +36,12 @@
   - React Router 6
   - Beginning Typescript Migration
 - Bootstrap 5 + React-Bootstrap 2 migration
-  - Use more CSS Modules when possible to reduce the # of times props.viewWidth is prop drilled
+  - CSS Modules used whenever possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!
-  - BUT use Bootstrap's helper classes if they provide multiple CSS rules at once
+  - BUT Bootstrap's helper classes used if they provide multiple CSS rules at once
     - Ex: 'display-2' under the hood is actually 'font-weight', 'font-size', and 'line-height' for a very specific look!
     - On other hand, 'flex-grow-1' just adds 'flex-grow: 1', so instead use a CSS Module that combines it with other flex rules for that element
-  - Extend React-Bootstrap Components to be easily reused across my Portfolio with my own specifications and preferences
+  - React-Bootstrap Components repackaged into my own custom components with my own specifications and preferences for easy reuse across my Portfolio
     - App-Wide Alert made to be easily filled, displayed, and recolored based on message and color props
     - App-Wide Spinner to easily ensure it's accessible whenever used
 - React-Spring for animations
