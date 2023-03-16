@@ -6,8 +6,9 @@ import AppSpinner from "../AppSpinner/AppSpinner";
 import TurnstileWidget from "../ThirdParty/TurnstileWidget";
 import cnames from "classnames";
 import ContactPageFormCss from "./ContactPageForm.module.css";
-import { SendEmail } from "../Api/Common";
+import validate from "./validator";
 import { ProcessTurnstileResponse } from "../Api/ThirdParty"
+import { SendEmail } from "../Api/Common";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 const ContactPageForm = ({ onSubmitForm, darkMode }) => {
@@ -19,6 +20,8 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
 
   const [newEmail, setNewEmail] = useState({email: "", message: "", cfToken: ""});
   const updateEmailValue = (key, value) => { setNewEmail({ ...newEmail, [key]: value }) }; //* No useCallback needed
+  const [validationErrors, setValidationErrors] = useState({ email: [], message: [] });
+
   const turnstileSuccessCallback = useCallback((token) => { //* Need useCallback to prevent turnstile widget re-rendering & double firing
     setIsVerifying(false) //* Done checking, either received an undefined token or a string token to send to backend
     setNewEmail(oldEmail => ({ ...oldEmail, cfToken: token })); //* Using an update func avoids requiring newEmail state in dependency array
@@ -29,22 +32,31 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
     event.preventDefault(); event.stopPropagation(); //* Prevent page reload
     if (!IsContactable) { return }
   
+    //! Validate
+    const errors = validate({ email: newEmail.email, message: newEmail.message });
+    for (let key in errors) { if (errors[key].length > 0) { setValidationErrors(errors); return } } //* Activate Validation Feedback
+
+    //! Process
     const isSuccessful = await ProcessTurnstileResponse(SendEmail(newEmail), "Successfully sent your email!");
     if (onSubmitForm) { onSubmitForm(isSuccessful) } //* Also need to handle parent's callback
     if (isSuccessful) { }
     else { } //* Error w/ either turnstile or sending the email
   }, [IsContactable, onSubmitForm, newEmail])
 
-  return (
-    <Form onSubmit={ SubmitContactForm } className={ cnames({ "dark": darkMode }) } data-testid="form-container">
+  return ( //* NoValidate ensures Browser doesn't apply its own validation to this form
+    <Form noValidate onSubmit={ SubmitContactForm } className={ cnames({ "dark": darkMode }) } data-testid="form-container">
       { /* Using column to size appropriately at smaller viewports */ }
       <Form.Group controlId="inputEmail" as={ Col } xs="10" sm="8" className="mb-3">
         <Form.Label className={ContactPageFormCss.formLabel}>Email Address</Form.Label>
-        <Form.Control className="px-2" type="email" placeholder="Please enter your email" onChange={e => updateEmailValue('email', e.target.value) } />
+        <Form.Control className="px-2" type="email" placeholder="Please enter your email" 
+          isInvalid={validationErrors.email.length > 0} onChange={e => updateEmailValue('email', e.target.value) } />
+        { validationErrors.email.map((error) => <Form.Control.Feedback key={error} type="invalid">{ error }</Form.Control.Feedback>) }
       </Form.Group>
       <Form.Group controlId="inputMessage" className="mb-3">
         <Form.Label className={ContactPageFormCss.formLabel}>Message</Form.Label>
-        <Form.Control className="px-2" type="message" placeholder="Your Message" as="textarea" rows={ 3 } onChange={e => updateEmailValue('message', e.target.value) } />
+        <Form.Control className="px-2" type="message" placeholder="Your Message" as="textarea" rows={ 3 } 
+          isInvalid={validationErrors.message.length > 0} onChange={e => updateEmailValue('message', e.target.value) } />
+        { validationErrors.message.map((error) => <Form.Control.Feedback key={error} type="invalid">{ error }</Form.Control.Feedback>) }
       </Form.Group>
 
       <div className={ContactPageFormCss['button-container']}>

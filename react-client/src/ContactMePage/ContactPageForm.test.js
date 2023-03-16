@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
 import SilenceWarning from "../Utility/TestHelpers/WarningSilencer";
 import * as CommonAPI from "../Api/Common";
+import * as Validator from "./validator";
 import * as TurnstileAPI from "../Api/ThirdParty";
 
 const originalEnv = process.env;
@@ -52,7 +53,7 @@ describe("renders the form for the contact page", () => {
       await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Click turnstile widget button
       expect(finalSubmitButtonSpinner).not.toBeInTheDocument();
     })
-    test("an unavailable, verifying, & contact me state in the submit button", async () => {
+    test("a submit button with 'unavailable', 'verifying', or 'contact me' text states", async () => {
       //? If multiple imports needed from file, then must return an object w/ following syntax (__esModule key is very important!)
       //? Only want to partially mock the file? THEN Run 'const originalModule = jest.requireActual('dir/path/from/here')', 
       //? then add '...originalModule' to below returned obj, only overriding what's necessary
@@ -63,7 +64,7 @@ describe("renders the form for the contact page", () => {
       //       //* Why a button? Easiest way to activate callback + it matches the Turnstile Challenge button in terms of UX
       //       return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
       //     } 
-      //   } 
+      //   }
       // });
       // const ContactPageForm = (await import("./ContactPageForm")).default;
       //* Currently Unavailable
@@ -88,37 +89,8 @@ describe("renders the form for the contact page", () => {
       expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
       secondUnmount();
     })
-    //! Moved actual testable version of this test to another file to allow mock to work as expected
-    // test("a try again state in the submit button if computer detected trying to submit", () => {
-    //   //! As of Jest 27, resetModules seems bugged if a React Functional Component uses Hooks
-    //   jest.isolateModules(async () => { //! BUT isolateModules SOMETIMES seems to work in its place to change a mock mid-test
-    //     //? The one problem w/ isolateModules is it CANNOT contain anything from the outside scope
-    //     console.log("Starting try again state test")
-    //     jest.doMock('../ThirdParty/TurnstileWidget', () => {
-    //       return { //? Since it doesn't know about the outside scope, we can't use tokenTurnstileMock
-    //         __esModule: true, //? And must define a new mock below NO MATTER WHAT
-    //         default: ({action, successCB, className }) => {
-    //           return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
-    //         }
-    //       } 
-    //     });
-    //?  Additionally, it seems to stop the block when using async functions other than 'await import()'
-    //     const ContactPageFormImport = await import("./ContactPageForm");
-    //     const ContactPageForm = ContactPageFormImport.default;
-    //     render(<ContactPageForm />);
-    //     expect(screen.queryByRole('button', { name: /checking you're human!/i })).toBeInTheDocument();
-    //     fireEvent.click(screen.getByRole('button', { name: /turnstile verification button/i })); 
-    //? UserEvent.click() and findByRole seem to be the main issue BUT even w/out them, it suggests there's an async function pending
-    //? that is causing the test to stop in its tracks and pretend the test passed (despite not calling the following expects)
-    //     expect(screen.queryByRole('button', { name: /try again later/i })).toBeInTheDocument();
-    //     expect(screen.queryByRole('button', { name: /checking you're human!/i })).not.toBeInTheDocument();
-    //     expect(screen.queryByRole('button', { name: /currently unavailable/i })).not.toBeInTheDocument();
-    //     expect(screen.queryByRole('button', { name: /contact me/i })).not.toBeInTheDocument();
-    //     console.log("Finishing isolated modules block");
-    //   })
-    // })
-    test("a disabled submit button that can't fire the submitFunc prop if '_CONTACTABLE' = false OR 'isVerifying' = true", async () => {
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" }
+    test("a disabled submit button that won't run the submitFunc prop", async () => {
+      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" } //* CONTACTABLE == false then no submit called
       const user = userEvent.setup();
       const onSubmitFunc = jest.fn(e => e.preventDefault());
       const { unmount } = render(<ContactPageForm onSubmitForm={onSubmitFunc}/>);
@@ -127,7 +99,7 @@ describe("renders the form for the contact page", () => {
       await user.click(submitButton) //* If used fireEvent for a submit event, form would fire the func anyway!
       expect(onSubmitFunc).not.toBeCalled(); //* BUT even after a click, it's still not called due to disabled
 
-      process.env = originalEnv;
+      process.env = originalEnv; //* Even if CONTACTABLE == true, if isVerifying == true then no submit called
       unmount(); //* Need full unmount to reset isVerifying to true, rerender won't call useState again
       render(<ContactPageForm onSubmitForm={onSubmitFunc}/>);
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human/i});
@@ -137,6 +109,7 @@ describe("renders the form for the contact page", () => {
     })
   })
   test("that accepts a customizable onSubmit callback", async () => {
+    const validationMock = jest.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123");
     const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockImplementation(() => "123");
     //? preventDefault prevents a jest-dom form submit 'not-implemented' err (better solution may one day come BUT this seems easiest/best)
@@ -145,14 +118,14 @@ describe("renders the form for the contact page", () => {
     const onSubmitFunc = jest.fn();
     const user = userEvent.setup();
     const { rerender } = render(<ContactPageForm onSubmitForm={onSubmitFunc}/>)
-    await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
+
+    await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Turnstile finishes verification process
     const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i });
-    expect(onSubmitFunc).not.toBeCalled();
-    
-    fireEvent.submit(screen.getByTestId("form-container")) //* Not async BUT the callback using onSubmitFunc IS
+    expect(onSubmitFunc).not.toBeCalled(); //* BUT haven't clicked "Contact Me" button yet
+    fireEvent.submit(screen.getByTestId("form-container")) //* Submit form parent is NOT async BUT the callback using onSubmitFunc IS
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(1)); //* So must await it to finish & update mock's # of calls
     
-    fireEvent.submit(contactSubmitButton)
+    fireEvent.submit(contactSubmitButton) //* Submit the contact button itself
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(2));
     
     await user.click(contactSubmitButton)
@@ -171,6 +144,47 @@ describe("renders the form for the contact page", () => {
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
 
     window.console.error = origErrorConsole; //* Restore error log
+    validationMock.mockRestore();
+    emailSenderMock.mockRestore();
+    turnstileResponseMock.mockRestore();
+  })
+  test("with validation error messages after invalid data submitted", async () => {
+    //! Setup
+    const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123");
+    const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockImplementation(() => "123");
+    const validationMock = jest.spyOn(Validator, "default").mockReturnValueOnce({ email: [], message: [] });
+
+    //! Initial click but no validation errors
+    const user = userEvent.setup();
+    render(<ContactPageForm />);
+    await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
+    const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i });
+    await user.click(contactSubmitButton);
+    expect(validationMock).toHaveBeenCalledTimes(1);
+
+    //! Just 1 email validation error
+    validationMock.mockReturnValueOnce({ email: ["Email invalid error"], message: [] });
+    await user.click(contactSubmitButton);
+    expect(validationMock).toHaveBeenCalledTimes(2);
+    expect(screen.getByText(/email invalid error/i)).toBeInTheDocument(); //* One error rendered
+    //! 2 email validation errors
+    validationMock.mockReturnValueOnce({ email: ["Email invalid error 1", "Email invalid error 2"], message: [] });
+    await user.click(contactSubmitButton);
+    expect(validationMock).toHaveBeenCalledTimes(3);
+    expect(screen.getAllByText(/email invalid error/i).length).toBe(2); //* Both errors are rendered
+    //! Just 1 email and 1 message validation error
+    validationMock.mockReturnValueOnce({ email: ["Email invalid error"], message: ["Message invalid error"] });
+    await user.click(contactSubmitButton);
+    expect(validationMock).toHaveBeenCalledTimes(4);
+    expect(screen.getAllByText(/email invalid error/i).length).toBe(1); //* Back to 1 email error rendered
+    expect(screen.getByText(/message invalid error/i)).toBeInTheDocument(); //* BUT also have a message error rendered
+    //! 2 message validation errors
+    validationMock.mockReturnValueOnce({ email: [], message: ["Message invalid error 1", "Message invalid error 2"] });
+    await user.click(contactSubmitButton)
+    expect(validationMock).toHaveBeenCalledTimes(5);
+    expect(screen.getAllByText(/message invalid error/i).length).toBe(2); //* Similarly, 2 message errors can get rendered
+
+    validationMock.mockRestore();
     emailSenderMock.mockRestore();
     turnstileResponseMock.mockRestore();
   })

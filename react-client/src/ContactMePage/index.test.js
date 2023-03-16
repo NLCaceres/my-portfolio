@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ContactPage from ".";
 import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 import * as CommonAPI from "../Api/Common";
+import * as Validator from "./validator";
 import * as TurnstileAPI from "../Api/ThirdParty";
 
 //? jest.mock() hoists above imports which makes it file wide and work for every test below SO
@@ -35,6 +36,7 @@ describe("renders a simple contact page with a form component", () => {
     expect(title).toHaveClass("display-2");
   })
   test("that accepts a submit form callback", async () => {
+    const validationMock = jest.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     //? Must mock SendEmail to avoid network request. Mocking ProcessTurnstile just saves time (no network request performed in it)
     const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123");
     const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockImplementation(() => "123");
@@ -48,6 +50,7 @@ describe("renders a simple contact page with a form component", () => {
     fireEvent.submit(screen.getByTestId("form-container"));
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(1)); //* It won't call anything
     
+    validationMock.mockRestore();
     emailSenderMock.mockRestore();
     turnstileResponseMock.mockRestore();
   })
