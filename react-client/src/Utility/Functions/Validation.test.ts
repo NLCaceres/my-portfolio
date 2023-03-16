@@ -1,3 +1,4 @@
+import getErrorMessage from "./ErrorTyping";
 import { requireLength, validEmail } from "./Validation";
 
 describe("validates different data upon a set of criteria", () => {
@@ -29,13 +30,13 @@ describe("validates different data upon a set of criteria", () => {
       })
       test("where min and max can not be negative", () => {
         try { requireLength("foo", -1) }
-        catch (err) { if (err instanceof Error) { expect(err.message).toBe("Incorrect use of min") } }
+        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of min") }
 
         try { requireLength("foo", -1, -1) }
-        catch (err) { if (err instanceof Error) { expect(err.message).toBe("Incorrect use of min and max") } }
+        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of min and max") }
 
         try { requireLength("foo", 1, -1) }
-        catch (err) { if (err instanceof Error) { expect(err.message).toBe("Incorrect use of max") } }
+        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of max") }
       })
     })
 
