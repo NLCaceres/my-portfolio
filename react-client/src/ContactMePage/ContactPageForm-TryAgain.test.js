@@ -6,7 +6,9 @@ import userEvent from "@testing-library/user-event";
 //* Using jest.doMock() doesn't re-mock between tests BUT jest.resetModules() crashes tests making it useless
 //* jest.isolateModules() on the other hand seems to have trouble being used twice as well as 
 //* seems to have trouble w/ async methods like findByRole or user.click()
-//todo Maybe Jest 29 + React 18 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
+//* Using isolateModules: Can't contain outside scope, so a new mock must be made each time
+//* Using jest.doMock: Requires using "await import("someDir/someFile")" in each test BUT then they hang if you have to "await" another func
+//todo Maybe Jest 29 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
 jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
 })
