@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { animated, useTransition } from "@react-spring/web";
 import ContactPage from "../ContactMePage";
-import PostListView from "../PostListView/PostListView.js";
+import PostListView from "../PostListView/PostListView";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import AppRoutingCss from "./AppRouting.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
