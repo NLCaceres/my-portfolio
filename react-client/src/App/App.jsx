@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppAlert from "../AppAlert/AppAlert";
-import AppModal from "../Modals/AppModal.js";
+import AppModal from "../Modals/AppModal";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import ContactPageForm from "../ContactMePage/ContactPageForm";
 import Footer from "../Footer/Footer";
