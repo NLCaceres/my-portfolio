@@ -2,9 +2,9 @@ import { SendEmail } from "./Common";
 import * as UtilityFuncs from "./Utility";
 
 describe("runs common routes to Rails backend", () => {
-  let PostDataSpy;
+  let PostDataSpy: jest.SpyInstance;
   beforeEach(() => { 
-    PostDataSpy = jest.spyOn(UtilityFuncs, "PostData").mockImplementation(() => ({ success: true }));
+    PostDataSpy = jest.spyOn(UtilityFuncs, "PostData").mockImplementation(() => Promise.resolve({ success: true }));
   })
   afterEach(() => { PostDataSpy.mockRestore() }) //* Reset mocks
   

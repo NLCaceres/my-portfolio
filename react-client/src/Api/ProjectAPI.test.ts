@@ -4,9 +4,9 @@ import * as GetData from "./Utility";
 const originalEnv = process.env;
 
 describe("sending a GET request to receive Post list", () => {
-  let GetDataSpy;
+  let GetDataSpy: jest.SpyInstance;
   beforeEach(() => {
-    GetDataSpy = jest.spyOn(GetData, "default").mockImplementation(() => []);
+    GetDataSpy = jest.spyOn(GetData, "default").mockImplementation(() => Promise.resolve([]));
   })
   afterEach(() => { GetDataSpy.mockRestore() }) //* Reset mocks
   test("query argument affects request url", async () => {

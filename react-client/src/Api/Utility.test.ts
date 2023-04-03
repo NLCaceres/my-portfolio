@@ -2,9 +2,10 @@ import GetData, { PostData } from "./Utility";
 import * as BrowserFuncs from "../Utility/Functions/Browser";
 
 describe("should create simple and useful", () => {
-  let fetchSpy;
+  let fetchSpy: jest.SpyInstance;
   beforeEach(() => { //* mockImplementation return value must include json key or function throws, failing the test
-    fetchSpy = jest.spyOn(global, "fetch").mockImplementation(() => ({ status: 200, json: () => [] }));
+    fetchSpy = jest.spyOn(global, "fetch")
+      .mockImplementation((() => Promise.resolve({ status: 200, json: () => [] })) as jest.Mock);
   })
   afterEach(() => { fetchSpy.mockRestore() }) //* Reset mocks
   
@@ -37,7 +38,7 @@ describe("should create simple and useful", () => {
       expect(GetCookieSpy).toHaveBeenCalledTimes(1);
       expect(GetCookieSpy).lastCalledWith("CSRF-TOKEN");
 
-      const requestOptions = { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-Token": "some-token" }, body: "{\"didSucceed\":false}" };
+      const requestOptions = { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": "some-token" }, body: "{\"didSucceed\":false}" };
       expect(fetchSpy).lastCalledWith("/some-url", requestOptions);
 
       GetCookieSpy.mockRestore();
