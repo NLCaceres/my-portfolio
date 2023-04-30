@@ -1,12 +1,15 @@
 import React from "react";
 import App from "./App";
 import { MemoryRouter } from "react-router-dom";
-import { Globals } from '@react-spring/web';
-import { screen, render, act } from "@testing-library/react";
+import { Globals } from "@react-spring/web";
+import { screen, render, act, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
+import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
+import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as GetPostList from "../Api/ProjectAPI";
-import * as CommonAPI from "../Api/Common"
+import * as CommonAPI from "../Api/Common";
+import * as Scroll from "../Utility/Functions/Browser";
 
 jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
@@ -88,6 +91,36 @@ describe("renders the whole app", () => {
       expect(screen.getByText(/successfully sent/i)).toBeInTheDocument(); //* Successfully sent message
 
       completeAlertTimeoutDismiss();
+    })
+    test("controls if the footer's contact me button opens a 'Contact Me' modal or navigates to '/contact-me'", async () => {
+      const scrollSpy = jest.spyOn(Scroll, "SmoothScroll");
+      const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
+      const user = userEvent.setup();
+      const { rerender } = render(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App /> </MemoryRouter>);
+      //* This expect() checks the API responded & inserted stubbed PostCards into the DOM at "/portfolio/about-me"
+      expect(ApiMock).toHaveBeenCalledTimes(1);
+
+      const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
+      await user.click(contactMeButton); //* Should work as a button opening a modal
+      const modal = screen.getByRole("dialog");
+      expect(modal).toBeInTheDocument();
+      expect(scrollSpy).not.toHaveBeenCalled(); //* No scroll needed, just open the modal
+
+      const modalCloser = screen.getByLabelText("Close"); //* Close the modal now
+      await user.click(modalCloser);
+      await waitForElementToBeRemoved(modalCloser);
+      expect(modal).not.toBeInTheDocument();
+
+      useViewWidthSpy.mockReturnValue(mobileHighEndWidth); //* Rerender as mobile version
+      rerender(<MemoryRouter initialEntries={["/portfolio/about-me"]}> <App/> </MemoryRouter>);
+      const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
+      await user.click(contactMeButtonLink); //* Now at large mobile width, so should work as a link, navigating to "/contact-me"
+      //? W/out location prop on <Routes>, <Routes> updates B4 leaving MEANWHILE a duplicate is entering so have to wait for original to leave
+      await waitFor(() => { expect(screen.getAllByRole("heading", { name: /contact me!/i, level: 1 })).toHaveLength(1) });
+      expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 })).toBeInTheDocument(); //? Now only have one "Contact Me!"
+      expect(scrollSpy).toHaveBeenCalledTimes(1); //* Smooth scroll occurs on route transition, NOT modal opening
+
+      useViewWidthSpy.mockRestore();
     })
   })
 })

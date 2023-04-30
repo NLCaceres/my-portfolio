@@ -1,25 +1,20 @@
 // import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import AppAlert from "../AppAlert/AppAlert";
 import AppModal from "../Modals/AppModal";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import ContactPageForm from "../ContactMePage/ContactPageForm";
 import Footer from "../Footer/Footer";
 import AppRouting from "../Routing/AppRouting";
-import debounce from "lodash/debounce";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 //import * as serviceWorker from "./serviceWorker";
 
 const App = () => {
-  const [width, setWidth] = useState(window.innerWidth);
+  const width = useViewWidth();
   const [showModal, setShowModal] = useState(false);
   const [alertState, setShowAlert] = useState({}); //? { title: string, message: string, color: string, timeout: int (ID) }
-  useEffect(() => { //? Use debounce to group all resize events into a single setWidth call
-    const updateWidth = debounce(() => setWidth(window.innerWidth), 500); //? After 500ms passes w/out a new resize event
-    window.addEventListener("resize", updateWidth) //? Throttle would let the width be updated every 500ms
-    return () => { window.removeEventListener("resize", updateWidth) };
-  }, []);
 
   //! App Alert Functionality
   const showAlertBriefly = (newState) => { //* Displays alert for 5 seconds BUT allows early dismissal
