@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Carousel from 'react-bootstrap/Carousel';
+import useViewWidth from "../ContextProviders/ViewWidthProvider";
+import Carousel from "react-bootstrap/Carousel";
 import CarouselCss from "./Carousel.module.css";
 import cnames from "classnames";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //! Bootstrap Carousel with defaults set - no control arrows or interval
-const AppCarousel = ({ children, images, ItemComponent, className, viewWidth }) => {
+const AppCarousel = ({ children, images, ItemComponent, className }) => {
+  const viewWidth = useViewWidth();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const goToIndex = (newIndex, e) => {
@@ -14,35 +16,36 @@ const AppCarousel = ({ children, images, ItemComponent, className, viewWidth }) 
 
   const [usingHoverClass, setUsingHoverClass] = useState(false);
   useEffect(() => { //* At wider viewports (Large tablets + desktops), when mounting, fade the arrow icons in and out
-    if (viewWidth >= 768) {
-      let iterations = 0;
-      const fadeEffectInterval = setInterval(() => {
-        iterations++; //* 6 runs! On 6th we clear THEN hide by class removal
-        //* 1st iteration = Show, 2nd = hide, so on and so forth
-        if (iterations > 5) clearInterval(fadeEffectInterval); //* Able to clear itself!
-        setUsingHoverClass(prevState => !prevState);
-      }, 750)
-      return () => { clearInterval(fadeEffectInterval) }
-    }
+    if (viewWidth < 768) { return }
+    let iterations = 0;
+    const fadeEffectInterval = setInterval(() => {
+      iterations++; //* 6 runs! On 6th we clear THEN hide by class removal
+      //* 1st iteration = Show, 2nd = hide, so on and so forth
+      if (iterations > 5) clearInterval(fadeEffectInterval); //* Able to clear itself!
+      setUsingHoverClass(prevState => !prevState);
+    }, 750)
+    return () => { clearInterval(fadeEffectInterval) }
   }, [viewWidth]);
+
+  const child = ( //* Either take the passed in "children" OR create a list based on the "images" prop
+    children ||
+    images?.map(image => //* List of Carousel.Items to display
+      (
+        <Carousel.Item key={ image.image_url }>
+          { (ItemComponent) ?
+              <ItemComponent src={ image.image_url } alt={ image.alt_text } /> : 
+              <DefaultItem src={ image.image_url } alt={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} /> 
+          }
+        </Carousel.Item>
+      )
+    )
+  )
 
   return (
     <Carousel activeIndex={ activeIndex } onSelect={ goToIndex } controls={false}
-      interval={null} data-testid="app-carousel" className={ cnames(CarouselCss.full, `${className || ''}`, 
-      {"hovered-indicators": usingHoverClass }) }>
-        {
-          children ||
-          images?.map(image => { //* Create an array of Carousel.Items to display
-            return (
-              <Carousel.Item key={ image.image_url }>
-                { (ItemComponent) ?
-                    <ItemComponent src={ image.image_url } alt={ image.alt_text } /> : 
-                    <DefaultItem src={ image.image_url } alt={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} /> 
-                }
-              </Carousel.Item>
-            )}
-          )
-        }
+      interval={null} data-testid="app-carousel" className={ cnames(CarouselCss.full, `${className || ""}`, 
+      { "hovered-indicators": usingHoverClass }) }> 
+        { child }
     </Carousel>
   );
 }

@@ -1,8 +1,8 @@
-import PostCardCss from './PostCard.module.css';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import PostCardCss from "./PostCard.module.css";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import PlaceholderImg from "../AppImages/PlaceholderImg";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import IntersectLoadImage from "../AppImages/IntersectLoadImage";
@@ -14,8 +14,8 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 const PostCard = ({ project, onImgClick, className, rowClasses, viewWidth }) => {
   return (
     //? data-testid = simple data attributes used in tests. Can remove via babel BUT no harm in being left in prod
-    <Card className={`${PostCardCss.postCard} ${className || ''}`.trim()} data-testid="post-card">
-      <Row className={`g-0 ${rowClasses || ''}`.trim()} data-testid="post-card-row">
+    <Card className={`${PostCardCss.postCard} ${className || ""}`.trim()} data-testid="post-card">
+      <Row className={`g-0 ${rowClasses || ""}`.trim()} data-testid="post-card-row">
         <Col xs="12" md="3" lg="2" className="d-flex justify-content-center">
           <CardImage project={ project } viewWidth={ viewWidth } onImgClick={ onImgClick }/>
         </Col>
@@ -35,7 +35,7 @@ const CardImage = ({ project, viewWidth, onImgClick }) => { //* Save a line & de
 
   if (viewWidth < 768 && project.post_images.length > 1) { //* If received multiple images + small screen, then just render a carousel
     return (
-      <AppCarousel viewWidth={ viewWidth } className={ PostCardCss.imgTopMargin }> 
+      <AppCarousel className={ PostCardCss.imgTopMargin }> 
         { project.post_images.map(image => {
           return (
             <div className="carousel-item" key={ image.image_url }> 
@@ -54,10 +54,9 @@ const CardImage = ({ project, viewWidth, onImgClick }) => { //* Save a line & de
     <IntersectLoadImage src={ project.post_images[0].image_url } alt={ project.post_images[0].alt_text }
       placeholderText={ placeholderText } onImgClick={onImgClick} className={classString} />
   )
-
 }
 
-//@params: Passed down props - project, viewWidth
+//@params: Passed down props - project
 const CardDetails = ({ project }) => {
   return (
     <Card.Body>
@@ -68,7 +67,7 @@ const CardDetails = ({ project }) => {
         { project.description }
       </Card.Text>
       <Button href={ project.github_url } className={`${PostCardCss.githubLink} ${PostCardCss.blockButton}
-        fw-bold ms-4 ms-md-3 mt-3 mt-md-4`}> { /* 'mt-3' used to resemble postCardPlaceholder's margins */}
+        fw-bold ms-4 ms-md-3 mt-3 mt-md-4`}> { /* "mt-3" used to resemble postCardPlaceholder's margins */}
           Github Page
       </Button>
       { project.homepage_url && (

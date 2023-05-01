@@ -11,7 +11,7 @@ const CardImageModal = props => {
   return (
     <AppModal ID={kebabProjectName} title={projectName} show={ props.show } onHide={ props.onHide }
       headerClasses={`pt-2 pb-1`} titleClasses={`fw-bolder text-white`} bodyClasses={`pt-1`}>
-        { (projectImgs && projectImgs.length > 1) && <AppCarousel images={projectImgs} viewWidth={props.viewWidth} className='px-4 mt-3' /> }
+        { (projectImgs && projectImgs.length > 1) && <AppCarousel images={projectImgs} className="px-4 mt-3" /> }
     </AppModal>
   );
 };
