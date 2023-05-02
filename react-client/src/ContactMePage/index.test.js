@@ -2,15 +2,16 @@ import React from "react"
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ContactPage from ".";
 import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
+import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as CommonAPI from "../Api/Common";
 import * as Validator from "./validator";
 import * as TurnstileAPI from "../Api/ThirdParty";
 
 //? jest.mock() hoists above imports which makes it file wide and work for every test below SO
 //? If a per-test option is needed, must use "jest.doMock()" (See ContactPageForm.test for example)
-jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
-  return (<div>Turnstile Verification Widget</div>);
-}); 
+jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => (
+  <div>Turnstile Verification Widget</div>
+)); 
 
 describe("renders a simple contact page with a form component", () => {
   test("with a parent & form container using css modules, & form in dark mode", () => {
@@ -29,11 +30,17 @@ describe("renders a simple contact page with a form component", () => {
     expect(formComponent).toHaveClass("dark");
   })
   test("that depends on viewWidth for correct title font size", () => {
-    const { rerender } = render(<ContactPage viewWidth={averageTabletLowEndWidth} />);
+    const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletLowEndWidth);
+    
+    const { rerender } = render(<ContactPage />);
     const title = screen.getByRole("heading", { name: /contact me/i });
     expect(title).toHaveClass("display-3");
-    rerender(<ContactPage viewWidth={averageTabletViewWidth} />);
+
+    useViewWidthSpy.mockReturnValue(averageTabletViewWidth);
+    rerender(<ContactPage />);
     expect(title).toHaveClass("display-2");
+
+    useViewWidthSpy.mockRestore();
   })
   test("that accepts a submit form callback", async () => {
     const validationMock = jest.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });

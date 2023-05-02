@@ -11,7 +11,7 @@ import * as GetPostList from "../Api/ProjectAPI";
 import * as CommonAPI from "../Api/Common";
 import * as Scroll from "../Utility/Functions/Browser";
 
-jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
 })
 

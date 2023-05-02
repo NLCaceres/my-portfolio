@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button";
@@ -14,6 +15,7 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 const ContactPageForm = ({ onSubmitForm, darkMode }) => {
   //! Computed Prop
   const IsContactable = (process.env.REACT_APP_CONTACTABLE === "true") ? true : false; //* All env vars are actually strings
+  const viewWidth = useViewWidth();
   //! State
   //* If not contactable, don't verify. IsContactable var only used onMount, later rerenders remember most recent state
   const [isVerifying, setIsVerifying] = useState(IsContactable);
@@ -60,7 +62,7 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
       </Form.Group>
 
       <div className={ContactPageFormCss['button-container']}>
-        <TurnstileWidget action="Contact-Page-Form" successCB={turnstileSuccessCallback} />
+        <TurnstileWidget action="Contact-Page-Form" compact={viewWidth <= 320} successCB={turnstileSuccessCallback} />
 
         <Button className={ContactPageFormCss.submitButton} type="submit" disabled={ !IsContactable || isVerifying }>
           { (isVerifying && IsContactable) && <AppSpinner tag="span" small /> } { /*//* Show when verifying and NOT disabled */ }

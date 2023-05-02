@@ -3,13 +3,15 @@ import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
 import SilenceWarning from "../Utility/TestHelpers/WarningSilencer";
+import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as CommonAPI from "../Api/Common";
 import * as Validator from "./validator";
 import * as TurnstileAPI from "../Api/ThirdParty";
 
 const originalEnv = process.env;
-jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
-  return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
+jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => {
+  const compactClass = (compact) ? "compact" : "normal";
+  return (<div className={compactClass}><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
 })
 
 // const tokenTurnstileMock = ({action, successCB, className }) => { //? Useful if using doMock like in line 21
@@ -55,8 +57,8 @@ describe("renders the form for the contact page", () => {
     })
     test("a submit button with 'unavailable', 'verifying', or 'contact me' text states", async () => {
       //? If multiple imports needed from file, then must return an object w/ following syntax (__esModule key is very important!)
-      //? Only want to partially mock the file? THEN Run 'const originalModule = jest.requireActual('dir/path/from/here')', 
-      //? then add '...originalModule' to below returned obj, only overriding what's necessary
+      //? Only want to partially mock the file? THEN Run "const originalModule = jest.requireActual('dir/path/from/here')", 
+      //? then add "...originalModule" to below returned obj, only overriding what's necessary
       // jest.doMock('../ThirdParty/TurnstileWidget', () => { 
       //   return { 
       //     __esModule: true, 
@@ -80,7 +82,7 @@ describe("renders the form for the contact page", () => {
       expect(process.env.REACT_APP_CONTACTABLE).toBe("true");
       const { unmount: secondUnmount } = render(<ContactPageForm />) //* Contactable = true + isVerifying = true
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human!/i });
-      expect(verifyingSubmitButton).toBeInTheDocument(); //* Get 'verifying' button, NOT 'unavailable' button
+      expect(verifyingSubmitButton).toBeInTheDocument(); //* Get "verifying" button, NOT "unavailable" button
 
       await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Click turnstile widget button
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
@@ -112,7 +114,7 @@ describe("renders the form for the contact page", () => {
     const validationMock = jest.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => "123");
     const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockImplementation(() => "123");
-    //? preventDefault prevents a jest-dom form submit 'not-implemented' err (better solution may one day come BUT this seems easiest/best)
+    //? preventDefault prevents a jest-dom form submit "not-implemented" err (better solution may one day come BUT this seems easiest/best)
     //? ALSO this trick assumes usage in onClick or onSubmit that accepts an event param by default!, if the func isn't used in that type of prop
     //? usage will not match since the func call probably won't have any params (or maybe too many!) and jest will throw an error that is e is undefined
     const onSubmitFunc = jest.fn();
@@ -187,5 +189,18 @@ describe("renders the form for the contact page", () => {
     validationMock.mockRestore();
     emailSenderMock.mockRestore();
     turnstileResponseMock.mockRestore();
+  })
+  test("using viewWidth to control the Turnstile Widget's size", () => {
+    const viewWidthContextSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(992);
+    const { rerender } = render(<ContactPageForm />); 
+    //* If viewWidth > 320, the mock TurnstileWidget receives a false compact value, and sets a "normal" class on its container <div>
+    expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("normal");
+    
+    //* If viewWidth <= 320, the mock TurnstileWidget receives a true compact value, and sets a "compact" class on its container <div>
+    viewWidthContextSpy.mockReturnValue(320);
+    rerender(<ContactPageForm />);
+    expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("compact");
+
+    viewWidthContextSpy.mockRestore();
   })
 })

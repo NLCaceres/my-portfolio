@@ -6,9 +6,10 @@ import { Globals } from "@react-spring/web";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import * as GetPostList from "../Api/ProjectAPI";
 
-jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
-  return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
-})
+//* No click needed on this mock Widget, so keep it simple
+jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => (
+  <div>Turnstile Verification Button</div>
+))
 
 beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
   Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!

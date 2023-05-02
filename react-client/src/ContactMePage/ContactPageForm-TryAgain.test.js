@@ -9,7 +9,7 @@ import userEvent from "@testing-library/user-event";
 //* Using isolateModules: Can't contain outside scope, so a new mock must be made each time
 //* Using jest.doMock: Requires using "await import("someDir/someFile")" in each test BUT then they hang if you have to "await" another func
 //todo Maybe Jest 29 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
-jest.mock("../ThirdParty/TurnstileWidget", () => ({action, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => {
   return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
 })
 
@@ -21,13 +21,13 @@ describe("renders the form for the contact page", () => {
       const ContactPageForm = ContactPageFormImport.default;
       render(<ContactPageForm />);
 
-      expect(screen.queryByRole('button', { name: /checking you're human!/i })).toBeInTheDocument();
-      await user.click(screen.getByRole('button', { name: /turnstile verification button/i }));
+      expect(screen.queryByRole("button", { name: /checking you're human!/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
 
-      expect(screen.queryByRole('button', { name: /try again later/i })).toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: /checking you're human!/i })).not.toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: /currently unavailable/i })).not.toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: /contact me/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /try again later/i })).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /checking you're human!/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /contact me/i })).not.toBeInTheDocument();
     })
   });
 });

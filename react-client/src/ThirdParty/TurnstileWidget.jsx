@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import TurnstileWidgetCss from "./TurnstileWidget.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
-const TurnstileWidget = ({ action, successCB, className }) => {
+const TurnstileWidget = ({ action, compact, successCB, className }) => {
+  const turnstileSize = (compact) ? "compact" : "normal"
   useEffect(() => {
     const turnstileRenderTimeoutID = setTimeout(() => {
       //? Config Options - https://developers.cloudflare.com/turnstile/get-started/client-side-rendering
@@ -13,6 +14,7 @@ const TurnstileWidget = ({ action, successCB, className }) => {
           ConsoleLogger(`Challenge Success - ${token}`);
           successCB(token);
         },
+        size: turnstileSize,
         retry: "never", //? If error-callback fires, retry happens anyway!
         "refresh-expired": "manual",
         "expired-callback": function() { //? Token expires 300 seconds after issue. Manual refresh requires user button click
@@ -30,9 +32,9 @@ const TurnstileWidget = ({ action, successCB, className }) => {
 
     return () => { clearTimeout(turnstileRenderTimeoutID) }
 
-  }, [action, successCB]);
+  }, [action, turnstileSize, successCB]);
 
-  return (<div id="turnstile-widget-container" className={`${className || ''} ${TurnstileWidgetCss.turnstileContainer}`}></div>)
+  return (<div id="turnstile-widget-container" className={`${className || ""} ${TurnstileWidgetCss.turnstileContainer}`}></div>)
 }
 
 export default TurnstileWidget;
