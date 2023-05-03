@@ -39,8 +39,7 @@ const PostListView = ({ viewWidth }) => {
     (
       <div>
         { viewWidth >= 768 && ( //? ImageModal is completely unmounted until img click mounts it then injects project images list
-          <CardImageModal onHide={ () => openModal(null) } show={ modalState.showModal }
-            project={ modalState.modalProject } viewWidth={ viewWidth } />
+          <CardImageModal onHide={ () => openModal(null) } show={ modalState.showModal } project={ modalState.modalProject } />
         )}
         { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ title }</h1> }
         <ProjectList projectType={ projectType } projectList={ projectList }

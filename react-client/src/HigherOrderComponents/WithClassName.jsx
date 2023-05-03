@@ -27,9 +27,8 @@ import React from "react";
 const withClassName = (Component, className) => 
   ( ({ className: otherClasses, ...props }) => <Component className={`${className} ${otherClasses || ""}`.trim()} {...props} /> )
 
-/*//! Example of using withClassName
-<AppCarousel images={ images } viewWidth={ viewWidth } className={ className } ItemComponent={ withClassName(IntersectLoadImage, imgClassName) } />
-*/
+//! Example of using "withClassName"
+//! <AppCarousel images={ images } className={ className } ItemComponent={ withClassName(IntersectLoadImage, imgClassName) } />
 
 //! There is a somewhat simpler way to accomplish my goal in this case though!
 //* What if instead of passing AppCarousel a customized component for Carousel.Item's map() to use,

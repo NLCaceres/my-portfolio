@@ -21,7 +21,7 @@ describe("render a simple react-bootstrap carousel", () => {
     expect(innerParent).toBeEmptyDOMElement(); //* It is now empty
     expect(innerParent.previousElementSibling).toBeInTheDocument(); //* Indicators still present as well!
 
-    rerender(<AppCarousel images={imageSet} />)
+    rerender(<AppCarousel images={imageSet} />);
     expect(innerParent).not.toBeEmptyDOMElement(); //* Now rendering img tags in default carousel items
     expect(screen.getAllByRole("img")).toHaveLength(2); //* If img array passed in, will render corresponding # of img tags
   })
@@ -31,7 +31,7 @@ describe("render a simple react-bootstrap carousel", () => {
       const setIntervalSpy = jest.spyOn(window, "setInterval");
       const clearIntervalSpy = jest.spyOn(window, "clearInterval");
       const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
-      const { unmount } = render(<AppCarousel images={imageSet} />)
+      const { unmount } = render(<AppCarousel images={imageSet} />);
       expect(setIntervalSpy).toHaveBeenCalledTimes(1); 
       expect(clearIntervalSpy).not.toHaveBeenCalled();
 
@@ -61,7 +61,7 @@ describe("render a simple react-bootstrap carousel", () => {
       setIntervalSpy.mockRestore(); clearIntervalSpy.mockRestore(); useViewWidthSpy.mockRestore(); //* Cleanup
     })
     test("that handles index changes via indicator buttons", async () => {
-      render(<AppCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)
+      render(<AppCarousel images={imageSet} />);
       const user = userEvent.setup();
       const activeImgIndicators = screen.getAllByRole("button");
       const currentImages = screen.getAllByAltText(/BarfooAlt/i).sort();
@@ -81,7 +81,7 @@ describe("render a simple react-bootstrap carousel", () => {
     })
     /* 
     test("that displays on hover", async () => {
-      const { rerender } = render(<AppCarousel images={imageSet} viewWidth={averageTabletViewWidth} />)
+      const { rerender } = render(<AppCarousel images={imageSet} />)
       const carouselRootElem = screen.getByTestId('app-carousel')
       const carouselIndicators = carouselRootElem.firstChild
       ? It would seem the next line would work! BUT jest-dom doesn't really load stylesheets! 
@@ -91,13 +91,13 @@ describe("render a simple react-bootstrap carousel", () => {
   })
   describe("with an option to swap out the default item", () => {
     test("if a render function is passed into the ItemComponent prop", () => {
-      const { rerender } = render(<AppCarousel images={imageSet} />)
+      const { rerender } = render(<AppCarousel images={imageSet} />);
       const defaultImgTags = screen.getAllByRole("img");
       //* The following specific classList signifies the default item has rendered
       for (const imageTag of defaultImgTags) { expect(imageTag).toHaveClass("img-fluid slide", { exact: true }) }
 
-      const itemComponent = ({src, alt}) => (<><div>{src}</div><div>{alt}</div></>)
-      rerender(<AppCarousel images={imageSet} ItemComponent={itemComponent} />)
+      const itemComponent = ({src, alt}) => (<><div>{src}</div><div>{alt}</div></>);
+      rerender(<AppCarousel images={imageSet} ItemComponent={itemComponent} />);
       const srcDivs = screen.getAllByText(/foobarsrc/i); //* Should still be two! Same # as the images array
       expect(srcDivs).toHaveLength(2); //* BUT no longer able to pass in classes
       for (const srcDiv of srcDivs) { expect(srcDiv).not.toHaveAttribute("class") }
@@ -114,7 +114,7 @@ describe("render a simple react-bootstrap carousel", () => {
   describe("with a default item component", () => {
     test("calculating the right css classes for its root + aspect ratio for default Item img tags", () => {
       const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopViewWidth);
-      const { rerender } = render(<AppCarousel images={imageSet} />)
+      const { rerender } = render(<AppCarousel images={imageSet} />);
       const carouselRoot = screen.getByTestId("app-carousel");
       expect(carouselRoot).toHaveClass("full carousel slide", { exact: true });
   
@@ -143,12 +143,12 @@ describe("render a simple react-bootstrap carousel", () => {
     })
     test("display captions if the property is available", () => {
       const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
-      const { rerender } = render(<AppCarousel images={imageSet} />)
+      const { rerender } = render(<AppCarousel images={imageSet} />);
       expect(screen.queryAllByText(/^(Foo)\w+$/i)).toHaveLength(0);
       
       //* Create img objects to display
       const imagesWithCaptions = imageSet.map((image, index) => ({ ...image, caption: "Foo" + index }));
-      rerender(<AppCarousel images={imagesWithCaptions} />)
+      rerender(<AppCarousel images={imagesWithCaptions} />);
       const captionHeaderTags = screen.getAllByRole("heading", { name: /foo/i });
       expect(captionHeaderTags).toHaveLength(2);
 
