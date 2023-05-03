@@ -2,23 +2,22 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Footer from "./Footer";
-import { mobileHighEndWidth } from "../Utility/Constants/Viewports"
 
 describe("renders a footer using a nav", () => {
   test("accepting a contact button click callback", async () => {
     const user = userEvent.setup();
     const contactButtonClickCallback = jest.fn();
-    const { rerender } = render(<Footer contactButtonOnClick={contactButtonClickCallback} />)
+    const { rerender } = render(<Footer contactButtonOnClick={contactButtonClickCallback} />);
     
-    await user.click(screen.getByRole("button", { name: /contact me/i }))
+    await user.click(screen.getByRole("button", { name: /contact me/i }));
     expect(contactButtonClickCallback).toHaveBeenCalledTimes(1);
 
     rerender(<Footer />);
-    await user.click(screen.getByRole("button", { name: /contact me/i }))
+    await user.click(screen.getByRole("button", { name: /contact me/i }));
     expect(contactButtonClickCallback).toHaveBeenCalledTimes(1);
   })
   test("with specific css modules", () => {
-    render(<Footer viewWidth={mobileHighEndWidth} />)
+    render(<Footer />);
     const navParent = screen.getByRole("navigation");
     expect(navParent).toHaveClass("navFooter navbar navbar-expand-md navbar-dark", { exact: true });
 
