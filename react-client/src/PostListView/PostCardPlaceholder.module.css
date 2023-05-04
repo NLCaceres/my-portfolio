@@ -18,6 +18,15 @@
   .smallHeader {
     font-size: calc(1.325rem + .9vw); /* Equal to BS-5 h2 class */
   }
+  /* "nth-child" selects elements that match the primary selector (i.e. this postCard class) in ANY container if it appears as the "nth child"
+  * The real PostCard places flex-direction: row-reverse for its "odd children" BECAUSE it only has 1 header sibling
+  * On the other hand, the placeholder PostCard has two header siblings causing the 1st PostCard to be the 3rd item in the container */
+  .postCard:nth-child(odd) > :global(.row) {
+    flex-direction: row;
+  }
+  .postCard:nth-child(even) > :global(.row) {
+    flex-direction: row-reverse;
+  }
 }
 
 .cardRow {

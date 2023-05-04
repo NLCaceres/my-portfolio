@@ -7,7 +7,7 @@ import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import AppRoutingCss from "./AppRouting.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
-const AppRouting = ({ viewWidth, submitContactForm }) => {
+const AppRouting = ({ submitContactForm }) => {
   //! Animations
   const location = useLocation();
   const transitions = useTransition(location, {
@@ -27,16 +27,16 @@ const AppRouting = ({ viewWidth, submitContactForm }) => {
       <Routes location={item}> {/*//? By removing <Navigate />, using "location" prop no longer stalls tests w/ infinite redirects/rerenders */}
         {/*//! It seems ReactRouter may eventually add its own Animation API */}
         { paths.map((pathStr) => { //? Route component dropped "exact" prop + uses "element" prop instead of "children" or "render" prop for components
-            return <Route path={`portfolio/${pathStr}`} key={pathStr} element={<PostListView viewWidth={ viewWidth } />} /> 
+            return <Route path={`portfolio/${pathStr}`} key={pathStr} element={<PostListView />} /> 
           })
         }
         
         <Route path="contact-me" element={<ContactPage onSubmitForm={ submitContactForm } />} />
         {/*//? "path" doesn't require leading slash except in the Home: "/" path */}
-        <Route path="/" element={<PostListView viewWidth={ viewWidth } />} /> {/* Drop <Navigate /> to use window.history.replaceState to simulate Redirects */}
+        <Route path="/" element={<PostListView />} /> {/* Drop <Navigate /> to use window.history.replaceState to simulate Redirects */}
         {/*//* Need above "home" route before "*" wildcard, or always get 404, highlights the importance of order of routes */}
 
-        <Route path="not-found" element={ <NotFoundPage /> } /> {/*//? Used for following wildcard "*" fallback route */}
+        <Route path="not-found" element={<NotFoundPage />} /> {/*//? Used for following wildcard "*" fallback route */}
         <Route path="*" element={<NotFoundPage />} /> {/* Let window.history.replaceState update URL to "/not-found", no true redirect, no extra rerenders */}
       </Routes>
     </animated.div>

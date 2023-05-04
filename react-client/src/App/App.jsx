@@ -18,7 +18,7 @@ const App = () => {
 
   //! App Alert Functionality
   const showAlertBriefly = (newState) => { //* Displays alert for 5 seconds BUT allows early dismissal
-    const alertTimeout = setTimeout(() => setShowAlert({}), 5000) //* Auto-dismiss after 5 seconds
+    const alertTimeout = setTimeout(() => setShowAlert({}), 5000); //* Auto-dismiss after 5 seconds
     setShowAlert({ ...newState, timeout: alertTimeout }); //* Set timeout so it can be cleared in case the user dismisses alert early
   }
   const closeAlert = () => {
@@ -54,7 +54,7 @@ const App = () => {
     <> 
       <AppNavbar />
     
-      <AppRouting viewWidth={ width } submitContactForm={submitContactForm} />
+      <AppRouting submitContactForm={ submitContactForm } />
       
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
       
