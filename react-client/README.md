@@ -8,10 +8,10 @@
     - Ex: `<PostCard.Image> { children } </PostCard.Image>`
   - Hook Updates
     - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
-    - IMPORTANT: BUT a UseViewWidth Hook may be useful to replace the viewWidth prop-drilling via the useContext/provider pattern
 - General Design
   - Drop React-Bootstrap and use React Portals to provide modal + a fancier carousel?
-    - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "Tailwind look"
+    - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "TailwindUI look"
+    - Using the <dialog> element is also a great newer option in HTML since it provides accessibility by default! It just needs styling!
   - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
     - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
       - Title can be laid out + styled as "h5.mx-2 + div.underline"
@@ -20,9 +20,14 @@
   - RPG-based Homepage to reduce wall of text feeling
 #### Changes Coming Soon
 - Typescript
-  - Update files containing JSX from '.js' files to '.jsx' then '.tsx' ('.tsx' is mandatory when using Typescript)
+  - Update files containing JSX from '.jsx' to '.tsx' 
+    - '.tsx' is mandatory when using Typescript
+    - Even test files can get a '.test.tsx' file extension to usx JSX
+- Drop "React" top import in files since React 17 no longer needs to call createElement from it.
+  - Thanks to a new JSX transform under the Babel/Typescript compiler's hood, React can choose to just import any needed hooks instead.
+- React-Router
+  - Swap in the 6.4 Data API
 - React-Spring
-  - UseViewWidth to swap Turnstile Widget with compact form in very small viewports (<320px)
   - React-Spring animations may be packable into hooks that can be reused
     - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
     - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
@@ -31,13 +36,15 @@
 ## Recent Changes
 - Upgraded to React 18!
   - All Components now Functional + Hook based. No longer Class based!
-    - Easily able to test hooks now thanks to renderHook from testing-library/react
+    - Testing hooks super simple now thanks to `renderHook()` from 'testing-library/react'
     - Reorganize folders to be oriented around individual components and their usage
+    - useContext pattern packed into a useViewWidth hook allowing access to viewWidth across the App without prop drilling
   - React Router 6
   - Beginning Typescript Migration
 - Bootstrap 5 + React-Bootstrap 2 migration
   - CSS Modules used whenever possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!
+    - Simplifies Zigzag pattern of PostCardList
   - BUT Bootstrap's helper classes used if they provide multiple CSS rules at once
     - Ex: 'display-2' under the hood is actually 'font-weight', 'font-size', and 'line-height' for a very specific look!
     - On other hand, 'flex-grow-1' just adds 'flex-grow: 1', so instead use a CSS Module that combines it with other flex rules for that element
