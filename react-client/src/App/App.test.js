@@ -7,8 +7,8 @@ import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
-import * as GetPostList from "../Api/ProjectAPI";
-import * as CommonAPI from "../Api/Common";
+import * as GetPostList from "../Data/Api/ProjectAPI";
+import * as CommonAPI from "../Data/Api/Common";
 import * as Scroll from "../Utility/Functions/Browser";
 
 jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => {

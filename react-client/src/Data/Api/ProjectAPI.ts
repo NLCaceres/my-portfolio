@@ -1,21 +1,6 @@
 import IsPlainObject from "lodash/isPlainObject";
 import GetData from "./Utility";
-
-type PostImage = {
-  image_url: string,
-  alt_text: string
-}
-
-type Post = {
-  id: number,
-  title: string,
-  description: string,
-  github_url?: string, // Most but not sure all posts have a github
-  homepage_url?: string, // Only web posts have a homepage
-  post_images?: PostImage[] // Not all posts currently have images
-  project_size?: string, // About me is the only one that doesn't have a size or type
-  project_type?: string
-}
+import Post from "../Models/Project";
 
 //* API that calls to Rails Backend and gets Projects in a format that can be turned into Posts
 //* qParams should probably be required BUT for now default to 'null' which returns aboutMe

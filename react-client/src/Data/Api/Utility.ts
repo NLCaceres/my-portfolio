@@ -1,4 +1,4 @@
-import { GetCookie } from "../Utility/Functions/Browser";
+import { GetCookie } from "../../Utility/Functions/Browser";
 
 //* Reusable functions that perform common functionality involved in making GET & POST requests
 export default async function GetData(url: string) {

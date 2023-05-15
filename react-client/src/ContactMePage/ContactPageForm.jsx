@@ -8,8 +8,8 @@ import TurnstileWidget from "../ThirdParty/TurnstileWidget";
 import cnames from "classnames";
 import ContactPageFormCss from "./ContactPageForm.module.css";
 import validate from "./validator";
-import { ProcessTurnstileResponse } from "../Api/ThirdParty"
-import { SendEmail } from "../Api/Common";
+import { ProcessTurnstileResponse } from "../Data/Api/ThirdParty"
+import { SendEmail } from "../Data/Api/Common";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 const ContactPageForm = ({ onSubmitForm, darkMode }) => {

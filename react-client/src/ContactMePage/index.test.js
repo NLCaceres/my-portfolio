@@ -3,9 +3,9 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ContactPage from ".";
 import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
-import * as CommonAPI from "../Api/Common";
+import * as CommonAPI from "../Data/Api/Common";
 import * as Validator from "./validator";
-import * as TurnstileAPI from "../Api/ThirdParty";
+import * as TurnstileAPI from "../Data/Api/ThirdParty";
 
 //? jest.mock() hoists above imports which makes it file wide and work for every test below SO
 //? If a per-test option is needed, must use "jest.doMock()" (See ContactPageForm.test for example)

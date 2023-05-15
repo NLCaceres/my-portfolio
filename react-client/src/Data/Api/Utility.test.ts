@@ -1,5 +1,5 @@
 import GetData, { PostData } from "./Utility";
-import * as BrowserFuncs from "../Utility/Functions/Browser";
+import * as BrowserFuncs from "../../Utility/Functions/Browser";
 
 describe("should create simple and useful", () => {
   let fetchSpy: jest.SpyInstance;

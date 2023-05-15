@@ -4,9 +4,9 @@ import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
 import SilenceWarning from "../Utility/TestHelpers/WarningSilencer";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
-import * as CommonAPI from "../Api/Common";
+import * as CommonAPI from "../Data/Api/Common";
 import * as Validator from "./validator";
-import * as TurnstileAPI from "../Api/ThirdParty";
+import * as TurnstileAPI from "../Data/Api/ThirdParty";
 
 const originalEnv = process.env;
 jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => {
