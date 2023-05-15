@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.1.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.3', '>= 6.1.3.2' # '~> 6.0.2', '>= 6.0.2.1' 
+gem 'rails', '~> 6.1.3', '>= 6.1.3.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
@@ -39,6 +39,8 @@ group :development, :test do #? Replace byebug & ruby-debug+debase with Rails 7'
 end
 
 group :development do
+  gem 'aws-sdk', '~> 3.1'
+  gem 'foreman'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
