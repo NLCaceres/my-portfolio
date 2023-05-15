@@ -16,7 +16,7 @@ class PostsController < ApiController
     else #* Returns entire list of projects
       @posts = Post.select_without(:created_at, :updated_at).order(:project_size)
     end
-    render json: @posts.to_json(include: { post_images: { only: %i[image_url alt_text] } })
+    render json: @posts.to_json(include: { post_images: { only: %i[image_url alt_text importance] } })
   end
 
   def create
