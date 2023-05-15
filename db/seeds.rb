@@ -18,4 +18,4 @@ end
 
 MyDbSeeder.new.driver
 #? ActiveAdmin creates this default user so devs can setup from ActiveAdmin console in production
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+AdminUser.create!(email: 'nick-react-rails@example.com', password: 'i3yDtBQpG', password_confirmation: 'i3yDtBQpG')
