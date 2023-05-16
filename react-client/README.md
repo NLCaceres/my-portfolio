@@ -19,12 +19,13 @@
         - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
   - RPG-based Homepage to reduce wall of text feeling
 #### Changes Coming Soon
+- Drop "React" top import in files since React 17 no longer needs to call createElement from it.
+  - Thanks to a new JSX transform under the Babel/Typescript compiler's hood, React can choose to just import any needed hooks instead.
+- Drop Bootstrap Carousel for an implementation that better handles lazy loading AWS Cloudfront-served images
 - Typescript
   - Update files containing JSX from '.jsx' to '.tsx' 
     - '.tsx' is mandatory when using Typescript
     - Even test files can get a '.test.tsx' file extension to usx JSX
-- Drop "React" top import in files since React 17 no longer needs to call createElement from it.
-  - Thanks to a new JSX transform under the Babel/Typescript compiler's hood, React can choose to just import any needed hooks instead.
 - React-Router
   - Swap in the 6.4 Data API
 - React-Spring
@@ -41,6 +42,9 @@
     - useContext pattern packed into a useViewWidth hook allowing access to viewWidth across the App without prop drilling
   - React Router 6
   - Beginning Typescript Migration
+    - Migrated PostCard.jsx to .tsx while also implementing ProjectImage sort based on new "importance" property
+  - Implement PostListView sort by "start_date" and new "importance" property. 
+    - For Desktop users, project images are also sorted to better showcase the selected project in the AppModal
 - Bootstrap 5 + React-Bootstrap 2 migration
   - CSS Modules used whenever possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!

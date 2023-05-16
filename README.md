@@ -15,14 +15,19 @@ While writing the two apps, I had plenty of time to think about the number of pr
   - Email Server? Heroku no longer an option
 - Include the following in Seeder:
   - Laravel + Vue Accounting On It
-  - Most of my experience with classic GUIs (Made in Java)
-- Ruby 3 is now an option thanks to Rails 6.1 and Rails 7.0.1!
-  - Similarly Webpacker 5.x is an option on Rails 6 BUT since React can bundle itself, it's best to let it handle the production build while Rails serves it up
-    - Note: Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
-    - Note for future upgrade: Rails includes `bin/rails webpacker:install` to handle update to webpacker similar to how ActiveAdmin works using 
-    `bin/rails g active_admin:install` with one additional step of adding `config.use_webpacker = true` in config/initializers/active_admin.rb
-      - Sprockets handles activeAdmin Sass, Css, images just fine anyway for now 
-      - BUT if dropping ActiveAdmin Webpacker will be entirely unnecessary since React can build itself.
+  - Most of my experience with classic GUIs (Made with JavaFx)
+- Webpacker 5.x is an option in Rails 6 BUT since React can bundle itself, it's best to let it handle the production build while Rails serves it up
+  - Note: Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
+  - Note for future upgrade: Rails includes `bin/rails webpacker:install` to handle update to webpacker similar to how ActiveAdmin works using 
+  `bin/rails g active_admin:install` with one additional step of adding `config.use_webpacker = true` in config/initializers/active_admin.rb
+    - Sprockets handles activeAdmin Sass, Css, images just fine anyway for now 
+    - BUT if dropping ActiveAdmin Webpacker will be entirely unnecessary since React can build itself.
+## Recent Changes
+- Updated Ruby from 2.7 to 3.1
+- Database 
+  - Updated DB Seeder for better readability in Ruby 3.1 with Rubocop
+  - Migration adding an "importance" and "start_date" column to Posts table for better sorting in the frontend
+  - Add Script to `lib/tasks` that migrates images to AWS S3 for easy fetching from AWS Cloudfront
 
 ## Notes to Remember! - December 2022
 ### Bundler
@@ -41,10 +46,15 @@ While writing the two apps, I had plenty of time to think about the number of pr
   - To create a config file, just run `bundle config set --local <key> <value>`. By setting some config key, bundler will automatically create the config file with the new value all setup and ready to go.
     - The local flag isn't technically needed since it's the default (as opposed to --global) BUT it's a useful reminder that you're configuring your local directory
 ### Rails and its Commands
-- Useful Rails Commands - To Serve and Display Locally `bin/rails s & yarn --cwd react-client start`
-  - To make it easier to swap out Env variables while running Rails & the React Dev Server locally, use the `heroku local` command
-    - `heroku local -f Procfile.dev` 
-    - Any .env file will be auto-grabbed and used to run the commands inside the Procfile so they have access to the vars set inside it.
+- Useful Rails Commands - To Serve and Display Locally `bin/rails start`
+  - Under the hood, as seen in `lib/tasks/start.rake`, this simple command calls `bin/rails start:development` which uses Foreman to handle Env variables
+    - Similar to `heroku local` (which is built on top of Foreman), any local env variables will be automatically pulled into the processes 
+    laid out by the local `Procfile`
+    - `bundle exec foreman local -f Procfile.dev` is the command being called to tell bundler to use the 'development group' Foreman gem to
+    run the processes laid out by `Procfile.dev`
+    - Even deeper under the hood, the commands laid out by `Procfile.dev` are:
+      - An API process running the Rail server via `bin/rails s` on Port 3001
+      - A web process running the React frontend in development mode via `yarn --cwd react-client start` on Port 3000
   - For list of commands, run `bin/rails` in the root rails dir
   - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
     - Running this command makes a 'new_framework_defaults' file, which lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (e.g. 6.0 to 6.1). 
