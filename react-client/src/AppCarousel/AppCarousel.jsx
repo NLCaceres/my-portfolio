@@ -5,6 +5,16 @@ import CarouselCss from "./Carousel.module.css";
 import cnames from "classnames";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
+//todo How to Replace the Bootstrap Carousel?
+//todo One option is to render the representative img and if the array length > 1 then also render indicators
+//todo THEN use those indicators on click to change the representative img by hiding the others underneath
+//todo ONLY on initial view does each img load in, but all subsequent viewings no reload needed!
+//todo ALTERNATIVE: Ditch Carousel all together for something different
+//todo Examples: 1. Grid/Collage of images that on click scale up the chosen img
+//todo 2. Dark background, jumbotron display rep img w/ minified imgs below. On click, scale down the rep img & scale up the chosen img
+//todo 3. Deck of cards that swap out and around each other.
+//todo Bonus: Display alt_text or a new description property in the foreground of the jumbotron'd rep img
+
 //! Bootstrap Carousel with defaults set - no control arrows or interval
 const AppCarousel = ({ children, images, ItemComponent, className }) => {
   const viewWidth = useViewWidth();

@@ -1,4 +1,5 @@
 import PostCardCss from "./PostCard.module.css";
+import { useMemo } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -7,12 +8,24 @@ import PlaceholderImg from "../AppImages/PlaceholderImg";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import IntersectLoadImage from "../AppImages/IntersectLoadImage";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
+import Project, { SortProjectImagesByImportance } from "../Data/Models/Project";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
+
+interface BasePostCardProps {
+  project: Project
+}
+interface PostCardWithImgProps extends BasePostCardProps {
+  onImgClick: Function
+}
+interface StyledImgPostCardProps extends PostCardWithImgProps {
+  className?: string,
+  rowClasses?: string
+}
 
 //@params: Following = Expected Props -  project (a data prop)
 //@params: onImgClick (img elem click hook)
 //@params: className (root element classes), rowClasses (Row container classes)
-const PostCard = ({ project, onImgClick, className, rowClasses }) => {
+const PostCard = ({ project, onImgClick, className, rowClasses }: StyledImgPostCardProps) => {
   return (
     //? data-testid = simple data attributes used in tests. Can remove via babel BUT no harm in being left in prod
     <Card className={`${PostCardCss.postCard} ${className || ""}`.trim()} data-testid="post-card">
@@ -29,16 +42,24 @@ const PostCard = ({ project, onImgClick, className, rowClasses }) => {
 };
 
 //@params: Passed down props - project, onImgClick
-const CardImage = ({ project, onImgClick }) => { //* Save a line & destructure props param in the func call!
+const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save a line & destructure props param in the func call!
   const viewWidth = useViewWidth();
+  const sortedPostImages = useMemo(() => {
+    return SortProjectImagesByImportance(project.post_images ?? []);
+  }, [project.post_images]);
   const placeholderText = (project.id?.toString() === process.env.REACT_APP_ABOUT_ME_ID) ? "My Photo" : "Project Photo";
   //* If receiving an empty array or no images in the array then render placeholder (Likely Rails will always send at least an empty [])
-  if (!Array.isArray(project.post_images) || project.post_images.length === 0) { return <PlaceholderImg children={ placeholderText } /> }
-
-  if (viewWidth < 768 && project.post_images.length > 1) { //* If received multiple images + small screen, then just render a carousel
+  if (sortedPostImages.length === 0) { return <PlaceholderImg children={ placeholderText } /> }
+  
+  //* One small issue with the following: onRender, you either get a Carousel or an IntersectLoadImg
+  //* BUT what happens with a mobile phone going from vertical to horizontal?
+  //* Posts with more than 1 image, flip from a Carousel to a single representative IntersectLoadImg!
+  //* WHICH means completely reloading the rep img every single time the viewWidth changes
+  //? Fix? useMemo on the rep child? Or finally drop Bootstrap's carousel and write my own implementation? (See "AppCarousel.jsx")
+  if (viewWidth < 768 && sortedPostImages.length > 1) { //* If received multiple images + small screen, then just render a carousel
     return (
       <AppCarousel className={ PostCardCss.imgTopMargin }> 
-        { project.post_images.map(image => {
+        { sortedPostImages.map(image => {
           return (
             <div className="carousel-item" key={ image.image_url }> 
               <IntersectLoadImage src={ image.image_url } alt={ image.alt_text } placeholderText={ placeholderText }
@@ -51,15 +72,15 @@ const CardImage = ({ project, onImgClick }) => { //* Save a line & destructure p
   }
 
   let classString = `${PostCardCss.cardImgContainer} ${PostCardCss.imgTopMargin}`; //* Base classList
-  if (viewWidth >= 992 && project.post_images.length > 1) { classString += ` ${PostCardCss.clickable}` } //* Add in CSS at specific viewport width
+  if (viewWidth >= 992 && sortedPostImages.length > 1) { classString += ` ${PostCardCss.clickable}` } //* Add in CSS at specific viewport width
   return ( //* At desktop sizes, render a single image that can open a modal if the project has multiple imgs
-    <IntersectLoadImage src={ project.post_images[0].image_url } alt={ project.post_images[0].alt_text }
+    <IntersectLoadImage src={ sortedPostImages[0].image_url } alt={ sortedPostImages[0].alt_text }
       placeholderText={ placeholderText } onImgClick={ onImgClick } className={ classString } />
   )
 }
 
 //@params: Passed down props - project
-const CardDetails = ({ project }) => {
+const CardDetails = ({ project }: BasePostCardProps) => {
   return (
     <Card.Body>
       <Card.Title as="h5" className="ms-2 fw-bold">
