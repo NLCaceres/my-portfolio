@@ -29,5 +29,5 @@
     "noUnusedParameters": true,
     "strict": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "./global.d.ts"]
  }
