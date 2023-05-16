@@ -5,8 +5,9 @@ import PostCard from "./PostCard";
 import CardImageModal from "../Modals/CardImageModal";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
 import UseNullableAsync from "../Hooks/UseAsync";
-import GetPostList from "../Api/ProjectAPI";
+import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
+import { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* "Import" loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
@@ -22,21 +23,27 @@ const PostListView = () => {
   const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
   const title = KebabToUppercasePhrase(projectType);
 
-  //! Computed Props of this component
-  const viewWidth = useViewWidth();
-
   //! State of this component: ModalState + ProjectList
   const [projectList, setProjectList] = useState({ majorProjects: [], minorProjects: [] });
   const [modalState, setModalState] = useState({ showModal: false, modalProject: null });
   const openModal = (newProject) => {
     if (viewWidth < 768) { return } //* No modal rendered for mobile so end func here
-    setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: newProject }));
+    const sortedImgs = SortProjectImagesByImportance(newProject?.post_images ?? []);
+    setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: { title: newProject?.title, "post_images": sortedImgs } }));
   }
+
+  //! Computed Props of this component
+  const viewWidth = useViewWidth();
+  const sortingCallback = useCallback((projectList) => {
+    const sortedMajorProjects = SortProjects(projectList.majorProjects ?? []);
+    const sortedSmallProjects = SortProjects(projectList.minorProjects ?? []);
+    setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
+  }, []) //* Empty ensures the sort is ONLY called once
   
   UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate "const" var like openModal
     const qParams = (projectType === "about-me") ? "null" : projectType.replace("-", "_");
     return GetPostList(qParams);
-  }, [projectType]), setProjectList);
+  }, [projectType]), sortingCallback);
 
   return (
     (projectList?.majorProjects?.length > 0 || projectList?.minorProjects?.length > 0) ?
