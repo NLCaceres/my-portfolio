@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Carousel from "react-bootstrap/Carousel";
 import CarouselCss from "./Carousel.module.css";
-import cnames from "classnames";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //todo How to Replace the Bootstrap Carousel?
@@ -51,10 +50,10 @@ const AppCarousel = ({ children, images, ItemComponent, className }) => {
     )
   )
 
+  const classList = `${CarouselCss.full} ${className || ""} ${(usingHoverClass) ? "hovered-indicators" : ""}`.trim();
   return (
     <Carousel activeIndex={ activeIndex } onSelect={ goToIndex } controls={false}
-      interval={null} data-testid="app-carousel" className={ cnames(CarouselCss.full, `${className || ""}`, 
-      { "hovered-indicators": usingHoverClass }) }> 
+      interval={null} data-testid="app-carousel" className={ classList }>
         { child }
     </Carousel>
   );

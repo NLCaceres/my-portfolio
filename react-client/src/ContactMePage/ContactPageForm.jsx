@@ -5,7 +5,6 @@ import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button";
 import AppSpinner from "../AppSpinner/AppSpinner";
 import TurnstileWidget from "../ThirdParty/TurnstileWidget";
-import cnames from "classnames";
 import ContactPageFormCss from "./ContactPageForm.module.css";
 import validate from "./validator";
 import { ProcessTurnstileResponse } from "../Data/Api/ThirdParty"
@@ -46,7 +45,7 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
   }, [IsContactable, onSubmitForm, newEmail])
 
   return ( //* NoValidate ensures Browser doesn't apply its own validation to this form
-    <Form noValidate onSubmit={ SubmitContactForm } className={ cnames({ "dark": darkMode }) } data-testid="form-container">
+    <Form noValidate onSubmit={ SubmitContactForm } className={(darkMode) ? "dark" : ""} data-testid="form-container">
       { /* Using column to size appropriately at smaller viewports */ }
       <Form.Group controlId="inputEmail" as={ Col } xs="10" sm="8" className="mb-3">
         <Form.Label className={ContactPageFormCss.formLabel}>Email Address</Form.Label>
