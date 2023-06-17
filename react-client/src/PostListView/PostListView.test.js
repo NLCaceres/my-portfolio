@@ -17,7 +17,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     ImgSortingMock = jest.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
     ProjectSortingMock = jest.spyOn(ProjectHelpers, "SortProjects");
   })
-  afterEach(() => { 
+  afterEach(() => {
     ApiMock.mockRestore(); 
     ViewWidthMock.mockRestore();
     ImgSortingMock.mockRestore();
@@ -83,17 +83,14 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       expect(ImgSortingMock).toHaveBeenCalledTimes(0); //! Sanity check, ImgSortMock not polluting other tests. Restore() called
       const { rerender } = render(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images[0].alt_text })); //* Use click to make modal appear
-      expect(ImgSortingMock).toHaveBeenCalledTimes(4); //* Called by each of the 3 Postcards + on modal opening
+      expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Called by each of the 3 Postcards Projects
       const modalOpenFirstTime = screen.getByRole("dialog");
       expect(modalOpenFirstTime).toBeInTheDocument(); expect(modalOpenFirstTime).toHaveClass("show"); //* Modal mounted and it's visible
       await user.click(screen.getByRole("button", { name: /close/i })); //* Close the modal
-      expect(ImgSortingMock).toHaveBeenCalledTimes(5); //* Sorter ALWAYS called, even on close
-      expect(ImgSortingMock).toHaveBeenLastCalledWith([]); //* BUT it's called with an empty array, saving time
 
       //* Only have 1 img so a condition in ProjectSection says don't render a modal, just render an img
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images[0].alt_text })); //* Only 1 image in [] so click doesn't work
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* Modal long gone
-      expect(ImgSortingMock).toHaveBeenCalledTimes(5); //* No call to openModal function so no sort called
 
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       rerender(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
@@ -102,7 +99,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images[0].alt_text }));
       //* Still no modal renders since two conditions fail in single img project post: viewWidth too small AND post only has 1 img
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-      expect(ImgSortingMock).toHaveBeenCalledTimes(5); //* No call to openModal function so no sort called
+      expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Not called anymore
     })
     test("a different size title", async () => {
       ApiMock.mockImplementation(() => ({ majorProjects: [ProjectFactory.create()], minorProjects: [] }));

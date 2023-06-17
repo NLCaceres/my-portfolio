@@ -4,7 +4,6 @@ import PostCard from "./PostCard";
 import ProjectFactory, { ProjectImageFactory } from "../Utility/TestHelpers/ProjectFactory";
 import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
-import * as ProjectHelpers from "../Data/Models/Project";
 
 describe("render a single PostCard", () => {
   let ViewWidthMock: jest.SpyInstance;
@@ -33,43 +32,36 @@ describe("render a single PostCard", () => {
 
   //! CardImage Func Component
   describe("with a representative image column", () => {
-    test("using either a placeholder, sorted img or sorted carousel", async () => {
-      const ImgSortingMock = jest.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
+    test("using either a placeholder, img or carousel", async () => {
       //! Placeholder if no imgs in project obj
       const testProject = ProjectFactory.create();
       const { rerender } = render(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       //* Not an img tag so use getByRole to grab .placeholderImg container div's h2 text
       const placeHolderImg = screen.getByRole("heading", { name: /project/i }).parentElement;
       expect(placeHolderImg).toBeInTheDocument(); //* Checking container
-      expect(ImgSortingMock).toHaveBeenCalledTimes(1); //* Call sort on 1st render
       
       //! Add 1 image to the project obj - placeholder disappears, single rep img appears
       testProject.post_images = [ProjectImageFactory.create()];
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(placeHolderImg).not.toBeInTheDocument(); //* Placeholder fades away
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* Only one img displayed + no modal open on click
-      expect(ImgSortingMock).toHaveBeenCalledTimes(2); //* Call sort again when post_images gets a real array
 
       testProject.post_images = [...testProject.post_images, ProjectImageFactory.create()]; //* Add an img so 2 imgs total
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(screen.queryByTestId("app-carousel")).not.toBeInTheDocument(); //* At desktop, never render a carousel as the rep img
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* One now clickable rep img displayed
-      expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Call sort again when post_images gets another new array w/ 2 items
 
       //! 2 imgs at 768px tablet size. Low end before use a carousel instead of a single clickable modal-opening img
       ViewWidthMock.mockReturnValue(averageTabletViewWidth);
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(screen.queryByTestId("app-carousel")).not.toBeInTheDocument(); //* NO carousel still
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* Still 1 clickable img
-      expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* No new post_images array, no sort needed
 
       //! Carousel appears at 767px tablet (and lower) w/ multiple images
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(await screen.findByTestId("app-carousel")).toBeInTheDocument();
       expect(screen.getAllByRole("img", { name: /barfooalt/i })).toHaveLength(2); //* Imgs technically still there! but in carousel!
-      expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Still no new post_images array, no sort
-      ImgSortingMock.mockRestore();
     })
     test("that hints + allows clicks at specific viewWidths", async () => {
       const testProject = ProjectFactory.create(); const mockImgClickFunc = jest.fn();

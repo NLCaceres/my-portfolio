@@ -28,15 +28,20 @@ const PostListView = () => {
   const [modalState, setModalState] = useState({ showModal: false, modalProject: null });
   const openModal = (newProject) => {
     if (viewWidth < 768) { return } //* No modal rendered for mobile so end func here
-    const sortedImgs = SortProjectImagesByImportance(newProject?.post_images ?? []);
-    setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: { title: newProject?.title, "post_images": sortedImgs } }));
+    setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: { title: newProject?.title, "post_images": newProject?.post_images } }));
   }
 
   //! Computed Props of this component
   const viewWidth = useViewWidth();
   const sortingCallback = useCallback((projectList) => {
-    const sortedMajorProjects = SortProjects(projectList.majorProjects ?? []);
-    const sortedSmallProjects = SortProjects(projectList.minorProjects ?? []);
+    const sortedMajorProjects = SortProjects(projectList.majorProjects ?? []).map(project => { 
+      project.post_images = SortProjectImagesByImportance(project.post_images ?? []); 
+      return project;
+    });
+    const sortedSmallProjects = SortProjects(projectList.minorProjects ?? []).map(project => { 
+      project.post_images = SortProjectImagesByImportance(project.post_images ?? []); 
+      return project;
+    });
     setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
   }, []) //* Empty ensures the sort is ONLY called once
   
