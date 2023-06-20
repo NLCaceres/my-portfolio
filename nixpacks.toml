@@ -2,7 +2,7 @@
 nixPkgs = ['nodejs', 'yarn']
 
 [phases.install]
-cmds = ['bundle install --jobs 1']
+cmds = ['bundle config set deployment true', 'bundle config set without development test', 'bundle install --jobs 1']
 
 [phases."node:install"]
 cmds = ['yarn railway-install']
