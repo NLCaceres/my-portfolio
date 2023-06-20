@@ -1,0 +1,72 @@
+name: Run Ruby on Rails & React Tests before Deploying to Railway
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  ruby_on_rails_test:
+    name: Run Ruby on Rails Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby based on ruby-version file
+        uses: ruby/setup-ruby@v1
+      - name: Set deployment config
+        run: bundle config set deployment true
+      - name: Set dependency groups
+        run: bundle config set without development test
+      - name: Install Bundle dependencies
+        run: bundle install --jobs 1
+      - name: Run Ruby on Rails tests
+        run: bin/rails test
+
+
+  react_tests:
+    name: Run React Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.9.0]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Yarn dependencies
+        run: yarn --cwd react-client install --frozen-lockfile
+      - name: Run React tests
+        run: yarn --cwd react-client test
+
+  
+  deploy:
+    name: Deploy to Railway
+    needs: [ruby_on_rails_test, react_tests]
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      ci_token: ${{ secrets.RAILWAY_TOKEN }}
+    strategy:
+      matrix:
+        node-version: [18.9.0]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Railway CLI
+        run: npm i -g @railway/cli
+      - name: Deploy Portfolio to Railway
+        run: RAILWAY_TOKEN=$ci_token railway up
