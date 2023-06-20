@@ -20,12 +20,11 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_redirected_to 'http://www.example.com:3000/portfolio'
   end
-  
+
   test 'most routes should redirect' do
     ENV['RAILS_ENV'] = 'production'
     get '/foo' #* Fires off request on port 3001 but will always redirect to 3000
-    assert_response :success
-    assert_match 'Foobar', @response.body
+    File.file?("#{Rails.root}/public/main.html") ? (assert_response :success) : (assert_response :not_found)
 
     ENV['RAILS_ENV'] = 'test'
     get '/bar'

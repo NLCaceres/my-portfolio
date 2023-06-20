@@ -10,14 +10,17 @@ class ApplicationController < ActionController::Base
   #* Both root + "*path" routes (see config/routes) point to the following method
   def fallback_redirect
     set_csrf_cookie
-    if production? #? 'send_file' vs 'render file: 'public/index.html' = send_file is faster since no layout being used
-      #? On the other hand, w/out file or 'public' (i.e. render 'index') the application/index.html.erb layout is sent
-      #? Below: type sets mimeType, disposition either displays or downloads the file
-      send_file "#{Rails.root}/public/main.html", type: 'text/html; charset=utf-8', disposition: 'inline', status: 200
+    file_name = "#{Rails.root}/public/main.html"
+    if production? && File.file?(file_name) #? 'send_file' > 'render file: 'public/main.html'. Faster w/out layout check
+      #? 'type' symbol sets mimeType, 'disposition' causes the file to either be displayed or downloaded
+      send_file file_name, type: 'text/html; charset=utf-8', disposition: 'inline', status: 200
+    elsif production? #* If no React file found, 404 Front-End does not exist!
+      head :not_found
     else #? In dev + tests, redirect to 'localhost:3000/', so the React dev server can send the app
       redirect_to "#{request.protocol}#{request.host}:3000/portfolio"
     end
   end
+  #? Using 'render' w/out 'file' or 'public' symbol, i.e. render 'index', sends the 'application/index.html.erb' layout
 
   #* Following route occurs only if specific headers included with GET request
   def routes
