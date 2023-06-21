@@ -5,23 +5,23 @@ Originally written using Rails 5, my React-based portfolio would fetch data from
 While writing the two apps, I had plenty of time to think about the number of projects I had written going through my Mobile Apps Minor at the University of Southern California, and found myself thinking that my journey as a software developer is exactly how I'd layout my portfolio, step by step, project by project and type by type. From mobile app development to web development and even basic GUI development, I feel confident as ever to take on any task in any language or framework and that's exactly what I'd like to convey! While relatively simple compared to my passion projects, like the Infection Control web, Android and iOS app or my Laravel + VueJS Accounting On It property management web app, the tech options behind it and possibilities feel endless. As a result, I look forward to improving it and adding to it each and every year!
 
 ## Future Development
-- From here out, focus on this project rather than the Rails 5 version. 
-  - Create a Swagger UI inspired routes list view
-  - Drop ActiveAdmin for simple React-based forms + Login via same Devise system.
-    - Would allow for Rails 7 version in API mode
-  - Update to new timeline-based design with new and improved RPG-based homepage
+- Drop ActiveAdmin for simple React-based forms + Login via same Devise system.
+  - Can update to Rails 7 in API mode
+  - No need to move to Webpacker via `bin/rails webpacker:install`, which would also require using `bin/rails g active_admin:install` 
+  as well as adding `config.use_webpacker = true` in `config/initializers/active_admin.rb`
+    - Currently, Sprockets is handling the CSS + images
+- Create a Swagger UI inspired routes list
+  - Frontend: New List view to display the routes in the admin section
+  - Backend: Sends routes list - DONE
+- Update to Frontend to timeline-based design with new and improved RPG-based homepage
 - Contact Us from the back-end!
-  - Front End Setup - DONE
+  - Frontend Setup - DONE
   - Email Server? Heroku no longer an option
-- Include the following in Seeder:
+- Include the following in Database:
   - Laravel + Vue Accounting On It
-  - Most of my experience with classic GUIs (Made with JavaFx)
-- Webpacker 5.x is an option in Rails 6 BUT since React can bundle itself, it's best to let it handle the production build while Rails serves it up
-  - Note: Webpacker 5.x uses webpack 4.x meanwhile if Rails upgrades to Webpacker 6.x (current), it'll be webpack 5.x
-  - Note for future upgrade: Rails includes `bin/rails webpacker:install` to handle update to webpacker similar to how ActiveAdmin works using 
-  `bin/rails g active_admin:install` with one additional step of adding `config.use_webpacker = true` in config/initializers/active_admin.rb
-    - Sprockets handles activeAdmin Sass, Css, images just fine anyway for now 
-    - BUT if dropping ActiveAdmin Webpacker will be entirely unnecessary since React can build itself.
+  - Classic GUIs, made with JavaFx
+- Consider Codecov or Coveralls for better, more visible coverage reports
+
 ## Recent Changes
 - Updated Ruby from 2.7 to 3.1
 - Database 
@@ -29,7 +29,7 @@ While writing the two apps, I had plenty of time to think about the number of pr
   - Migration adding an "importance" and "start_date" column to Posts table for better sorting in the frontend
   - Add Script to `lib/tasks` that migrates images to AWS S3 for easy fetching from AWS Cloudfront
 
-## Notes to Remember! - December 2022
+## Notes to Remember! - June 2023
 ### Bundler
 - A nifty package manager for Ruby with two ways of updating
   - `bundle install` conservatively updates packages once you modify the Gemfile. It only will update based on changes
@@ -45,6 +45,12 @@ While writing the two apps, I had plenty of time to think about the number of pr
       - Setting 'path' avoids installing gems to the global gem list, isolating your app
   - To create a config file, just run `bundle config set --local <key> <value>`. By setting some config key, bundler will automatically create the config file with the new value all setup and ready to go.
     - The local flag isn't technically needed since it's the default (as opposed to --global) BUT it's a useful reminder that you're configuring your local directory
+  - Using the Config file is best practice for Bundler 2+ due to an incoming change to how Bundler handles config flags. 
+    - Bundler 1 & 2 can unexpectedly setup a config file just by using flags while running commands like "install", or "update", which makes flags stateful!
+    - Bundler 3 intends to change this, which could cause even more unexpected behavior. 
+      - As a result, setting up a config file and being aware of default behavior guarantees consistent command usage across platforms
+      - If you need to alter behavior of a command ONCE, then flags will still be available
+
 ### Rails and its Commands
 - Useful Rails Commands - To Serve and Display Locally `bin/rails start`
   - Under the hood, as seen in `lib/tasks/start.rake`, this simple command calls `bin/rails start:development` which uses Foreman to handle Env variables
@@ -69,6 +75,7 @@ While writing the two apps, I had plenty of time to think about the number of pr
     or simply delete it all together
     - Since React creates a index.html file by default during its build process, it's important to rename it and serve our renamed file instead
     so we can actually see React do its magic once served by the controller's action (in this case application#fallback_redirect)
+
 ### Debugging Rails 6+ Apps on Ruby 3+ via Ruby's debug gem
 - Must use the VSCode rdbg extension to attach the gem to a process started by the `rdbg` command
   - Ex: `bin/rdbg -n --open=vscode -c -- bin/rails s` to start the server process, letting it wait for a debugger to attach
@@ -99,6 +106,7 @@ While writing the two apps, I had plenty of time to think about the number of pr
 - Why not use byebug or ruby-debug-ide?
   - Byebug is a bit simple. Useful! but not powerful nor well integrated with VSCode
   - ruby-debug-ide, on the other hand, as of Dec 2022, has issues running on MacOS due to debase 0.2.4 (that are seemingly unlikely to be fixed soon)
+
 ### My Package.json Commands
 - Preface to next point, Facebook still uses yarn primarily BUT since yarn is installed via NPM (on Railway), it's pretty easy to get confused. 
   - `npx create-react-app app-name` still used to make a new React app. 
