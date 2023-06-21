@@ -1,4 +1,3 @@
-import React from "react";
 import CardImageModal from "./CardImageModal";
 import { render, screen } from "@testing-library/react";
 import ProjectFactory, { ProjectImageFactory } from "../Utility/TestHelpers/ProjectFactory";

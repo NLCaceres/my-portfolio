@@ -1,5 +1,4 @@
-// import "./App.css";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import AppAlert from "../AppAlert/AppAlert";

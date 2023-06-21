@@ -1,5 +1,3 @@
-import React from "react";
-
 //! Lesson on Higher Order Components
 //? Render function names passed into a prop are different than passing in "<SomeComponent />"
 //? i.e. if you have "const ChildComponent = ({name}) => (<div>{name || 'Default'}</div>)"

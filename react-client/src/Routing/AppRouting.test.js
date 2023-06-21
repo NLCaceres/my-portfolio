@@ -1,4 +1,3 @@
-import React from "React";
 import AppRouting from "./AppRouting";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";

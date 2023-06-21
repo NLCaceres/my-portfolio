@@ -1,4 +1,3 @@
-import React from "react";
 import { ViewWidthProvider } from "./ContextProviders/ViewWidthProvider";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";

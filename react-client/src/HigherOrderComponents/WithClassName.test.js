@@ -1,4 +1,3 @@
-import React from "react";
 import withClassName from "./WithClassName";
 import { render, screen } from "@testing-library/react";
 

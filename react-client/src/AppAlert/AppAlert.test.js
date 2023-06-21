@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import AppAlert from './AppAlert';
+import AppAlert from "./AppAlert";
 
 describe("renders a reusable App-wide Bootstrap alert with", () => {
   describe("specific app-themed style", () => {

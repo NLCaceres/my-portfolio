@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import TurnstileWidgetCss from "./TurnstileWidget.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 

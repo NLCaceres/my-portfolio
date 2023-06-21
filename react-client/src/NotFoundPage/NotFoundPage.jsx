@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSpring } from "@react-spring/web";
-import NotFoundCss from "./NotFoundPage.module.css"
+import NotFoundCss from "./NotFoundPage.module.css";
 import BackgroundLoadImage from "../AppImages/BackgroundLoadImage";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 

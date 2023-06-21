@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { animated, config, useResize, useSpring } from "@react-spring/web"
+import { useEffect, useState } from "react";
+import { animated, config, useResize, useSpring } from "@react-spring/web";
 import PlaceholderImg from "./PlaceholderImg";
 import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";

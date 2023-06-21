@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { animated, useTransition } from "@react-spring/web";
 import ContactPage from "../ContactMePage";

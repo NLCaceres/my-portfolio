@@ -1,7 +1,5 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import IntersectLoadImage from "./IntersectLoadImage";
-import * as ReactSpring from "@react-spring/web";
 
 describe("rendering a 'BackgroundLoadImage' component that only begins load on intersection", () => {
   test("injecting the src upon crossing a '0.6' threshold", async () => {

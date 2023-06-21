@@ -1,4 +1,3 @@
-import React from "react";
 import BackgroundLoadImage from "./BackgroundLoadImage";
 import { useInView } from "@react-spring/web";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";

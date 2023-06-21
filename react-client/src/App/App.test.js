@@ -1,4 +1,3 @@
-import React from "react";
 import App from "./App";
 import { MemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";

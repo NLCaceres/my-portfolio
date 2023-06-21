@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Carousel from "react-bootstrap/Carousel";
 import CarouselCss from "./Carousel.module.css";

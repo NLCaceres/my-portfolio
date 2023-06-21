@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NavbarCss from "./Navbar.module.css";
 import Logo from "../logo.svg";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar"
-import Nav from "react-bootstrap/Nav"
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
 import { Link, NavLink } from "react-router-dom";
 
 /* //? Repackaging of React-bootstrap navbar into something a bit more convenient */

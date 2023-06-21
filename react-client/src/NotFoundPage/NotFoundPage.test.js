@@ -1,4 +1,3 @@
-import React from "react";
 import { fireEvent, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";

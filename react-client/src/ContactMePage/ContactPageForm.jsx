@@ -1,13 +1,13 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
-import Col from "react-bootstrap/Col"
-import Form from "react-bootstrap/Form"
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import AppSpinner from "../AppSpinner/AppSpinner";
 import TurnstileWidget from "../ThirdParty/TurnstileWidget";
 import ContactPageFormCss from "./ContactPageForm.module.css";
 import validate from "./validator";
-import { ProcessTurnstileResponse } from "../Data/Api/ThirdParty"
+import { ProcessTurnstileResponse } from "../Data/Api/ThirdParty";
 import { SendEmail } from "../Data/Api/Common";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import ContactPageForm from "./ContactPageForm";
 import IndexCss from "./index.module.css";

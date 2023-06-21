@@ -1,6 +1,5 @@
-import React from "react";
 import AppModalCss from "./AppModal.module.css";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 import { CreateID } from "../Utility/Functions/ComputedProps";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
@@ -8,7 +7,7 @@ let modalCount = 0;
 const propIdOrModalId = id => {
   if (id === undefined) { //* Provide a default ID that should be unique
     let finalID;
-    [modalCount, finalID] = CreateID(modalCount, 'modal');
+    [modalCount, finalID] = CreateID(modalCount, "modal");
     return finalID;
   }
   return `${id}-modal`;
