@@ -15,6 +15,24 @@ jobs:
     name: Run Ruby on Rails Tests
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres:15-alpine
+        # Set the password for the Postgres service
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Maps TCP port 5432 on service container to the host
+        ports:
+          - 5432:5432
+        # Set health checks to wait until Postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby based on ruby-version file
@@ -27,6 +45,8 @@ jobs:
         run: bundle install --jobs 1
       - name: Run Ruby on Rails tests
         run: bin/rails test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
 
 
   react_tests:
@@ -54,8 +74,6 @@ jobs:
     needs: [ruby_on_rails_test, react_tests]
     runs-on: ubuntu-latest
     environment: production
-    env:
-      ci_token: ${{ secrets.RAILWAY_TOKEN }}
     strategy:
       matrix:
         node-version: [18.9.0]
@@ -69,4 +87,6 @@ jobs:
       - name: Install Railway CLI
         run: npm i -g @railway/cli
       - name: Deploy Portfolio to Railway
-        run: RAILWAY_TOKEN=$ci_token railway up
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
