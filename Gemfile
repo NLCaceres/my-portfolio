@@ -34,12 +34,13 @@ gem 'activeadmin', '~> 2.10'
 gem 'rack-attack', '>= 6.5', '< 6.8' # Based on current pace, 6.8 would drop ruby 2.7 BUT Rails 7 may be ready + have Ruby 3 support
 gem 'net-http' # Correct issue w/ net-imap, a dependency of mail, which ActionMail depends on (Likely fixed by Ruby3)
 
+gem 'aws-sdk-s3', '~> 1' # Thanks to V3's Modularization, it's best to take ONLY the AWS service gem you need
+
 group :development, :test do #? Replace byebug & ruby-debug+debase with Rails 7's choice Ruby's default: debug
   gem 'debug', ">= 1.0.0", platforms: [:mri, :mingw, :x64_mingw]
 end
 
 group :development do
-  gem 'aws-sdk', '~> 3.1'
   gem 'foreman'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
