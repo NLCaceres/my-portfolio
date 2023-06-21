@@ -19,8 +19,6 @@
         - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
   - RPG-based Homepage to reduce wall of text feeling
 #### Changes Coming Soon
-- Drop "React" top import in files since React 17 no longer needs to call createElement from it.
-  - Thanks to a new JSX transform under the Babel/Typescript compiler's hood, React can choose to just import any needed hooks instead.
 - Drop Bootstrap Carousel for an implementation that better handles lazy loading AWS Cloudfront-served images
 - Typescript
   - Update files containing JSX from '.jsx' to '.tsx' 
@@ -45,6 +43,7 @@
     - Migrated PostCard.jsx to .tsx while also implementing ProjectImage sort based on new "importance" property
   - Implement PostListView sort by "start_date" and new "importance" property. 
     - For Desktop users, project images are also sorted to better showcase the selected project in the AppModal
+  - Embrace React 17+ JSX transform by dropping React top import
 - Bootstrap 5 + React-Bootstrap 2 migration
   - CSS Modules used whenever possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!
@@ -66,6 +65,7 @@
     - Even Carousel lazy loads in mobile image section of Card 
     - Desktop modal does not lazy load BUT maybe it should given some projects have 8+ imgs that would load at once
 - Update engines to Node 18, NPM 8, Yarn 1.22.19 and move from Heroku to Railway for deployments
+  - Configure Jest Coverage settings
 
 ## Quick Notes
 - React 17 decided to put its testing dependencies in package.json's normal dependencies list. Why?
@@ -81,6 +81,11 @@ in production to make your build on Railway or Vercel. Finally, the issues highl
 - `yarn install` -> Usually run as expected to create a lock file + package install, but also often run when major package changes are added to package.json
 - `yarn start` -> Run the app in dev mode (typically localhost:3000) with hot reloading 
 - `yarn test` -> Launch test runner in interactive watch mode
+  - To force all tests to run, use `--watchAll`
+  - To get coverage, use `--coverage` (No middle double-dash needed, i.e. `yarn test -- --coverage`)
+    - Be aware of jest settings in `package.json`, which can accidentally exclude tests or include unnecessary files
+  - To run once without watching, either use `CI=true` env var as a prefix or `--ci` flag which is, of course, helpful in Continuous Integration environments
+  where a single run-through all the tests is all that's needed
 - `yarn build` -> Build app for production in /build dir, minified and hashed filenames
     - Problem minifying? https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 - `yarn eject` -> One way operation! Instead of yarn controlling webpack, babel, etc,
