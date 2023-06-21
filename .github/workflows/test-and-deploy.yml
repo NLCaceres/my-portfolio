@@ -31,7 +31,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
+       
+    # Apply the following ENV vars to all of the following steps of this job
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
 
     steps:
       - uses: actions/checkout@v3
@@ -43,10 +46,10 @@ jobs:
         run: bundle config set without development test
       - name: Install Bundle dependencies
         run: bundle install --jobs 1
+      - name: Setup Database
+        run: bin/rails db:setup
       - name: Run Ruby on Rails tests
         run: bin/rails test
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
 
 
   react_tests:
