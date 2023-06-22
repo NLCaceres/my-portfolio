@@ -43,7 +43,7 @@ jobs:
       - name: Set deployment config
         run: bundle config set deployment true
       - name: Set dependency groups
-        run: bundle config set without development test
+        run: bundle config set without development
       - name: Install Bundle dependencies
         run: bundle install --jobs 1
       - name: Setup Database
