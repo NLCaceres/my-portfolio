@@ -10,7 +10,8 @@ describe("creates an appwide simple unique id", () => {
     const countIdTuple = CreateID(count, prefix);
     expect(countIdTuple).toBeInstanceOf(Array);
     expect(countIdTuple).toHaveLength(2);
-    expect(countIdTuple).toContain(3, 'foobar-3');
+    expect(countIdTuple).toContain(3);
+    expect(countIdTuple).toContain("foobar-3");
   })
 })
 
@@ -38,12 +39,7 @@ describe("transform kebab-case phrase into uppercase whitespace delimited phrase
     const uppercaseLetter = KebabToUppercasePhrase('t');
     expect(uppercaseLetter).toBe('T');
 
-    //* Falsy Values
-    //* NaN, 0, and false also would yield these results so maybe use '??' instead of '||'?
-    const undefinedPhrase = KebabToUppercasePhrase(undefined);
-    expect(undefinedPhrase).toBe('');
-    const nullPhrase = KebabToUppercasePhrase(null);
-    expect(nullPhrase).toBe('');
+    //* Used to consider all falsy values, but now only strings SHOULD ever be passed in
     const falsyPhrase = KebabToUppercasePhrase('');
     expect(falsyPhrase).toBe('');
   })

@@ -1,6 +1,6 @@
 //* Contains functions that handle basic Browser functionality like getting specific cookies!
 
-export function GetCookie(name) {
+export function GetCookie(name: string) {
   const splitCookies = document.cookie.split('; ');
   if (splitCookies.length === 0) { return } //* No cookies, then early return
   //* Search thru each cookie key/val pair to find cookie based on name
