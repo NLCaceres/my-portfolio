@@ -11,9 +11,11 @@ import { Link, NavLink } from "react-router-dom";
 const AppNavbar = () => {
   const [expanded, setExpanded] = useState(false); //* Init state = false
   useEffect(() => {
-    function expansionListener(event) { //? Contains() works on DomNodes + better supported than String.includes()
+    function expansionListener(event: Event) {
+      if (!event.target || !(event.target instanceof Element)) { return } //* Early return if target is falsy or not type Element
+      //? Contains() works on DomNodes + better supported than String.includes()
       (event.target.classList.contains("navbar-toggler") || event.target.className === "navbar-toggler-icon") ?
-        setExpanded(!expanded) : setExpanded(false) //* If not the toggler or icon, then click must close nav
+        setExpanded(!expanded) : setExpanded(false); //* If not the toggler or icon, then click must close nav
     }
     document.addEventListener("click", expansionListener)
     return () => { document.removeEventListener("click", expansionListener) } //* Cleanup listener
@@ -48,18 +50,17 @@ const FullNav = () => {
 const NavButtons = () => {
   const tabProperNames = { iOS: "iOS", android: "Android", 
     "front-end": "Front-End Web", "back-end": "Back-End Web" };
-  const tabKeyNames = Object.keys(tabProperNames);
+
   //? Must pass this func to React-Router-Dom's NavLink so it can apply certain classes when it's the active/matching route
-  const isActiveClasses = ({isActive}) => //? Must include 'nav-link' class to adopt Bootstrap styles
+  const isActiveClasses = ({ isActive }: { isActive: boolean }) => //? Must include 'nav-link' class to adopt Bootstrap styles
     `nav-link ${NavbarCss.navButton} ${(isActive) ? NavbarCss.activeNavButton : ""}`.trim()
 
-  return [...Array(tabKeyNames.length)].map((_, i) => {
-    const tabKeyName = tabKeyNames[i];
+  return (Object.keys(tabProperNames) as Array<keyof typeof tabProperNames>).map(keyName => {
     return (
       <Nav.Item className={`border border-dark rounded ${NavbarCss.navItem}`}
-        key={ tabProperNames[tabKeyName] }>
-          <NavLink to={`portfolio/${tabKeyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
-              { tabProperNames[tabKeyName] }
+        key={ tabProperNames[keyName] }>
+          <NavLink to={`portfolio/${keyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
+              { tabProperNames[keyName] }
           </NavLink>
       </Nav.Item>
     );

@@ -16,7 +16,7 @@ describe("renders an app standard styled spinner", () => {
     const spinner = screen.getByRole("status");
     expect(spinner).toHaveClass("me-2")
 
-    rerender(<AppSpinner className={"foobar"} />)
+    rerender(<AppSpinner className="foobar" />)
     expect(spinner).toHaveClass("foobar");
     expect(spinner).toHaveClass("foobar me-2 spinner-border", { exact: true });
   })
@@ -30,17 +30,17 @@ describe("renders an app standard styled spinner", () => {
     expect(spinner).toHaveClass("spinner-border-sm"); //* Gets rendered smaller!
   })
   test("in a variety of colors", () => {
-    const { rerender } = render(<AppSpinner color={"primary"} />)
+    const { rerender } = render(<AppSpinner color="primary" />)
     const spinner = screen.getByRole("status");
     expect(spinner).toHaveClass("text-primary");
 
-    rerender(<AppSpinner color={"danger"} />)
+    rerender(<AppSpinner color="danger" />)
     expect(spinner).toHaveClass("text-danger");
 
-    rerender(<AppSpinner color={"info"} />)
+    rerender(<AppSpinner color="info" />)
     expect(spinner).toHaveClass("text-info");
 
-    rerender(<AppSpinner color={"success"} />)
+    rerender(<AppSpinner color="success" />)
     expect(spinner).toHaveClass("text-success");
     //* There's also secondary, warning, light, and dark
   })
