@@ -15,7 +15,7 @@ export function CleanAndKebabString(title: string) {
 }
 
 export function IsEmpty<T>(value: string | Array<T>) {
-  return value.length > 0;
+  return value.length === 0;
 }
 
 //* In practice, trims concatenated className strings
@@ -24,20 +24,24 @@ export function Strip(value: string) {
   return value.trim();
 }
 
-//* Following used with URLs to transform kebab cased directories 'about-me' to 'About Me'
-export function KebabToUppercasePhrase(phrase: string, wordsToSkip?: WordModifierOptions, wordsToHyphenate?: WordModifierOptions) {
-  if (!phrase) return '';
-  const defPhrase = phrase || ''; //* Since null doesn't cause default param, '||' can create a default val
-  const words = defPhrase.split('-');
-  return UppercasePhrase(words, wordsToSkip, wordsToHyphenate); //* If last 2 params not filled then undefined and default params passed in
+//* Following used with URLs to transform kebab cased directories "about-me" to "About Me"
+export function KebabCaseToTitleCase(phrase: string, wordsToSkip?: WordModifierOptions) {
+  if (IsEmpty(phrase)) { return "" }
+  const words = phrase.split("-");
+  return TitleCase(words, wordsToSkip); //* If last param is not filled then it's undefined, so default params passed in
+}
+export function KebabCaseToKebabTitleCase(phrase: string, wordsToSkip?: WordModifierOptions) {
+  if (IsEmpty(phrase)) { return "" }
+  const words = phrase.split("-");
+  const kebabTitlePhrase = TitleCase(words, wordsToSkip, word => `${word}-`)
+  return kebabTitlePhrase.slice(0, -1); //* Slice off the hanging "-" so "Some-Phrase-" becomes "Some-Phrase"
 }
 
-//* Following used with obj keys to transform camelCase 'aboutMe' to 'About Me'
-export function CamelCaseToUppercasePhrase(phrase: string, wordsToSkip?: WordModifierOptions) {
-  if (!phrase) return '';
-  const defPhrase = phrase || '';
-  const words = defPhrase.split(/(?=[A-Z])/);
-  return UppercasePhrase(words, wordsToSkip);
+//* Following used with obj keys to transform camelCase "aboutMe" to "About Me"
+export function CamelCaseToTitleCase(phrase: string, wordsToSkip?: WordModifierOptions) {
+  if (IsEmpty(phrase)) { return "" }
+  const words = phrase.split(/(?=[A-Z])/);
+  return TitleCase(words, wordsToSkip);
 }
 
 //* Provide the word, and whether the modifier should be applied via a boolean
@@ -45,22 +49,34 @@ type WordModifierOptions = {
   [word: string]: boolean
 }
 
-function UppercasePhrase(words: string[], wordsToSkip: WordModifierOptions = { iOS: true }, wordsToHyphenate: WordModifierOptions = { 'front-end': true, 'back-end': true }) {
-  let title;
-  if (!Array.isArray(words)) return; //* Could throw instead
-  for (let i = 0; i < words.length; i++) {
-    const currentWord = words[i];
-    if (i === 0) {
-      title = (wordsToSkip[currentWord]) ? currentWord : currentWord.charAt(0).toUpperCase() + currentWord.slice(1);
+export function isString(str: any): str is string {
+  return typeof str === "string";
+}
+
+//* Take a whole string and capitalize any words it encounters a la Ruby on Rails
+export function TitleCase(str: string | string[], wordsToSkip: WordModifierOptions = { iOS: true }, wordTransform?: (word: string) => string) {
+  if (str.length === 0) { return "" }
+  if (isString(str) && !!wordsToSkip[str]) { return str } //* Check this is a str + make sure it needs to capitalized
+  if (isString(str) && str.length === 1) { return str.charAt(0).toUpperCase() } //* Single letter that can be dealt with quickly
+
+  const wordsInStr = Array.isArray(str) ? str : str.split(" "); //* If string is multiple words
+  return wordsInStr.reduce((buildStr, currentStr, index) => {
+    if (!!wordsToSkip[currentStr]) {
+      return (index === wordsInStr.length - 1) ? (buildStr + currentStr) : (buildStr + `${currentStr} `);
     }
-    else if (wordsToSkip[currentWord]) { title += ` ${currentWord}` } //* No capital needed. Tack on word, and move on
-    else {
-      const prevWord = words[i-1]; //* Safe since should be at second index now
-      const currentUppercasedWord = currentWord.charAt(0).toUpperCase() + currentWord.slice(1); //* Slice should handle 'out of bounds index' err
-      title += (wordsToHyphenate[`${prevWord}-${currentWord}`]) //* Some words SHOULD be hyphenated
-        ? `-${currentUppercasedWord}` //* 'front-end' to 'Front-End'
-        : ` ${currentUppercasedWord}`; //* 'front-end' to 'Front End'
-    }
-  }
-  return title;
+
+    const casedWord = (currentStr.length === 1)
+      ? currentStr.toUpperCase()
+      : currentStr.charAt(0).toUpperCase() + currentStr.slice(1);
+
+    if (wordTransform) { return buildStr + wordTransform(casedWord) }
+
+    //? Double ternary to form simple if-elseIf-else conditional return
+    return (index === wordsInStr.length - 1) ? (buildStr + casedWord) //* Check if last (or ONLY) word in splitStr[]
+      : (buildStr + `${casedWord} `);
+  }, "");
+}
+
+export function DropSpecialChars(str: string) {
+  return str.replace(/[+\-_~ ]+$/, ""); //? Matches "+-_~" (escapes the "-") AND whitespace
 }

@@ -6,7 +6,7 @@ import CardImageModal from "../Modals/CardImageModal";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
 import UseNullableAsync from "../Hooks/UseAsync";
 import GetPostList from "../Data/Api/ProjectAPI";
-import { CamelCaseToUppercasePhrase, KebabToUppercasePhrase } from "../Utility/Functions/ComputedProps";
+import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
 import { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* "Import" loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
@@ -21,7 +21,8 @@ const PostListView = () => {
     (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname; //* Else all other "/portfolio/foo" routes
   const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
   const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
-  const title = KebabToUppercasePhrase(projectType);
+  const title = (projectType === "front-end" || projectType === "back-end") 
+    ? KebabCaseToKebabTitleCase(projectType) : KebabCaseToTitleCase(projectType);
 
   //! State of this component: ModalState + ProjectList
   const [projectList, setProjectList] = useState({ majorProjects: [], minorProjects: [] });
@@ -69,7 +70,7 @@ const PostListView = () => {
 //* EXCEPT in the case of the AboutMe page where it's the 1 section & gets a special header
 const ProjectList = ({ modalControl, projectList, projectType, viewWidth }) => {
   return Object.keys(projectList).map((projectKey) => {
-    const projectSize = CamelCaseToUppercasePhrase((projectKey === "minorProjects") ? "smallProjects" : projectKey);
+    const projectSize = CamelCaseToTitleCase((projectKey === "minorProjects") ? "smallProjects" : projectKey);
     const aboutMeTitle = projectType === "about-me" ? "Nicholas L. Caceres" : null;
 
     //? CAN use nanoid, shortid, uuid pkgs for keys on lists or id on forms BUT obj/class props = best
