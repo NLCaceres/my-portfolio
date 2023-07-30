@@ -4,6 +4,10 @@ import FloatingAlertCss from './AppAlert.module.css';
 import ConsoleLogger from '../Utility/Functions/LoggerFuncs';
 
 //! An Alert to display for a variety of messages across the app, front and center floating at the bottom of the page
+
+//* Alert State for those that only appear briefly (closing on timeout)
+export type AlertState = { title?: string, message?: string, color?: string, timeoutID?: NodeJS.Timeout }
+
 //* Currently used for contact-me email submission: Green on success & red on error
 interface AlertProps {
   title?: string, message?: string, color?: string, onClose?: Function
