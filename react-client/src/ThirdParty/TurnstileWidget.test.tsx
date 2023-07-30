@@ -6,10 +6,13 @@ describe("renders a Turnstile Verification Widget", () => {
     jest.useFakeTimers(); //* Setup timeout + turnstile render mocks
     jest.spyOn(global, "clearTimeout");
     const turnstileRenderMock = jest.fn();
-    window.turnstile = {};
-    window.turnstile.render = turnstileRenderMock;
+    window.turnstile = { 
+      ready: jest.fn(), implicitRender: jest.fn(), execute: jest.fn(), 
+      reset: jest.fn(), remove: jest.fn(), getResponse: jest.fn(), 
+      render: turnstileRenderMock 
+    };
 
-    const { unmount } = render(<TurnstileWidget />);
+    const { unmount } = render(<TurnstileWidget action="" successCB={jest.fn()} />);
     jest.runOnlyPendingTimers(); //* Ensure timeout funcs called
     expect(turnstileRenderMock).toHaveBeenCalledTimes(1);
 
@@ -23,12 +26,12 @@ describe("renders a Turnstile Verification Widget", () => {
     //* Setting up a mock that just calls our successCallback doesn't really test the actual setup
   })
   test("uses Turnstile specific id + css modules with a prop to add more classes", () => {
-    const { rerender } = render(<TurnstileWidget />);
-    const widget = document.body.firstChild.firstChild;
+    const { rerender } = render(<TurnstileWidget action="" successCB={jest.fn()} />);
+    const widget = document.body.firstChild!.firstChild;
     expect(widget).toHaveAttribute("id", "turnstile-widget-container");
     expect(widget).toHaveClass(" turnstileContainer", { exact: true });
     
-    rerender(<TurnstileWidget className={"foobar"} />);
+    rerender(<TurnstileWidget className={"foobar"} action="" successCB={jest.fn()} />);
     expect(widget).toHaveClass("foobar turnstileContainer", { exact: true });
   })
 })

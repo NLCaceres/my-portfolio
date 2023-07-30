@@ -2,15 +2,22 @@ import { useEffect } from "react";
 import TurnstileWidgetCss from "./TurnstileWidget.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
-const TurnstileWidget = ({ action, compact, successCB, className }) => {
+export interface TurnstileWidgetProps {
+  action: string, compact: boolean, successCB: Function, className?: string
+}
+const defaultProps = { //? Ensures props get defaults when placed in layout when using ".defaultProps"
+  compact: false
+}
+
+const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWidgetProps & typeof defaultProps) => {
   const turnstileSize = (compact) ? "compact" : "normal"
   useEffect(() => {
     const turnstileRenderTimeoutID = setTimeout(() => {
       //? Config Options - https://developers.cloudflare.com/turnstile/get-started/client-side-rendering
       window.turnstile.render("#turnstile-widget-container", {
-        sitekey: process.env.REACT_APP_TURNSTILE_SITE_KEY,
+        sitekey: process.env.REACT_APP_TURNSTILE_SITE_KEY ?? "",
         action: action, //? 0-32 chars that describes the widget's purpose
-        callback: function(token) {
+        callback: function(token: string) {
           ConsoleLogger(`Challenge Success - ${token}`);
           successCB(token);
         },
@@ -37,4 +44,5 @@ const TurnstileWidget = ({ action, compact, successCB, className }) => {
   return (<div id="turnstile-widget-container" className={`${className || ""} ${TurnstileWidgetCss.turnstileContainer}`}></div>)
 }
 
+TurnstileWidget.defaultProps = defaultProps;
 export default TurnstileWidget;
