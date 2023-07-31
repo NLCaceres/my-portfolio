@@ -1,6 +1,15 @@
+/* Setting min-width helps reduce jank when the widget finally renders in */
 .turnstileContainer {
   height: 65px;
+  min-width: 300px;
 }
+
+/* Following CAN be useful for slightly shrinking the Turnstile Widget itself if needed */
+/* @media only screen and (min-width: 576px) {
+  .turnstileContainer > iframe {
+    width: 225px !important;
+  }
+} */
 
 @media only screen and (max-width: 575px) {
   .turnstileContainer {
@@ -10,5 +19,6 @@
 @media only screen and (max-width: 320px) {
   .turnstileContainer {
     height: 126px;
+    min-width: 130px;
   }
 }

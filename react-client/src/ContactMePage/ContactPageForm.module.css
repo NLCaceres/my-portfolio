@@ -23,8 +23,11 @@
   }
 }
 
-.submitButton {
-  max-height: 40px;
+.button-container > .submitButton {
+  margin-left: 0.5rem;
+  max-height: 50px;
+  min-height: 40px;
+  line-height: 1.15;
   font-weight: bolder;
   color: white;
   background-color: #00E000 !important;
