@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 
 //* Unfortunately, jest.doMock() nor jest.isolateModules() seem to work as expected 
 //* Using jest.doMock() doesn't re-mock between tests BUT jest.resetModules() crashes tests making it useless
@@ -8,7 +9,7 @@ import userEvent from "@testing-library/user-event";
 //* Using isolateModules: Can't contain outside scope, so a new mock must be made each time
 //* Using jest.doMock: Requires using "await import("someDir/someFile")" in each test BUT then they hang if you have to "await" another func
 //todo Maybe Jest 29 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
-jest.mock("../ThirdParty/TurnstileWidget", () => ({ action, compact, successCB, className }) => {
+jest.mock("../ThirdParty/TurnstileWidget", () => ({ successCB }: TurnstileWidgetProps) => {
   return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
 })
 

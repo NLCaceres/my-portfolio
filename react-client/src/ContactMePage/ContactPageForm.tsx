@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { type FormEvent, useCallback, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -6,12 +6,21 @@ import Button from "react-bootstrap/Button";
 import AppSpinner from "../AppSpinner/AppSpinner";
 import TurnstileWidget from "../ThirdParty/TurnstileWidget";
 import ContactPageFormCss from "./ContactPageForm.module.css";
-import validate from "./validator";
+import validate, { ContactFormValidationErrors } from "./validator";
 import { ProcessTurnstileResponse } from "../Data/Api/ThirdParty";
 import { SendEmail } from "../Data/Api/Common";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
-const ContactPageForm = ({ onSubmitForm, darkMode }) => {
+interface ContactPageFormProps { 
+  onSubmitForm?: (successful: boolean) => void, 
+  darkMode: boolean
+}
+
+const defaultProps = {
+  darkMode: false
+}
+
+const ContactPageForm = ({ onSubmitForm, darkMode }: ContactPageFormProps & typeof defaultProps) => {
   //! Computed Prop
   const IsContactable = (process.env.REACT_APP_CONTACTABLE === "true") ? true : false; //* All env vars are actually strings
   const viewWidth = useViewWidth();
@@ -20,16 +29,16 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
   const [isVerifying, setIsVerifying] = useState(IsContactable);
 
   const [newEmail, setNewEmail] = useState({email: "", message: "", cfToken: ""});
-  const updateEmailValue = (key, value) => { setNewEmail({ ...newEmail, [key]: value }) }; //* No useCallback needed
-  const [validationErrors, setValidationErrors] = useState({ email: [], message: [] });
+  const updateEmailValue = (key: string, value: string) => { setNewEmail({ ...newEmail, [key]: value }) }; //* No useCallback needed
+  const [validationErrors, setValidationErrors] = useState<ContactFormValidationErrors>({ email: [], message: [] });
 
-  const turnstileSuccessCallback = useCallback((token) => { //* Need useCallback to prevent turnstile widget re-rendering & double firing
-    setIsVerifying(false) //* Done checking, either received an undefined token or a string token to send to backend
+  const turnstileSuccessCallback = useCallback((token: string) => { //* Need useCallback to prevent turnstile widget re-rendering & double firing
+    setIsVerifying(false); //* Done checking, either received an undefined token or a string token to send to backend
     setNewEmail(oldEmail => ({ ...oldEmail, cfToken: token })); //* Using an update func avoids requiring newEmail state in dependency array
   }, []);
   
   //! Form Handler
-  const SubmitContactForm = useCallback(async (event) => {
+  const SubmitContactForm = useCallback(async (event: FormEvent) => {
     event.preventDefault(); event.stopPropagation(); //* Prevent page reload
     if (!IsContactable) { return }
   
@@ -37,7 +46,6 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
     const errors = validate({ email: newEmail.email, message: newEmail.message });
     for (let key in errors) { if (errors[key].length > 0) { setValidationErrors(errors); return } } //* Activate Validation Feedback
 
-    //! Process
     const isSuccessful = await ProcessTurnstileResponse(SendEmail(newEmail), "Successfully sent your email!");
     if (onSubmitForm) { onSubmitForm(isSuccessful) } //* Also need to handle parent's callback
     if (isSuccessful) { }
@@ -75,4 +83,5 @@ const ContactPageForm = ({ onSubmitForm, darkMode }) => {
   )
 }
 
+ContactPageForm.defaultProps = defaultProps;
 export default ContactPageForm;
