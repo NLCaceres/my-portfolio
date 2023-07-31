@@ -13,7 +13,7 @@ import { SmoothScroll } from "../Utility/Functions/Browser";
 export type ModalFunc = (show: boolean) => void
 export type AlertFunc = ({ title, message, color }: AlertState) => void
 
-const App = () => {
+const Layout = () => {
   const width = useViewWidth();
   const [showModal, setShowModal] = useState(false);
   const [alertState, setShowAlert] = useState<AlertState>({ title: "", message: "", color: "" });
@@ -54,7 +54,7 @@ const App = () => {
   }
 
   return (
-    <ViewWidthProvider>
+    <>
       <AppNavbar />
     
       <AppRouting context={[setShowModal, showAlertBriefly]} />
@@ -67,8 +67,13 @@ const App = () => {
         headerClasses="pt-2 pb-1" titleClasses="fw-bolder text-white">
           <ContactPageForm onSubmitForm={submitContactForm} />
       </AppModal>
-    </ViewWidthProvider>
+    </>
   );
+}
+
+//? ContextProviders are only properly observed if they exist ABOVE the component calling useContext(), NOT the same level
+const App = () => {
+  return <ViewWidthProvider> <Layout /> </ViewWidthProvider>
 }
 
 export default App;
