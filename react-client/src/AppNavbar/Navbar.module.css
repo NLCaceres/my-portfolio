@@ -62,7 +62,7 @@
   color: black !important;
 }
 
-.navButton {
+.navItem > .navButton {
   color: #000 !important;
   font-weight: 550;
   white-space: normal;
@@ -76,16 +76,16 @@
   border-radius: 0.15rem !important; /* Change BS 5 links' default border + prevent odd gap when links in button */
 }
 
-.navButton:hover {
+.navItem > .navButton:hover {
   color: black !important; /* Keeps consistent styling allowing parent navItem to handle hover */
   text-decoration: none;
 }
 
-.activeNavButton {
+.navItem > .activeNavButton {
   background-color: black !important;
   color: white !important;
 }
 
-.activeNavButton:hover {
+.navItem > .activeNavButton:hover {
   color: lime !important;
 }

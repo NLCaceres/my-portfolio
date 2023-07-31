@@ -25,16 +25,16 @@
   }
 }
 
-.contactButton {
+.navFooter .contactButton {
   font-weight: 550;
 }
-.contactButton:hover, .contactButton:active {
+.navFooter .contactButton:hover, .contactButton:active {
   border-width: 2px;
   border-color: white !important;
   color: black !important;
   background-color: transparent !important;
 }
-.contactButton:focus, .contactButton:focus:active {
+.navFooter .contactButton:focus, .contactButton:focus:active {
   box-shadow: none !important;
   border-width: 2px;
   border-color: white !important;
