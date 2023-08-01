@@ -33,16 +33,16 @@ const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWid
         "error-callback": function() { //? Only fires if network issue occurs for some reason
           ConsoleLogger("Challenge Error Occurred!");
         }
-      }); //? Running setTimeout w/out a delay param passed in like this makes the callback run IMMEDIATELY (so ASAP)
-    }) //? Until Cloudflare provides a retry/refresh-callback, best to hold off on styling it, especially via document.query(),
-    //? because the widget's style resets if the user taps the refresh button to restart the challenge
+      }); //? Until Cloudflare provides a retry/refresh-callback, intricate styling (like via document.query) can be
+      //? reset by the widget's Refresh Button, so stick to basic height/width changes via this parent-div for now
+    }, 750) //? A timeout w/ a delay helps when rendering a Widget in a Component entering via Routing Nav Animation
 
     return () => { clearTimeout(turnstileRenderTimeoutID) }
 
   }, [action, turnstileSize, successCB]);
 
   return (<div id="turnstile-widget-container" className={`${className || ""} ${TurnstileWidgetCss.turnstileContainer}`}></div>)
-}
+} //todo Could render a placeholder labeled "Initializing Turnstile Verification Widget" while timeout is waiting
 
 TurnstileWidget.defaultProps = defaultProps;
 export default TurnstileWidget;
