@@ -2,16 +2,16 @@
 
 ## Future Changes
 - React 18 based changes
-  - Suspense Library?
-  - Vite?
   - JSX Dot Notation to simplify imports + name clarity?
     - Ex: `<PostCard.Image> { children } </PostCard.Image>`
   - Hook Updates
     - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
+    - As an alternative to useSWR, React-Router seems to provide similar pre-loading
+      - Additionally, React-Router now provides an option to render in a component while this loading occurs (like Suspense!)
 - General Design
   - Drop React-Bootstrap and use React Portals to provide modal + a fancier carousel?
     - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "TailwindUI look"
-    - Using the <dialog> element is also a great newer option in HTML since it provides accessibility by default! It just needs styling!
+    - Using the `<dialog>` element is also a great newer option in HTML since it provides accessibility by default! It just needs styling!
   - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
     - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
       - Title can be laid out + styled as "h5.mx-2 + div.underline"
@@ -19,13 +19,10 @@
         - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
   - RPG-based Homepage to reduce wall of text feeling
 #### Changes Coming Soon
-- Drop Bootstrap Carousel for an implementation that better handles lazy loading AWS Cloudfront-served images
-- Typescript
-  - Update files containing JSX from '.jsx' to '.tsx' 
-    - '.tsx' is mandatory when using Typescript
-    - Even test files can get a '.test.tsx' file extension to usx JSX
-- React-Router
-  - Swap in the 6.4 Data API
+- Finalize Typescript migration ('.tsx' is mandatory when writing components or using them in tests)
+  - Images, HOCs, NotFoundPage, and PostListView
+  - Carousel? Or time to drop in favor of an implementation with improved lazy-loading with AWS in mind AND that doesn't use Bootstrap?
+  - Modal? Or better to drop and rewrite via `<dialog>`?
 - React-Spring
   - React-Spring animations may be packable into hooks that can be reused
     - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
@@ -38,9 +35,13 @@
     - Testing hooks super simple now thanks to `renderHook()` from 'testing-library/react'
     - Reorganize folders to be oriented around individual components and their usage
     - useContext pattern packed into a useViewWidth hook allowing access to viewWidth across the App without prop drilling
-  - React Router 6
+  - React Router 6 and 6.4 Data API added in
   - Beginning Typescript Migration
-    - Migrated PostCard.jsx to .tsx while also implementing ProjectImage sort based on new "importance" property
+    - PostCard updated and also given a ProjectImage sort based on new "importance" property
+    - ContactPage alongside its TurnstileWidget with new Turnstile types
+    - Index + App file with the ViewWidthProvider as well as the Router Data API and the Routing component 
+    - Utility Files all updated
+    - Common AppSpinner, AppAlert, AppNavbar, and Footer
   - Implement PostListView sort by "start_date" and new "importance" property. 
     - For Desktop users, project images are also sorted to better showcase the selected project in the AppModal
   - Embrace React 17+ JSX transform by dropping React top import
