@@ -1,6 +1,6 @@
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
-import { screen, render, act, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
+import { screen, render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
@@ -81,7 +81,6 @@ describe("renders the whole app", () => {
 
       const modalCloser = screen.getByLabelText("Close"); //* Close the modal now
       await user.click(modalCloser);
-      await waitForElementToBeRemoved(modalCloser);
       expect(modal).not.toBeInTheDocument();
 
       useViewWidthSpy.mockReturnValue(mobileHighEndWidth); //* Rerender as mobile version
