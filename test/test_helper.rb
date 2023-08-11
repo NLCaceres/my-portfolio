@@ -1,4 +1,6 @@
 ENV['RAILS_ENV'] = 'test' #? Set to 'production' to imitate Railway (likely need a staging version)
+ENV['MY_CONTACT_EMAIL'] = 'foo@example.com' #? Ensures Mailers have defaults even w/out Foreman or Hivemind
+ENV['APP_CONTACT_EMAIL'] = 'bar@example.com'
 require_relative '../config/environment'
 require 'rails/test_help'
 require 'test_helpers/redirect_assertions'

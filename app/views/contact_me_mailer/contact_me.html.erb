@@ -1,0 +1,56 @@
+<%# This ActionView is injected into the layout 'mailer.html.erb' yield section %>
+
+<main>
+  <h2>Portfolio Contact Form Email</h2>
+  <section>
+    <div class="title-container">
+      <h4 class="field-header">From: </h4>
+      <h4 class="email-header"> <%= @sender[:email] %> </h4>
+    </div>
+    <h4 class="field-header d-inline-block">Message: </h4>
+    <p class="message-body"> <%= sanitize @sender[:message], tags: [], attributes: [] %> </p>
+  </section>
+  <p class="app-footer-note">© <%= Time.zone.now.year %> Nicholas Caceres. All rights reserved.</p>
+</main>
+
+<%# Can add links or even override <style> in the main <head> tag of the 'mailer.html.erb' layout %>
+<% content_for :head do %>
+  <style>
+    section {
+      max-width: 650px;
+    }
+    h2 {
+      margin-top: 0.5rem;
+    }
+    p {
+      margin-top: 0.5rem;
+    }
+    .title-container {
+      display: flex;
+      align-items: baseline;
+      margin: 0.5rem 0 1rem;
+    }
+    .field-header {
+      padding: 4px 8px;
+      background-color: #00E000;
+      color: #000000;
+      font-weight: 500;
+      border-radius: 10px;
+    }
+    .message-body {
+      padding: 0 1rem;
+    }
+    .app-footer-note {
+      margin-top: 1rem;
+      color: #b0adc5;
+    }
+    .email-header {
+      margin: 0 0.5rem;
+      padding: 4px 8px;
+      background-color: rgb(153, 0, 0);
+      color: #ffffffee;
+      font-weight: 500;
+      border-radius: 10px;
+    }
+  </style>
+<% end %>
