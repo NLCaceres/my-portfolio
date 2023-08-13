@@ -1,6 +1,7 @@
 # Handle Redirect to React Frontend Route + RoutesList
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  before_action :contactable?, only: %i[send_email]
 
   def health_check
     not_serving = !rails_server? && !puma_server? #? If running migrations, then not_serving == true!
@@ -35,11 +36,12 @@ class ApplicationController < ActionController::Base
 
   #* POST request to send email BUT 1st check with turnstile backend if human
   def send_email
-    # puts "Request Origin = #{request.origin}"
-    # puts "Request Base URL = #{request.base_url}"
     turnstile_res = turnstile_check(params[:cfToken], request.remote_ip)
-    http_status = turnstile_res['success'] == true ? :ok : :forbidden
-    #* Include email sending logic here via params[:email] and params[:message]
+    http_status = turnstile_res['success'] ? :ok : :forbidden
+    if turnstile_res['success']
+      sender = { email: params[:email], message: params[:message] }
+      ContactMeMailer.contact_me(sender).deliver_later #? Send asyncly once resources are ready
+    end
     render json: turnstile_res, status: http_status
   end
 
@@ -85,12 +87,17 @@ class ApplicationController < ActionController::Base
     cookies['CSRF-TOKEN'] = csrf_token
   end
 
+  #? BeforeActions will prevent the controller method from running if they render or redirect
+  def contactable?
+    head :forbidden unless ENV['REACT_APP_CONTACTABLE'] == 'true'
+  end
+
   def turnstile_check(cf_token, remote_ip)
     uri = URI('https://challenges.cloudflare.com/turnstile/v0/siteverify')
     res = Net::HTTP.post_form(uri, { 'secret' => ENV['TURNSTILE_SECRET_KEY'], 'response' => cf_token, 'remoteip' => remote_ip })
     res_json = JSON.parse(res.body) #? Gets a HASH so remove other keys and return json object with key and value
     res_json.delete('hostname')
-    res_json[:message] = res_json['success'] == true ? 'Successfully sent your email!' : 'Unable to send your email!'
+    res_json[:message] = res_json['success'] ? 'Successfully sent your email!' : 'Unable to send your email!'
     res_json
   end
 end
