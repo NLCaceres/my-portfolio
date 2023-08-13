@@ -1,7 +1,9 @@
 # Handle Redirect to React Frontend Route + RoutesList
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  #? BeforeActions seem to run in order of declaration
   before_action :contactable?, only: %i[send_email]
+  before_action :validate_email_param, only: %i[send_email]
 
   def health_check
     not_serving = !rails_server? && !puma_server? #? If running migrations, then not_serving == true!
@@ -90,6 +92,11 @@ class ApplicationController < ActionController::Base
   #? BeforeActions will prevent the controller method from running if they render or redirect
   def contactable?
     head :forbidden unless ENV['REACT_APP_CONTACTABLE'] == 'true'
+  end
+
+  def validate_email_param
+    #? Alternative regex to check for common emails = /^[A-Za-z0-9+_.-]+@([A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/
+    head :bad_request unless params[:email] =~ /^[^\s@]+@[^\s@]+\.[^\s@]{2,6}$/
   end
 
   def turnstile_check(cf_token, remote_ip)

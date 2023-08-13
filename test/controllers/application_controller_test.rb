@@ -99,7 +99,8 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, invalid_email_response['error-codes'].size
   end
 
-  test 'should send email if contactable AND verified by Turnstile' do
+  # rubocop:disable Metrics/BlockLength
+  test 'should send email if contactable, with a valid email AND verified by Turnstile' do
     ENV['REACT_APP_CONTACTABLE'] = 'false'
     post send_email_url, headers: accept_header, params: default_params
     assert_response :forbidden
@@ -116,6 +117,15 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
 
     #* Once the app is contactable
     ENV['REACT_APP_CONTACTABLE'] = 'true'
+
+    #* THEN an invalid email param will send a Bad Request response
+    post send_email_url, headers: accept_header, params: { email: 'foo', message: 'Bar', cfToken: '1' }
+    assert_response :bad_request
+    #? Following emails are invalid due to invalid TLDs (i.e. '.example' and '.c' which is too long and too short)
+    post send_email_url, headers: accept_header, params: { email: 'foo@email.example', message: 'Bar', cfToken: '1' }
+    assert_response :bad_request
+    post send_email_url, headers: accept_header, params: { email: 'foo@example.c', message: 'Bar', cfToken: '1' }
+    assert_response :bad_request
 
     #* THEN a dummy secret expected to fail should send the fail response w/out an email sent
     ENV['TURNSTILE_SECRET_KEY'] = '2x0000000000000000000000000000000AA'
