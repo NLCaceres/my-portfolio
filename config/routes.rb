@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   scope '/api' do
     resources :posts
-    post '/send-email', to: 'application#send_email', as: 'send_email'
-    get '/routes', to: 'application#routes', as: 'routes' # 'as' symbol help form route name (i.e. 'routes_url' or 'routes_path')
+    post '/contact-email', to: 'emails#contact_email'
+    get '/routes', to: 'routes#index', as: 'routes' # 'as' helps form route name (i.e. 'routes_url' or 'routes_path')
   end
 end
