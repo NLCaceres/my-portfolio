@@ -1,9 +1,9 @@
 <%# This ActionView is injected into the layout 'mailer.html.erb' yield section %>
 
 <main>
-  <h2>Portfolio Contact Form Email</h2>
-  <section>
-    <div class="title-container">
+  <h2 class='title-header'>Portfolio Contact Form Email</h2>
+  <section class='message-container'>
+    <div class="sender-container">
       <h4 class="field-header">From: </h4>
       <h4 class="email-header"> <%= @sender[:email] %> </h4>
     </div>
@@ -25,32 +25,44 @@
     p {
       margin-top: 0.5rem;
     }
-    .title-container {
+    .title-header {
+      font-weight: 600;
+      padding: 4px 8px 2px;
+      border-bottom: 2px solid rgb(153, 0, 0);
+      border-radius: 5px;
+    }
+    .message-container {
+      border-left: 1.5px solid rgb(153, 0, 0);
+      border-right: 1.5px solid rgb(153, 0, 0);
+      border-bottom: 1.5px solid rgb(153, 0, 0);
+      border-radius: 1rem;
+    }
+    .sender-container {
       display: flex;
       align-items: baseline;
       margin: 0.5rem 0 1rem;
     }
     .field-header {
-      padding: 4px 8px;
-      background-color: #00E000;
+      color: #000000;
+      font-weight: 550;
+      padding: 4px 5px 2px;
+      border-bottom: 1.5px solid #00E000;
+      border-radius: 4px;
+    }
+    .email-header {
       color: #000000;
       font-weight: 500;
-      border-radius: 10px;
+      margin: 0 0.5rem;
+      padding: 4px 5px 2px;
+      border-bottom: 1.5px solid rgb(153, 0, 0);
+      border-radius: 4px;
     }
     .message-body {
       padding: 0 1rem;
     }
     .app-footer-note {
+      color: #00000033;
       margin-top: 1rem;
-      color: #b0adc5;
-    }
-    .email-header {
-      margin: 0 0.5rem;
-      padding: 4px 8px;
-      background-color: rgb(153, 0, 0);
-      color: #ffffffee;
-      font-weight: 500;
-      border-radius: 10px;
     }
   </style>
 <% end %>
