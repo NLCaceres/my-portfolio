@@ -21,7 +21,7 @@ export function validEmail(value: string): boolean {
   //* 2. Followed by a single "@" character -> "/@/"
   //* 3. Followed by 1 or more characters that are not whitespace or "@" -> "/[^\s@]+/"
   //* 4. A single "." character -> "/\./"
-  //* 5. Finally, it must end with 1 or more characters that are not whitespace or "@" -> "/[^\s@]+$/"
-  let simpleEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  //* 5. Finally, it must end in a 2 to 6 character TLD w/out whitespace or "@" -> "/[^\s@]{2,6}$/"
+  let simpleEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,6}$/
   return simpleEmailRegex.test(value);
 }
