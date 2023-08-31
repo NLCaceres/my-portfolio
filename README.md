@@ -11,12 +11,10 @@ While writing the two apps, I had plenty of time to think about the number of pr
   as well as adding `config.use_webpacker = true` in `config/initializers/active_admin.rb`
     - Currently, Sprockets is handling the CSS + images
 - Create a Swagger UI inspired routes list
-  - Frontend: New List view to display the routes in the admin section
-  - Backend: Sends routes list - DONE
-- Update to Frontend to timeline-based design with new and improved RPG-based homepage
-- Contact Us from the back-end!
-  - Frontend Setup - DONE
-  - Email Server? Heroku no longer an option
+  - Front-end: New List view to display the routes in the admin section
+  - Back-end: Sends routes list - DONE
+- Update Front-end to timeline-based design with new and improved RPG-based homepage
+- Contact Me Front-end & Back-end should add a "sender's name" field
 - Include the following in Database:
   - Laravel + Vue Accounting On It
   - Classic GUIs, made with JavaFx
@@ -26,8 +24,12 @@ While writing the two apps, I had plenty of time to think about the number of pr
 - Updated Ruby from 2.7 to 3.1
 - Database 
   - Updated DB Seeder for better readability in Ruby 3.1 with Rubocop
-  - Migration adding an "importance" and "start_date" column to Posts table for better sorting in the frontend
+  - Migration adding an "importance" and "start_date" column to Posts table for better sorting in the front-end
   - Add Script to `lib/tasks` that migrates images to AWS S3 for easy fetching from AWS Cloudfront
+- Contact Me Front-end + Back-end Setup
+  - MailTrap currently is the Email Infrastructure (SMTP) provider
+    - 1000 emails per month and ALSO 100 test emails per month
+  - Contact feature controlled by an env var, BUT currently turned off until domain name chosen so Mailtrap can be linked to it
 
 ## Notes to Remember! - June 2023
 ### Bundler
@@ -60,7 +62,7 @@ While writing the two apps, I had plenty of time to think about the number of pr
     run the processes laid out by `Procfile.dev`
     - Even deeper under the hood, the commands laid out by `Procfile.dev` are:
       - An API process running the Rail server via `bin/rails s` on Port 3001
-      - A web process running the React frontend in development mode via `yarn --cwd react-client start` on Port 3000
+      - A web process running the React front-end in development mode via `yarn --cwd react-client start` on Port 3000
   - For list of commands, run `bin/rails` in the root rails dir
   - `bin/rails app:update` -> Update old files and generate any new ones after updating the Gemfile and running `bundle install`
     - Running this command makes a 'new_framework_defaults' file, which lists settings that will be turned on or changed when you update config.load_defaults in config/application.rb from oldMaj.oldMin to newMaj.newMin (e.g. 6.0 to 6.1). 
