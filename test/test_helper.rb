@@ -6,6 +6,7 @@ require 'rails/test_help'
 require 'test_helpers/redirect_assertions'
 require 'test_helpers/common_headers'
 
+#* All Rails tests start here with a few configuration options like parallelize and fixtures
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: 1) #? Default arg, :number_of_processors, grabs # of cores on your computer to parallelize work

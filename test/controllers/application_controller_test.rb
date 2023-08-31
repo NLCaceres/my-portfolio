@@ -14,6 +14,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     #* Check therefore fails so GET unavailable response
     assert_response :service_unavailable
   end
+
   test 'should successfully perform redirect from health-check in dev' do
     get '/health-check'
     #* Following represents typical fallback_redirect development route

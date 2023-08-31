@@ -1,4 +1,4 @@
-# Preview all emails at http://localhost:3001/rails/mailers/contact_me_mailer
+#* Preview all emails at http://localhost:3001/rails/mailers/contact_me_mailer
 class ContactMeMailerPreview < ActionMailer::Preview
   # http://localhost:3001/rails/mailers/contact_me_mailer/contact_me
   def contact_me

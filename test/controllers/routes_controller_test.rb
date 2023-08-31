@@ -7,12 +7,12 @@ class RoutesControllerTest < ActionDispatch::IntegrationTest
   test 'should GET human-readable routes list' do
     get routes_url, headers: accept_header
     assert_response :success
-    assert_equal 10, @response.parsed_body.size # Should get an Array of CURRENTLY 10 Hashes representing 10 routes
+    assert_equal 10, @response.parsed_body.size #* Should get an Array of CURRENTLY 10 Hashes representing 10 routes
   end
 
   test 'should receive redirect without headers' do
     get routes_url
-    assert_redirect_to_react # Get redirect if simple GET w/out headers added
+    assert_redirect_to_react #* Get redirect if simple GET w/out headers added
   end
 
   test 'should receive Bad Request if unexpected headers found' do
