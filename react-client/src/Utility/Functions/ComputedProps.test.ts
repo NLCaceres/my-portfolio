@@ -2,16 +2,16 @@ import { CreateID, DropSpecialChars, CamelCaseToTitleCase, CleanAndKebabString, 
 
 describe("provides functions to transform data into UI-ready forms", () => {
   test("using a static count property and class name prefix to return a tuple that provides an ID and entity count", () => {
-    const prefix = 'foobar';
+    const prefix = "foobar";
     const [count, id] = CreateID(1, prefix);
     expect(count).toBe(2);
-    expect(id).toBe('foobar-2');
+    expect(id).toBe("foobar-2");
     const countIdTuple = CreateID(count, prefix);
     expect(countIdTuple).toBeInstanceOf(Array);
     expect(countIdTuple).toHaveLength(2);
     expect(countIdTuple).toContain(3);
     expect(countIdTuple).toContain("foobar-3");
-  })
+  });
 
   test("drop special chars from a string's end via Regex pattern matching replacement", () => {
     expect(DropSpecialChars("")).toBe("");
@@ -21,7 +21,7 @@ describe("provides functions to transform data into UI-ready forms", () => {
     //* Trim whitespace
     expect(DropSpecialChars("  Foo Bar")).toBe("  Foo Bar");
     expect(DropSpecialChars("Foo Bar  ")).toBe("Foo Bar");
-    
+
     //* All the special chars should be dropped from the end
     expect(DropSpecialChars("Foo Bar+")).toBe("Foo Bar");
     expect(DropSpecialChars("Foo Bar_")).toBe("Foo Bar");
@@ -40,7 +40,7 @@ describe("provides functions to transform data into UI-ready forms", () => {
 
     expect(DropSpecialChars("Foo Bar+-_~ ")).toBe("Foo Bar");
     expect(DropSpecialChars("+-_~ Foo Bar")).toBe("+-_~ Foo Bar");
-  })
+  });
 
   test("transform camelCase phrase into uppercase whitespace delimited phrase", () => {
     const uppercaseSpacedPhrase = CamelCaseToTitleCase("theCowGoesMoo");
@@ -53,21 +53,21 @@ describe("provides functions to transform data into UI-ready forms", () => {
     expect(uppercaseTwoLetterWord).toBe("Is");
     const uppercaseLetter = CamelCaseToTitleCase("t");
     expect(uppercaseLetter).toBe("T");
-  })
+  });
 
   test("removes html unsafe chars and kebabs the remainder of a phrase", () => {
-    const testString = CleanAndKebabString('Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~')
-    expect(testString).toBe('foobarbamdanfredtomkimem');
+    const testString = CleanAndKebabString("Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~");
+    expect(testString).toBe("foobarbamdanfredtomkimem");
 
-    const kebabString = CleanAndKebabString('foo bar');
-    expect(kebabString).toBe('foo-bar');
+    const kebabString = CleanAndKebabString("foo bar");
+    expect(kebabString).toBe("foo-bar");
 
-    const kebabCleanString = CleanAndKebabString('Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~ fizz buzz')
-    expect(kebabCleanString).toBe('foobarbamdanfredtomkimem-fizz-buzz');
+    const kebabCleanString = CleanAndKebabString("Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~ fizz buzz");
+    expect(kebabCleanString).toBe("foobarbamdanfredtomkimem-fizz-buzz");
 
-    const kebabExtraCleanString = CleanAndKebabString('Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~ fizz:/ buzz')
-    expect(kebabExtraCleanString).toBe('foobarbamdanfredtomkimem-fizz-buzz');
-  })
+    const kebabExtraCleanString = CleanAndKebabString("Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~ fizz:/ buzz");
+    expect(kebabExtraCleanString).toBe("foobarbamdanfredtomkimem-fizz-buzz");
+  });
 
   test("transform kebab-case phrase into uppercase whitespace delimited phrase", () => {
     //* Used to consider all falsy values, but now only strings SHOULD ever be passed in
@@ -84,7 +84,7 @@ describe("provides functions to transform data into UI-ready forms", () => {
     expect(uppercaseTwoLetterWord).toBe("Is");
     const uppercaseLetter = KebabCaseToTitleCase("t");
     expect(uppercaseLetter).toBe("T");
-    
+
     //* Need to re-kebab certain phrases
     const hyphenatedFrontEnd = KebabCaseToTitleCase("front-end");
     expect(hyphenatedFrontEnd).not.toBe("Front-End");
@@ -92,7 +92,7 @@ describe("provides functions to transform data into UI-ready forms", () => {
     const hyphenatedBackEnd = KebabCaseToTitleCase("back-end");
     expect(hyphenatedBackEnd).not.toBe("Back-End");
     expect(hyphenatedBackEnd).toBe("Back End");
-  })
+  });
   test("transform kebab-case phrase into uppercase kebab-case phrase", () => {
     const emptyStr = KebabCaseToKebabTitleCase("");
     expect(emptyStr).toBe("");
@@ -107,10 +107,10 @@ describe("provides functions to transform data into UI-ready forms", () => {
     expect(uppercaseTwoLetterWord).toBe("Is");
     const uppercaseLetter = KebabCaseToKebabTitleCase("t");
     expect(uppercaseLetter).toBe("T");
-    
+
     const hyphenatedFrontEnd = KebabCaseToKebabTitleCase("front-end");
     expect(hyphenatedFrontEnd).toBe("Front-End");
     const hyphenatedBackEnd = KebabCaseToKebabTitleCase("back-end");
     expect(hyphenatedBackEnd).toBe("Back-End");
-  })
-})
+  });
+});

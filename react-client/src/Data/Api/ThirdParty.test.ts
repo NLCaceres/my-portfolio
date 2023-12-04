@@ -3,7 +3,7 @@ import { ProcessTurnstileResponse } from "./ThirdParty";
 describe("runs requests to Third-Parties", () => {
   test("should process Cloudflare's Turnstile response", async () => {
     const badResponse = Promise.resolve(undefined); //* Missing response so return false, NOT human
-    const badProcess = await ProcessTurnstileResponse(badResponse)
+    const badProcess = await ProcessTurnstileResponse(badResponse);
     expect(badProcess).toBe(false);
 
     //* Should get a success flag equal to true
@@ -37,5 +37,5 @@ describe("runs requests to Third-Parties", () => {
     const differentExpectedMessageResponse = Promise.resolve({ success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Another Success!" });
     const differentExpectedMessageProcess = await ProcessTurnstileResponse(differentExpectedMessageResponse, "Another Success!");
     expect(differentExpectedMessageProcess).toBe(true); //* If getting expected alternate message THEN human
-  })
-})
+  });
+});

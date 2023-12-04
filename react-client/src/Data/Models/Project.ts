@@ -7,12 +7,12 @@ export type ProjectImage = {
   image_url: string,
   alt_text: string,
   importance: number
-}
+};
 
 //? On JS Sort performance: For arrays of length < 2 (i.e. 1 or 0), they are instantly sorted, no compare func is run
 //? PLUS as usual, each browser has a different implementation for sort(), i.e. one browser may MergeSort while another QuickSorts!
 export function SortProjectImagesByImportance(projectImages: ProjectImage[]) {
-  return [...projectImages].sort((a,b) => a.importance - b.importance)
+  return [...projectImages].sort((a,b) => a.importance - b.importance);
 }
 
 type Project = {
@@ -26,24 +26,24 @@ type Project = {
   project_type?: string,
   importance: number,
   start_date?: string
-}
+};
 
 //! Most recent projects come first BUT if something has high importance (0 == highest value) then make it come first despite recency
 export function SortProjects(projects: Project[]) {
   const dateSortedProjects = projects.sort((a,b) => {
-    const dateB = Date.parse(b.start_date ?? ''); //* If date is not valid or in a parsable format for the browser, NaN is returned
-    const dateA = Date.parse(a.start_date ?? ''); //* "YYYY-MM-DDTHH:mm:ss.sssZ" is the ONLY guaranteed format across browsers
-    if (isNaN(dateB)) { return -1 }
-    else if (isNaN(dateA)) { return 1 }
-    else { return dateB - dateA } //? Descending order: Most recent to oldest
-  })
+    const dateB = Date.parse(b.start_date ?? ""); //* If date is not valid or in a parsable format for the browser, NaN is returned
+    const dateA = Date.parse(a.start_date ?? ""); //* "YYYY-MM-DDTHH:mm:ss.sssZ" is the ONLY guaranteed format across browsers
+    if (isNaN(dateB)) { return -1; }
+    else if (isNaN(dateA)) { return 1; }
+    else { return dateB - dateA; } //? Descending order: Most recent to oldest
+  });
 
   //? Javascript sort() mutates arrays, in-place (no extra memory) and stable (positions remain the same if sorted)
   //? BUT this means sort() just returns the same array back to you, so it actually isn't necessary to set new variables
-  //? Since they all point to the same object, BUT making new variables is very readable 
+  //? Since they all point to the same object, BUT making new variables is very readable
   //? so I think it's beneficial to make new variables that will die anyway when the function completes
   const importanceSortedProjects = dateSortedProjects.sort((a,b) => a.importance - b.importance);
   return importanceSortedProjects;
 }
 
-export default Project
+export default Project;

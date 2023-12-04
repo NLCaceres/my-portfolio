@@ -5,10 +5,10 @@ import { PostData } from "./Utility";
 type Email = {
   email: string,
   message: string
-}
+};
 
 //* Post Endpoints
 export async function SendEmail(body: Email) {
-  const sentEmailJsonResponse = await PostData("/api/send-email", body)
+  const sentEmailJsonResponse = await PostData("/api/send-email", body);
   return sentEmailJsonResponse;
 }

@@ -20,27 +20,27 @@ describe("validates different data upon a set of criteria", () => {
 
         const invalidMaxString = requireLength("foob", 0, 3);
         expect(invalidMaxString).toBe(false);
-      })
+      });
       test("where strings must not be empty unless min is set to 0", () => {
         const invalidEmptyString = requireLength("");
         expect(invalidEmptyString).toBe(false);
 
         const validEmptyString = requireLength("", 0);
         expect(validEmptyString).toBe(true);
-      })
+      });
       test("where min and max can not be negative", () => {
-        try { requireLength("foo", -1) }
-        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of min") }
+        try { requireLength("foo", -1); }
+        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of min"); }
 
-        try { requireLength("foo", -1, -1) }
-        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of min and max") }
+        try { requireLength("foo", -1, -1); }
+        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of min and max"); }
 
-        try { requireLength("foo", 1, -1) }
-        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of max") }
-      })
-    })
+        try { requireLength("foo", 1, -1); }
+        catch (err) { expect(getErrorMessage(err)).toBe("Incorrect use of max"); }
+      });
+    });
 
-    describe("of emails", () => { 
+    describe("of emails", () => {
       // TODO: Should probably always be add more potentially weird but valid emails to check against as they spring to mind
       test("that meet simple expected criteria", () => {
         const basicEmail = "hello@example.com";
@@ -91,7 +91,7 @@ describe("validates different data upon a set of criteria", () => {
         expect(validEmail(underscoredEmail)).toBe(true);
         const ampersandEmail = "hello&world@example.com";
         expect(validEmail(ampersandEmail)).toBe(true);
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});
