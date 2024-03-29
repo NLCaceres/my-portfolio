@@ -15,7 +15,7 @@ export default async function GetPostList(qParams = "null") {
   else if (IsPlainObject(jsonResponse)) { // Based on TS, should be a Post BUT as a double check, use lodash to verify we get an "object"
     const majorProjSizeCheck = jsonResponse.project_size && jsonResponse.project_size === "major_project";
     const minorProjSizeCheck = jsonResponse.project_size && jsonResponse.project_size === "small_project";
-    const idCheck = jsonResponse.id && jsonResponse.id.toString() === process.env.REACT_APP_ABOUT_ME_ID;
+    const idCheck = jsonResponse.id && jsonResponse.id.toString() === import.meta.env.VITE_ABOUT_ME_ID;
 
     if (majorProjSizeCheck || idCheck) { projectList.majorProjects.unshift(jsonResponse); }
     else if (minorProjSizeCheck) { projectList.minorProjects.unshift(jsonResponse); }

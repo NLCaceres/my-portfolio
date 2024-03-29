@@ -15,7 +15,7 @@ const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWid
     const turnstileRenderTimeoutID = setTimeout(() => {
       //? Config Options - https://developers.cloudflare.com/turnstile/get-started/client-side-rendering
       window.turnstile.render("#turnstile-widget-container", {
-        sitekey: process.env.REACT_APP_TURNSTILE_SITE_KEY ?? "",
+        sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "",
         action: action, //? 0-32 chars that describes the widget's purpose
         callback: function(token: string) {
           ConsoleLogger(`Challenge Success - ${token}`);

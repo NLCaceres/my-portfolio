@@ -22,7 +22,7 @@ const defaultProps = {
 
 const ContactPageForm = ({ onSubmitForm, darkMode }: ContactPageFormProps & typeof defaultProps) => {
   //! Computed Prop
-  const IsContactable = (process.env.REACT_APP_CONTACTABLE === "true") ? true : false; //* All env vars are actually strings
+  const IsContactable = (import.meta.env.VITE_CONTACTABLE === "true") ? true : false; //* All env vars are actually strings
   const viewWidth = useViewWidth();
   //! State
   //* If not contactable, don't verify. IsContactable var only used onMount, later rerenders remember most recent state

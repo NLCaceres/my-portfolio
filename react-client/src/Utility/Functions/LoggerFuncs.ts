@@ -1,6 +1,6 @@
 
 const ConsoleLogger = (message: string | object, componentName?: string, lineNum?: number) => {
-  if (process.env.RACK_ENV === "production" || process.env.REACT_APP_RACK_ENV === "production") return;
+  if (import.meta.env.RACK_ENV === "production" || import.meta.env.VITE_RACK_ENV === "production") return;
 
   //* Make your own stack trace by passing a short component name and the line num from your editor
   const stackTrace = (componentName && lineNum) ? `Inside: ${componentName} Component on line #${lineNum}` :

@@ -42,7 +42,7 @@ const Layout = () => {
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />
   const submitContactForm = (successful: boolean) => {
     setShowModal(false);
-    //! In the future, may need REACT_APP_CONTACTABLE env var but currently ContactPageForm component handles it
+    //! In the future, may need VITE_CONTACTABLE env var but currently ContactPageForm component handles it
     if (successful) { //* For better UX, this provides feedback on what happened with user's email message onSubmit
       showAlertBriefly({ color: "success", title: "Email sent!", message: "Successfully sent your message! I should get back to you soon!" });
     }

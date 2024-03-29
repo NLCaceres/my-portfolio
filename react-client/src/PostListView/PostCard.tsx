@@ -44,7 +44,7 @@ const PostCard = ({ project, onImgClick, className, rowClasses }: StyledImgPostC
 const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save a line & destructure props param in the func call!
   const viewWidth = useViewWidth();
   const postImages = project.post_images ?? [];
-  const placeholderText = (project.id?.toString() === process.env.REACT_APP_ABOUT_ME_ID) ? "My Photo" : "Project Photo";
+  const placeholderText = (project.id?.toString() === import.meta.env.VITE_ABOUT_ME_ID) ? "My Photo" : "Project Photo";
   //* If receiving an empty array or no images in the array then render placeholder (Likely Rails will always send at least an empty [])
   if (postImages.length === 0) { return <PlaceholderImg children={ placeholderText } /> }
   
