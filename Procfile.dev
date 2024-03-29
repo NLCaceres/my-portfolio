@@ -1,2 +1,2 @@
-web: PORT=3000 yarn --cwd react-client start
+web: PORT=3000 npm --prefix react-client start
 api: PORT=3001 bin/rails s

@@ -4,9 +4,8 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "^18.9.0",
-    "yarn": "^1.22.19",
-    "npm": "^8.19.1"
+    "node": "^20.9.0",
+    "npm": "^10.5.0"
   },
   "dependencies": {
     "@react-spring/web": "^9.6.1",
@@ -33,11 +32,6 @@
     "eslint": "^8.55.0",
     "eslint-plugin-react": "^7.33.2",
     "http-proxy-middleware": "2.0.6"
-  },
-  "resolutions": {
-    "coa": "2.0.2",
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-    "@typescript-eslint/parser": "^6.13.1"
   },
   "scripts": {
     "start": "react-scripts start",

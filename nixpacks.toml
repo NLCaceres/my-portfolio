@@ -1,14 +1,14 @@
 [phases."node:setup"]
-nixPkgs = ['nodejs', 'yarn']
+nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = ['bundle config set deployment true', 'bundle config set without development test', 'bundle install --jobs 1']
 
 [phases."node:install"]
-cmds = ['yarn railway-install']
+cmds = ['npm railway-install']
 
 [phases.build]
-cmds = ['yarn railway-deploy', 'bundle exec rake assets:precompile']
+cmds = ['npm railway-deploy', 'bundle exec rake assets:precompile']
 
 [phases.release]
 dependsOn = ['build']
