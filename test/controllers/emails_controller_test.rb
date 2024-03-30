@@ -7,7 +7,7 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
   default_params = { email: 'foo@example.com', message: 'Barfoo', cfToken: '1' }
 
   test 'Turnstile human verification results in specific responses' do
-    ENV['REACT_APP_CONTACTABLE'] = 'true'
+    ENV['VITE_CONTACTABLE'] = 'true'
 
     #* On Success will receive success = true & empty error-codes
     ENV['TURNSTILE_SECRET_KEY'] = '1x0000000000000000000000000000000AA'
@@ -36,7 +36,7 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
 
   # rubocop:disable Metrics/BlockLength
   test 'should send email if contactable, with a valid email AND verified by Turnstile' do
-    ENV['REACT_APP_CONTACTABLE'] = 'false'
+    ENV['VITE_CONTACTABLE'] = 'false'
     post contact_email_url, headers: accept_header, params: default_params
     assert_response :forbidden
 
@@ -51,7 +51,7 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
 
     #* Once the app is contactable
-    ENV['REACT_APP_CONTACTABLE'] = 'true'
+    ENV['VITE_CONTACTABLE'] = 'true'
 
     #* THEN an invalid email param will send a Bad Request response
     post contact_email_url, headers: accept_header, params: { email: 'foo', message: 'Bar', cfToken: '1' }

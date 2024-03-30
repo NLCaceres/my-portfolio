@@ -20,7 +20,7 @@ class EmailsController < ActionController::Base
 
   #? BeforeActions will prevent the controller method from running if they render or redirect
   def contactable?
-    head :forbidden unless ENV['REACT_APP_CONTACTABLE'] == 'true'
+    head :forbidden unless ENV['VITE_CONTACTABLE'] == 'true'
   end
 
   def validate_email_param
