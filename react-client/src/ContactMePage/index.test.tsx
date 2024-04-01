@@ -1,23 +1,25 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 import ContactPage from ".";
 import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
 import { type AlertState } from "../AppAlert/AppAlert";
-import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as RoutingContext from "../Routing/AppRouting";
 import * as CommonAPI from "../Data/Api/Common";
 import * as Validator from "./validator";
 import * as TurnstileAPI from "../Data/Api/ThirdParty";
 
-//? jest.mock() hoists above imports which makes it file wide and work for every test below SO
-//? If a per-test option is needed, must use "jest.doMock()" (See ContactPageForm.test for example)
-jest.mock("../ThirdParty/TurnstileWidget", () => (_: TurnstileWidgetProps) => (
-  <div>Turnstile Verification Widget</div>
-)); 
+//? vi.mock() hoists above imports which makes it file wide and work for every test below SO
+//? If a per-test option is needed, must use "vi.doMock()" (See ContactPageForm.test for example)
+vi.mock("../ThirdParty/TurnstileWidget", () => {
+  return {
+    default: () => (<div>Turnstile Verification Button</div>)
+  }
+});
 
 describe("renders a simple contact page with a form component", () => {
   test("with a parent & form container using css modules, & form in dark mode", () => {
-    jest.spyOn(RoutingContext, "useRoutingContext")
+    vi.spyOn(RoutingContext, "useRoutingContext")
       .mockReturnValue([(_: boolean) => { return true }, (__: AlertState) => {}]);
     render(<ContactPage />);
     const headerTag = screen.getByRole("heading", { name: /contact me/i });
@@ -32,12 +34,12 @@ describe("renders a simple contact page with a form component", () => {
     const formComponent = formParentContainer!.firstChild;
     expect(formComponent).toBeInTheDocument();
     expect(formComponent).toHaveClass("dark");
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   })
   test("that depends on viewWidth for correct title font size", () => {
-    jest.spyOn(RoutingContext, "useRoutingContext")
+    vi.spyOn(RoutingContext, "useRoutingContext")
       .mockReturnValue([(_: boolean) => { return true }, (__: AlertState) => {}]);
-    const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletLowEndWidth);
+    const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletLowEndWidth);
     
     const { rerender } = render(<ContactPage />);
     const title = screen.getByRole("heading", { name: /contact me/i });
@@ -47,17 +49,17 @@ describe("renders a simple contact page with a form component", () => {
     rerender(<ContactPage />);
     expect(title).toHaveClass("display-2");
 
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   })
   test("that depends and uses callbacks from the RoutingContext", async () => {
-    const showModalMock = jest.fn();
-    const showAlertMock = jest.fn();
-    jest.spyOn(RoutingContext, "useRoutingContext")
+    const showModalMock = vi.fn();
+    const showAlertMock = vi.fn();
+    vi.spyOn(RoutingContext, "useRoutingContext")
       .mockReturnValue([showModalMock, showAlertMock]);
-    jest.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
+    vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     //? Must mock SendEmail to avoid network request. Mocking ProcessTurnstile just saves time (no network request performed in it)
-    jest.spyOn(CommonAPI, "SendEmail").mockImplementation(() => Promise.resolve("123"));
-    jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse")
+    vi.spyOn(CommonAPI, "SendEmail").mockImplementation(() => Promise.resolve("123"));
+    vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse")
       .mockImplementation((_: Promise<unknown>, __?: string) => Promise.resolve(true));
 
     const { rerender } = render(<ContactPage />);
@@ -69,6 +71,6 @@ describe("renders a simple contact page with a form component", () => {
     fireEvent.submit(screen.getByTestId("form-container"));
     await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1)); //* It won't call anything
     
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   })
 })

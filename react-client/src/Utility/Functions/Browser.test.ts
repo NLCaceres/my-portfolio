@@ -1,4 +1,5 @@
 import { GetCookie, SmoothScroll } from "./Browser";
+import { vi } from "vitest";
 
 describe("provides common functions used by the browser ", () => {
 
@@ -20,15 +21,15 @@ describe("provides common functions used by the browser ", () => {
   });
 
   test("running a scroll to the top on 350 millisecond timeout", () => {
-    jest.useFakeTimers();
-    const scrollSpy = jest.spyOn(window, "scroll").mockImplementation(() => 1);
+    vi.useFakeTimers();
+    const scrollSpy = vi.spyOn(window, "scroll").mockImplementation(() => 1);
 
     SmoothScroll();
 
-    jest.advanceTimersByTime(350);
+    vi.advanceTimersByTime(350);
     expect(scrollSpy).toHaveBeenCalledTimes(1);
     expect(scrollSpy).toHaveBeenLastCalledWith({ top: 0, left: 0, behavior: "smooth" });
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });

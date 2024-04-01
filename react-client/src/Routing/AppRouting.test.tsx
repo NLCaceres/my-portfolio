@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
@@ -6,9 +7,11 @@ import { RouteList } from "./RouteList";
 import * as GetPostList from "../Data/Api/ProjectAPI";
 
 //* No click needed on this mock Widget, so keep it simple
-jest.mock("../ThirdParty/TurnstileWidget", () => () => (
-  <div>Turnstile Verification Button</div>
-))
+vi.mock("../ThirdParty/TurnstileWidget", () => {
+  return {
+    default: () => (<div>Turnstile Verification Button</div>)
+  }
+});
 
 beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
   Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
@@ -17,9 +20,9 @@ beforeAll(() => { //? Skip animating styles from Route Transitions, immediately 
 describe("renders react-router-dom routes", () => {
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
-    jest.spyOn(GetPostList, "default").mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
+    vi.spyOn(GetPostList, "default").mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
   })
-  afterEach(() => { jest.restoreAllMocks() })
+  afterEach(() => { vi.restoreAllMocks() })
   
   test("mapping a home page to '/' and '/portfolio/about-me'", async () => {
     //? Redirects seem to cause trouble when paired with React-Spring's useTransitions BUT by using my own key selection func +

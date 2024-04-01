@@ -1,4 +1,5 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
 import SilenceWarning from "../Utility/TestHelpers/WarningSilencer";
@@ -8,11 +9,14 @@ import * as CommonAPI from "../Data/Api/Common";
 import * as Validator from "./validator";
 import * as TurnstileAPI from "../Data/Api/ThirdParty";
 
-const originalEnv = process.env;
-jest.mock("../ThirdParty/TurnstileWidget", () => ({ compact, successCB }: TurnstileWidgetProps) => {
-  const compactClass = (compact) ? "compact" : "normal";
-  return (<div className={compactClass}><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
-})
+vi.mock("../ThirdParty/TurnstileWidget", () => {
+  return {
+    default: ({ compact, successCB }: TurnstileWidgetProps) => {
+      const compactClass = (compact) ? "compact" : "normal";
+      return (<div className={compactClass}><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
+    }
+  }
+});
 
 // const tokenTurnstileMock = ({action, successCB, className }) => { //? Useful if using doMock like in line 21
 //   //* Why a button? Easiest way to activate callback + it matches the Turnstile Challenge button in terms of UX
@@ -36,19 +40,19 @@ describe("renders the form for the contact page", () => {
   })
   describe("that depends on '_CONTACTABLE' env var for conditionally rendering", () => {
     test("a spinner in the submit button when running an async task", async () => {
-      expect(process.env.REACT_APP_CONTACTABLE).toBe("true");
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
       const user = userEvent.setup(); //? Best to call 1st or at least before render is called
       const { unmount } = render(<ContactPageForm />); //* Contactable = true + isVerifying = true
       const submitButtonSpinner = screen.getByRole("status", { hidden: true });
       expect(submitButtonSpinner).toBeInTheDocument();
 
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" }
-      expect(process.env.REACT_APP_CONTACTABLE).toBe("false");
+      import.meta.env.VITE_CONTACTABLE = "false";
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("false");
       unmount();
       const { unmount: secondUnmount } = render(<ContactPageForm />); //* Contactable = false + isVerifying = false
       expect(screen.queryByRole("status", { hidden: true })).not.toBeInTheDocument();
 
-      process.env = originalEnv;
+      import.meta.env.VITE_CONTACTABLE = "true";
       secondUnmount();
 
       //* Normal flow w/ mocked implementation
@@ -73,7 +77,7 @@ describe("renders the form for the contact page", () => {
       // });
       // const ContactPageForm = (await import("./ContactPageForm")).default;
       //* Currently Unavailable
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" }
+      import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
       const { unmount } = render(<ContactPageForm />); //* Contactable = true + isVerifying = true
       const unavailableSubmitButton = screen.getByRole("button", { name: /currently unavailable/i });
@@ -81,8 +85,8 @@ describe("renders the form for the contact page", () => {
       unmount();
 
       //* Checking You're Human then after Turnstile Challenge completed via button click, Contact Me appears in submit button
-      process.env = originalEnv;
-      expect(process.env.REACT_APP_CONTACTABLE).toBe("true");
+      import.meta.env.VITE_CONTACTABLE = "true";
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
       const { unmount: secondUnmount } = render(<ContactPageForm />); //* Contactable = true + isVerifying = true
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human!/i });
       expect(verifyingSubmitButton).toBeInTheDocument(); //* Get "verifying" button, NOT "unavailable" button
@@ -95,16 +99,16 @@ describe("renders the form for the contact page", () => {
       secondUnmount();
     })
     test("a disabled submit button that won't run the submitFunc prop", async () => {
-      process.env = { ...originalEnv, REACT_APP_CONTACTABLE: "false" } //* CONTACTABLE == false then no submit called
+      import.meta.env.VITE_CONTACTABLE = "false"; //* CONTACTABLE == false then no submit called
       const user = userEvent.setup();
-      const onSubmitFunc = jest.fn(e => e.preventDefault());
+      const onSubmitFunc = vi.fn(e => e.preventDefault());
       const { unmount } = render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
       const submitButton = screen.getByRole("button", { name: /currently unavailable/i});
       expect(onSubmitFunc).not.toBeCalled(); //* No click tried so naturally not called!
       await user.click(submitButton); //* If used fireEvent for a submit event, form would fire the func anyway!
       expect(onSubmitFunc).not.toBeCalled(); //* BUT even after a click, it's still not called due to disabled
 
-      process.env = originalEnv; //* Even if CONTACTABLE == true, if isVerifying == true then no submit called
+      import.meta.env.VITE_CONTACTABLE = "true"; //* Even if CONTACTABLE == true, if isVerifying == true then no submit called
       unmount(); //* Need full unmount to reset isVerifying to true, rerender won't call useState again
       render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human/i});
@@ -114,13 +118,13 @@ describe("renders the form for the contact page", () => {
     })
   })
   test("that accepts a customizable onSubmit callback", async () => {
-    const validationMock = jest.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
-    const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
-    const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
+    const validationMock = vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
+    const emailSenderMock = vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
+    const turnstileResponseMock = vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
     //? preventDefault prevents a jest-dom form submit "not-implemented" err (better solution may one day come BUT this seems easiest/best)
     //? ALSO this trick assumes usage in onClick or onSubmit that accepts an event param by default!, if the func isn't used in that type of prop
     //? usage will not match since the func call probably won't have any params (or maybe too many!) and jest will throw an error that is e is undefined
-    const onSubmitFunc = jest.fn();
+    const onSubmitFunc = vi.fn();
     const user = userEvent.setup();
     const { rerender } = render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
 
@@ -155,9 +159,9 @@ describe("renders the form for the contact page", () => {
   })
   test("with validation error messages after invalid data submitted", async () => {
     //! Setup
-    const emailSenderMock = jest.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
-    const turnstileResponseMock = jest.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
-    const validationMock = jest.spyOn(Validator, "default").mockReturnValueOnce({ email: [], message: [] });
+    const emailSenderMock = vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
+    const turnstileResponseMock = vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
+    const validationMock = vi.spyOn(Validator, "default").mockReturnValueOnce({ email: [], message: [] });
 
     //! Initial click but no validation errors
     const user = userEvent.setup();
@@ -194,7 +198,7 @@ describe("renders the form for the contact page", () => {
     turnstileResponseMock.mockRestore();
   })
   test("using viewWidth to control the Turnstile Widget's size", () => {
-    const viewWidthContextSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(992);
+    const viewWidthContextSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(992);
     const { rerender } = render(<ContactPageForm />); 
     //* If viewWidth > 320, the mock TurnstileWidget receives a false compact value, and sets a "normal" class on its container <div>
     expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("normal");

@@ -1,10 +1,11 @@
 import { SendEmail } from "./Common";
+import { vi, type MockInstance } from "vitest";
 import * as UtilityFuncs from "./Utility";
 
 describe("runs common routes to Rails backend", () => {
-  let PostDataSpy: jest.SpyInstance;
+  let PostDataSpy: MockInstance;
   beforeEach(() => {
-    PostDataSpy = jest.spyOn(UtilityFuncs, "PostData").mockImplementation(() => Promise.resolve({ success: true }));
+    PostDataSpy = vi.spyOn(UtilityFuncs, "PostData").mockImplementation(() => Promise.resolve({ success: true }));
   });
   afterEach(() => { PostDataSpy.mockRestore(); }); //* Reset mocks
 

@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { vi, type MockInstance } from "vitest";
 import userEvent from "@testing-library/user-event";
 import PostCard from "./PostCard";
 import ProjectFactory, { ProjectImageFactory } from "../Utility/TestHelpers/ProjectFactory";
@@ -6,9 +7,9 @@ import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidt
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 
 describe("render a single PostCard", () => {
-  let ViewWidthMock: jest.SpyInstance;
+  let ViewWidthMock: MockInstance;
   beforeEach(() => {
-    ViewWidthMock = jest.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
+    ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
   })
   afterEach(() => { ViewWidthMock.mockRestore() })
 
@@ -64,13 +65,13 @@ describe("render a single PostCard", () => {
       expect(screen.getAllByRole("img", { name: /barfooalt/i })).toHaveLength(2); //* Imgs technically still there! but in carousel!
     })
     test("that hints + allows clicks at specific viewWidths", async () => {
-      const testProject = ProjectFactory.create(); const mockImgClickFunc = jest.fn();
+      const testProject = ProjectFactory.create(); const mockImgClickFunc = vi.fn();
       const user = userEvent.setup();
       //! viewWidth < 767 w/ no imgs so no click event fires, nor CSS hinting that it's clickable
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       const { rerender } = render(<PostCard project={testProject} onImgClick={mockImgClickFunc} />);
       const placeholderImg = screen.getByRole("heading", { name: /project/i }).parentElement;
-      expect(placeholderImg).toHaveClass("placeholderImg"); //? Jest simplifies CssModules like "PostCardCss.clickable" from
+      expect(placeholderImg).toHaveClass("placeholderImg"); //? Vitest simplifies CssModules like "PostCardCss.clickable" from
       expect(placeholderImg).not.toHaveClass("clickable"); //? their unique "clickable_ab1cd" to simply "clickable"
       await user.click(placeholderImg!);
       expect(mockImgClickFunc).not.toHaveBeenCalled();

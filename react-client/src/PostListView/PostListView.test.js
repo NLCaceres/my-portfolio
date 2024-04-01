@@ -1,4 +1,5 @@
 import { MemoryRouter } from "react-router-dom";
+import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PostListView from "./PostListView";
@@ -11,10 +12,10 @@ import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 describe("renders a list of bootstrap cards filled with post objs", () => {
   let ApiMock; let ViewWidthMock; let ImgSortingMock; let ProjectSortingMock
   beforeEach(() => {
-    ApiMock = jest.spyOn(GetPostList, "default");
-    ViewWidthMock = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
-    ImgSortingMock = jest.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
-    ProjectSortingMock = jest.spyOn(ProjectHelpers, "SortProjects");
+    ApiMock = vi.spyOn(GetPostList, "default");
+    ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
+    ImgSortingMock = vi.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
+    ProjectSortingMock = vi.spyOn(ProjectHelpers, "SortProjects");
   })
   afterEach(() => {
     ApiMock.mockRestore(); 

@@ -1,4 +1,5 @@
 import { render, screen, act, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import AppCarousel from "./AppCarousel";
 import { ProjectImageFactory } from "../Utility/TestHelpers/ProjectFactory";
@@ -26,10 +27,10 @@ describe("render a simple react-bootstrap carousel", () => {
   })
   describe("that has indicators", () => {
     test("that flash on tablets and wider screens via set/clearInterval", () => {
-      jest.useFakeTimers(); //? Setup to test to setInterval (or setTimeout if it was used)
-      const setIntervalSpy = jest.spyOn(window, "setInterval");
-      const clearIntervalSpy = jest.spyOn(window, "clearInterval");
-      const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
+      vi.useFakeTimers(); //? Setup to test to setInterval (or setTimeout if it was used)
+      const setIntervalSpy = vi.spyOn(window, "setInterval");
+      const clearIntervalSpy = vi.spyOn(window, "clearInterval");
+      const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
       const { unmount } = render(<AppCarousel images={imageSet} />);
       expect(setIntervalSpy).toHaveBeenCalledTimes(1); 
       expect(clearIntervalSpy).not.toHaveBeenCalled();
@@ -37,26 +38,26 @@ describe("render a simple react-bootstrap carousel", () => {
       const carouselRootElem = screen.getByTestId("app-carousel");
       expect(carouselRootElem).not.toHaveClass("hovered-indicators"); //* Starts invisible
       for (let i = 0; i < 6; i++) { //* 3 flashes of the indicators, on, off, on...
-        act(() => { jest.advanceTimersByTime(750) }); //? act() needed since React components using hooks get called as timers advance
+        act(() => { vi.advanceTimersByTime(750) }); //? act() needed since React components using hooks get called as timers advance
         (i % 2 === 0) ? expect(carouselRootElem).toHaveClass("hovered-indicators") : expect(carouselRootElem).not.toHaveClass("hovered-indicators");
       }
       expect(clearIntervalSpy).toHaveBeenCalledTimes(1); //* clearInterval called as hover hint animation finishes
       unmount();
       expect(clearIntervalSpy).toHaveBeenCalledTimes(2); //* Called on unmount when bigger than mobile size
-      jest.useRealTimers(); //? Cleanup/Reset - Not too early or the interval spies get unmocked & undefined
+      vi.useRealTimers(); //? Cleanup/Reset - Not too early or the interval spies get unmocked & undefined
       
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       useViewWidthSpy.mockReturnValue(smallTabletHighEndWidth);
       const { unmount: secondUnmount } = render(<AppCarousel images={imageSet} />);
       expect(setIntervalSpy).toHaveBeenCalledTimes(1); //* Spies not called at mobile size
       expect(carouselRootElem).not.toHaveClass("hovered-indicators"); //* No flashes now or with timer advances
       for (let i = 0; i < 6; i++) { 
-        act(() => { jest.advanceTimersByTime(750) }); 
+        act(() => { vi.advanceTimersByTime(750) }); 
         expect(carouselRootElem).not.toHaveClass("hovered-indicators");
       }
       secondUnmount();
       expect(clearIntervalSpy).toHaveBeenCalledTimes(2); //* Spies not called at mobile size so remain at 2 total times called
-      jest.useRealTimers(); 
+      vi.useRealTimers(); 
       setIntervalSpy.mockRestore(); clearIntervalSpy.mockRestore(); useViewWidthSpy.mockRestore(); //* Cleanup
     })
     test("that handles index changes via indicator buttons", async () => {
@@ -112,7 +113,7 @@ describe("render a simple react-bootstrap carousel", () => {
   })
   describe("with a default item component", () => {
     test("calculating the right css classes for its root + aspect ratio for default Item img tags", () => {
-      const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopViewWidth);
+      const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopViewWidth);
       const { rerender } = render(<AppCarousel images={imageSet} />);
       const carouselRoot = screen.getByTestId("app-carousel");
       expect(carouselRoot).toHaveClass("full carousel slide", { exact: true });
@@ -141,7 +142,7 @@ describe("render a simple react-bootstrap carousel", () => {
       useViewWidthSpy.mockRestore();
     })
     test("display captions if the property is available", () => {
-      const useViewWidthSpy = jest.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
+      const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
       const { rerender } = render(<AppCarousel images={imageSet} />);
       expect(screen.queryAllByText(/^(Foo)\w+$/i)).toHaveLength(0);
       

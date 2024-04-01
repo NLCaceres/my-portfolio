@@ -1,4 +1,5 @@
 import AppModal from "./AppModal";
+import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -95,7 +96,7 @@ describe("renders a react-bootstrap modal", () => {
   })
 
   test("fires a custom onHide func when close button clicked", async () => {
-    const mockFunc = jest.fn();
+    const mockFunc = vi.fn();
     const user = userEvent.setup();
     render(<AppModal show={true} onHide={mockFunc} ID="foobar" title={"FoobarTitle"} />);
     await user.click(screen.getByRole("button", { name: /close/i }));

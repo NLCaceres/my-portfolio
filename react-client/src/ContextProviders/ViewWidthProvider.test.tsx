@@ -1,4 +1,5 @@
 import { screen, render, renderHook, waitFor, fireEvent } from "@testing-library/react";
+import { vi } from "vitest";
 import useViewWidth, { ViewWidthProvider } from "./ViewWidthProvider"
 
 describe("View Width Provider with a useViewWidth hook for simple consumption", () => {
@@ -18,7 +19,7 @@ describe("View Width Provider with a useViewWidth hook for simple consumption", 
     await waitFor(() => expect(screen.getByRole("heading")).toHaveTextContent("Smaller than 1024"));
   })
   test("calling removeEventListener if the ViewWidthProvider unmounts", () => {
-    const removeEventSpy = jest.spyOn(window, "removeEventListener");
+    const removeEventSpy = vi.spyOn(window, "removeEventListener");
     const { unmount } = render(<ViewWidthProvider> <Stub /> </ViewWidthProvider>)
 
     expect(removeEventSpy).toHaveBeenCalledTimes(0);

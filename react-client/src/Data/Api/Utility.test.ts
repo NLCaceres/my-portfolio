@@ -1,11 +1,15 @@
 import GetData, { PostData } from "./Utility";
+import { vi, type MockInstance, type Mock } from "vitest";
 import * as BrowserFuncs from "../../Utility/Functions/Browser";
 
+const createMockResponse = <T>(jsonResponse: T, statusCode = 200) =>
+  vi.fn(() => Promise.resolve({ json: () => Promise.resolve(jsonResponse), status: statusCode })) as Mock;
+//? Why use createMockResponse() to mock the global Fetch API's entire implementation?
+//? Because just using mockResolvedValue allows real requests to still be sent
 describe("should create simple and useful", () => {
-  let fetchSpy: jest.SpyInstance;
+  let fetchSpy: MockInstance;
   beforeEach(() => { //* mockImplementation return value must include json key or function throws, failing the test
-    fetchSpy = jest.spyOn(global, "fetch")
-      .mockImplementation((() => Promise.resolve({ status: 200, json: () => [] })) as jest.Mock);
+    fetchSpy = vi.spyOn(global, "fetch").mockImplementation(createMockResponse([]));
   });
   afterEach(() => { fetchSpy.mockRestore(); }); //* Reset mocks
 
@@ -19,11 +23,11 @@ describe("should create simple and useful", () => {
       expect(fetchSpy).lastCalledWith("/some-other-url", commonHeaders);
     });
     test("should use invalid status codes from response to cause an early return", async () => {
-      fetchSpy.mockImplementationOnce(() => ({ status: 200, json: () => ({ body: [] }) }));
+      fetchSpy.mockImplementationOnce(createMockResponse({ body: [] }, 200));
       const emptyResponse = await GetData("/some-url"); //* Basic 200 status without any values sent back yields
       expect(emptyResponse).toStrictEqual({ body: [] }); //* Simple empty object w/ expected JSON keys
 
-      fetchSpy.mockImplementationOnce(() => ({ status: 400 }));
+      fetchSpy.mockImplementationOnce(createMockResponse({ body: [] }, 400));
       const badResponse = await GetData("/some-other-url");
       expect(badResponse).toBe(undefined); //* 400 status or higher yields undefined
     });
@@ -31,7 +35,7 @@ describe("should create simple and useful", () => {
 
   describe("POST requests", () => {
     test("using our data and some CSRF token to post the data", async () => {
-      const GetCookieSpy = jest.spyOn(BrowserFuncs, "GetCookie").mockImplementationOnce(() => "some-token");
+      const GetCookieSpy = vi.spyOn(BrowserFuncs, "GetCookie").mockImplementationOnce(() => "some-token");
       const body = { didSucceed: false };
       await PostData("/some-url", body);
 
@@ -53,7 +57,7 @@ describe("should create simple and useful", () => {
       const invalidResponse = await PostData("hello");
       expect(invalidResponse).toBe(undefined);
 
-      fetchSpy.mockImplementationOnce(() => ({ json: () => "Success", status: 200 }));
+      fetchSpy.mockImplementationOnce(createMockResponse("Success"));
       const jsonResponse = await PostData("hello"); //* Valid status
       expect(jsonResponse).toBe("Success"); //* THEN return json response
     });

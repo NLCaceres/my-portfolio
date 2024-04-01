@@ -1,11 +1,12 @@
 import { render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import Footer from "./Footer";
 
 describe("renders a footer using a nav", () => {
   test("accepting a contact button click callback", async () => {
     const user = userEvent.setup();
-    const contactButtonClickCallback = jest.fn();
+    const contactButtonClickCallback = vi.fn();
     const { rerender } = render(<Footer contactButtonOnClick={contactButtonClickCallback} />);
     
     await user.click(screen.getByRole("button", { name: /contact me/i }));

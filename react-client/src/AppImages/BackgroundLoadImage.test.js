@@ -1,4 +1,5 @@
 import React from "react";
+import { vi } from "vitest";
 import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Globals } from "@react-spring/web";
@@ -38,7 +39,7 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(nonHeaderPlaceholderText).not.toHaveAttribute("style");
   })
   test("allowing an onclick callback to be put on the true img tag", async () => {
-    const clickCallback = jest.fn();
+    const clickCallback = vi.fn();
     const { rerender } = render(<BackgroundLoadImage onImgClick={clickCallback} />);
     const user = userEvent.setup();
 
@@ -69,7 +70,7 @@ describe("renders an image with option to display a placeholder while loading", 
       expect(placeholder).toBeInTheDocument(); //* Placeholder gets to stay
     })
     test("to fire a parent callback regardless of success or failure", async () => {
-      const loadCallback = jest.fn();
+      const loadCallback = vi.fn();
       const { rerender, unmount } = render(<BackgroundLoadImage onLoad={loadCallback} />);
       const img = screen.getByRole("img"); //* Img begins loading in background
       fireEvent.load(img); //* Image successfully loaded

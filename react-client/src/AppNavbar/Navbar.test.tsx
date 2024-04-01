@@ -1,4 +1,5 @@
 import { MemoryRouter } from "react-router-dom";
+import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AppNavbar from "./AppNavbar";
@@ -37,7 +38,7 @@ describe("renders a simple styled navbar", () => {
       expect(backEndNavLink.parentElement).toBeInTheDocument(); //* NavItem parent
     })
     test("with a scroll up on click of a link", async () => {
-      const scrollSpy = jest.spyOn(Scroll, "SmoothScroll");
+      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll");
       const user = userEvent.setup();
       render(<AppNavbar />, { wrapper: MemoryRouter });
 
@@ -47,14 +48,14 @@ describe("renders a simple styled navbar", () => {
       scrollSpy.mockRestore();
     })
     test("with specific CSS attributes", async () => {
-      const scrollSpy = jest.spyOn(Scroll, "SmoothScroll"); //* Prevents "scrollTo not implemented" error
+      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll"); //* Prevents "scrollTo not implemented" error
       const user = userEvent.setup();
       render(<AppNavbar />, { wrapper: MemoryRouter });
 
       const navBrand = screen.getByRole("link", { name: /brand logo/i });
       expect(navBrand).toHaveClass("brand navbar-brand", { exact: true });
       expect(navBrand).toHaveAttribute("href", "/portfolio/about-me");
-      expect(navBrand.lastChild).toHaveAttribute("src", "logo.svg"); //* Logo tag
+      expect(navBrand.lastChild).toHaveAttribute("src", "/src/logo.svg"); //* Logo tag
 
       const backEndNavLink = screen.getByText("Back-End Web");
       expect(backEndNavLink).toBeInTheDocument();

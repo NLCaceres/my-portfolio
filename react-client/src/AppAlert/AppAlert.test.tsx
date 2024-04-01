@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import AppAlert from "./AppAlert";
 
@@ -32,7 +33,7 @@ describe("renders a reusable App-wide Bootstrap alert with", () => {
   })
   test("an 'onClose' prop called when the alert is dismissed via close button", async () => {
     const user = userEvent.setup();
-    const onCloseMock = jest.fn();
+    const onCloseMock = vi.fn();
     render(<AppAlert title="Foobar" onClose={onCloseMock} />)
     expect(screen.getByRole("alert")).toBeInTheDocument();
     

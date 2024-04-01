@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 
@@ -9,9 +10,13 @@ import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 //* Using isolateModules: Can't contain outside scope, so a new mock must be made each time
 //* Using jest.doMock: Requires using "await import("someDir/someFile")" in each test BUT then they hang if you have to "await" another func
 //todo Maybe Jest 29 will fix it because 'jest.spyOn().mock(() => () => { return mockTurnstileWidget })' doesn't work either
-jest.mock("../ThirdParty/TurnstileWidget", () => ({ successCB }: TurnstileWidgetProps) => {
-  return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
-})
+vi.mock("../ThirdParty/TurnstileWidget", () => {
+  return {
+    default: ({ successCB }: TurnstileWidgetProps) => {
+      return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
+    }
+  }
+});
 
 describe("renders the form for the contact page", () => {
   describe("that depends on '_CONTACTABLE' env var for conditionally rendering", () => {

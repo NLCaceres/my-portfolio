@@ -1,12 +1,11 @@
 import GetPostList from "./ProjectAPI";
+import { vi, type MockInstance } from "vitest";
 import * as GetData from "./Utility";
 
-const originalEnv = process.env;
-
 describe("sending a GET request to receive Post list", () => {
-  let GetDataSpy: jest.SpyInstance;
+  let GetDataSpy: MockInstance;
   beforeEach(() => {
-    GetDataSpy = jest.spyOn(GetData, "default").mockImplementation(() => Promise.resolve([]));
+    GetDataSpy = vi.spyOn(GetData, "default").mockImplementation(() => Promise.resolve([]));
   });
   afterEach(() => { GetDataSpy.mockRestore(); }); //* Reset mocks
   test("query argument affects request url", async () => {
@@ -48,11 +47,11 @@ describe("sending a GET request to receive Post list", () => {
     expect(singleBadObjectPropResponse.majorProjects).toHaveLength(0); //* Empty arrays again
     expect(singleBadObjectPropResponse.minorProjects).toHaveLength(0);
 
-    process.env = { ...originalEnv, REACT_APP_ABOUT_ME_ID: "200"};
+    import.meta.env.VITE_ABOUT_ME_ID = "200";
     GetDataSpy.mockImplementationOnce(() => { return { id: "200" }; });
     const singleAlternateResponse = await GetPostList(); //* IF id matches expected about_me post ID
     expect(singleAlternateResponse.majorProjects).toHaveLength(1); //* THEN Insert it into majorProjects array
     expect(singleAlternateResponse.minorProjects).toHaveLength(0);
-    process.env = originalEnv;
+    import.meta.env.VITE_ABOUT_ME_ID = "1"; //* Reset to the original setup value
   });
 });
