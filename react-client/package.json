@@ -32,6 +32,7 @@
     "@types/lodash": "^4.14.192",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
+    "@vitest/coverage-v8": "^1.4.0",
     "eslint": "^8.55.0",
     "eslint-plugin-react": "^7.33.2",
     "jsdom": "^24.0.0",
@@ -42,6 +43,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "lint": "eslint src/**/*.ts{,x}"
   },
   "eslintConfig": {
@@ -60,28 +62,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "**/*.{js,jsx,ts,tsx}",
-      "!**/node_modules/**",
-      "!src/index.jsx",
-      "!src/serviceWorker.js",
-      "!src/setupProxy.js",
-      "!src/**/LoggerFuncs.js",
-      "!src/**/WarningSilencer.js"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": 90
-      }
-    },
-    "coverageReporters": [
-      "text"
     ]
   }
 }
