@@ -7,16 +7,16 @@ describe("View Width Provider with a useViewWidth hook for simple consumption", 
     const viewWidth = useViewWidth();
     return ((viewWidth >= 1024) ? <h1>{viewWidth}</h1> : <h1>Smaller than 1024</h1>);
   }
-  
-  test("first injects Jest's default of '1024', and then, on resize, injects new values to useViewWidth consumers", async () => {
+  test("checking the default value, then on resize, consuming useViewWidth's new value", async () => {
+    global.window.innerWidth = 1024;
     render(<ViewWidthProvider> <Stub /> </ViewWidthProvider>)
     expect(screen.getByRole("heading")).toHaveTextContent("1024");
 
-    //? Resize events are extremely flakey due to Jest's underlying usage of jsDOM 
-    //? so defineProperty() + fireEvent.resize() is the best way to force a rerender if a resize event changes viewWidth
-    Object.defineProperty(window, "innerWidth", { writable: true, configurable: true, value: 1023 }); //? Might not work more than once though!
+    global.window.innerWidth = 1023; //? 1st: Set new width THEN fire resize event to force a rerender with new view
     fireEvent.resize(window); //* Rerender occurs naturally so no need to extract "rerender()", just "await" the change
     await waitFor(() => expect(screen.getByRole("heading")).toHaveTextContent("Smaller than 1024"));
+
+    global.window.innerWidth = 1024;
   })
   test("calling removeEventListener if the ViewWidthProvider unmounts", () => {
     const removeEventSpy = vi.spyOn(window, "removeEventListener");
