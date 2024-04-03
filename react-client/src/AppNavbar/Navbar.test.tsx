@@ -38,7 +38,7 @@ describe("renders a simple styled navbar", () => {
       expect(backEndNavLink.parentElement).toBeInTheDocument(); //* NavItem parent
     })
     test("with a scroll up on click of a link", async () => {
-      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll");
+      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
       const user = userEvent.setup();
       render(<AppNavbar />, { wrapper: MemoryRouter });
 
@@ -48,7 +48,7 @@ describe("renders a simple styled navbar", () => {
       scrollSpy.mockRestore();
     })
     test("with specific CSS attributes", async () => {
-      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll"); //* Prevents "scrollTo not implemented" error
+      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1); //* Prevents "scrollTo not implemented" error
       const user = userEvent.setup();
       render(<AppNavbar />, { wrapper: MemoryRouter });
 

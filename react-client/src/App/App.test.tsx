@@ -86,7 +86,7 @@ describe("renders the whole app", () => {
       completeAlertTimeoutDismiss();
     });
     test("controls if the footer's contact me button opens a 'Contact Me' modal or navigates to '/contact-me'", async () => {
-      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll");
+      const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
       const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
       const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
