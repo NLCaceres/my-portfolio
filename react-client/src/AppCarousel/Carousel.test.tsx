@@ -14,12 +14,12 @@ describe("render a simple react-bootstrap carousel", () => {
     expect(child).toBeInTheDocument();
     const innerParent = child.parentElement;
     expect(innerParent).toHaveClass("carousel-inner", { exact: true });
-    expect(innerParent.previousElementSibling).toHaveClass("carousel-indicators", { exact: true });
+    expect(innerParent!.previousElementSibling).toHaveClass("carousel-indicators", { exact: true });
 
     rerender(<AppCarousel />);
     expect(innerParent).toBeInTheDocument(); //* Remains in the doc but
     expect(innerParent).toBeEmptyDOMElement(); //* It is now empty
-    expect(innerParent.previousElementSibling).toBeInTheDocument(); //* Indicators still present as well!
+    expect(innerParent!.previousElementSibling).toBeInTheDocument(); //* Indicators still present as well!
 
     rerender(<AppCarousel images={imageSet} />);
     expect(innerParent).not.toBeEmptyDOMElement(); //* Now rendering img tags in default carousel items
@@ -67,17 +67,17 @@ describe("render a simple react-bootstrap carousel", () => {
       const currentImages = screen.getAllByAltText(/BarfooAlt/i).sort();
       //* currentImages[0].alt should be BarfooAlt1 or simply smallest numbered altText value
       //* currentImages[1].alt should be BarfooAlt2
-      expect(currentImages[0].parentElement.className).toBe("active carousel-item"); //* 1st is always active to start
-      expect(currentImages[1].parentElement.className).toBe("carousel-item"); //* Always starts deactivated
+      expect(currentImages[0].parentElement!.className).toBe("active carousel-item"); //* 1st is always active to start
+      expect(currentImages[1].parentElement!.className).toBe("carousel-item"); //* Always starts deactivated
 
       await user.click(activeImgIndicators[1]);
-      await waitFor(() => { expect(currentImages[0].parentElement.className).toBe("carousel-item") }); //* Deactivated
+      await waitFor(() => { expect(currentImages[0].parentElement!.className).toBe("carousel-item") }); //* Deactivated
       //* Img #2 is activated next BUT using waitFor() className since CSS transition classes are applied first
-      await waitFor(() => { expect(currentImages[1].parentElement.className).toBe("active carousel-item") });
+      await waitFor(() => { expect(currentImages[1].parentElement!.className).toBe("active carousel-item") });
       
       await user.click(activeImgIndicators[0]);
-      await waitFor(() => { expect(currentImages[0].parentElement.className).toBe("active carousel-item") }); //* Reactivated
-      await waitFor(() => { expect(currentImages[1].parentElement.className).toBe("carousel-item") }); //* Deactivated again
+      await waitFor(() => { expect(currentImages[0].parentElement!.className).toBe("active carousel-item") }); //* Reactivated
+      await waitFor(() => { expect(currentImages[1].parentElement!.className).toBe("carousel-item") }); //* Deactivated again
     })
     /* 
     test("that displays on hover", async () => {

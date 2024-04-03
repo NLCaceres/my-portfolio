@@ -109,7 +109,7 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(img).toHaveClass("photo", { exact: true });
 
     expect(img.parentElement).toHaveClass("container ", { exact: true });
-    img.parentElement.setAttribute("style", "height: 250px; width: 250px;"); //* Unclear if useResize is adjusting them at all
+    img.parentElement!.setAttribute("style", "height: 250px; width: 250px;"); //* Unclear if useResize is adjusting them at all
     expect(img.parentElement).toHaveStyle({ height: "250px", width: "250px" }); //* BUT style does match its expected output
 
     expect(img.previousElementSibling).toHaveClass("placeholderImg placeholder", { exact: true });

@@ -3,7 +3,7 @@ import reactPlugin from "@vitejs/plugin-react";
 
 export default defineConfig({
   base: "",
-  plugins: [ reactPlugin() ],
+  plugins: [reactPlugin()],
   test: {
     include: ["./**/*.test.tsx", "./**/*.test.ts"],
     globals: true,

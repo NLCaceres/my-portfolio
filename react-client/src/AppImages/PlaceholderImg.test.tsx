@@ -36,7 +36,7 @@ describe("renders a div that looks like a placeholder img", () => {
     expect(containerDiv).toHaveStyle({ opacity: 0 });
 
     rerender(<PlaceholderImg style={{ height: 200 }} textStyle={{ color: "red" }} />);
-    expect(headerTag).toHaveStyle({ color: "red" });
+    expect(headerTag).toHaveStyle({ color: "rgb(255, 0, 0)" }); //* Testing-Lib seems to be convert "color: red" to "color: rgb()"
     expect(containerDiv).toHaveStyle({ height: "200px" });
 
     rerender(<PlaceholderImg />);
