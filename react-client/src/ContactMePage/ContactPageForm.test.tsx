@@ -1,33 +1,23 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { vi, type MockInstance } from "vitest";
 import userEvent from "@testing-library/user-event";
 import ContactPageForm from "./ContactPageForm";
-import SilenceWarning from "../Utility/TestHelpers/WarningSilencer";
-import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
+import * as TurnstileWidget from "../ThirdParty/TurnstileWidget";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as CommonAPI from "../Data/Api/Common";
 import * as Validator from "./validator";
 import * as TurnstileAPI from "../Data/Api/ThirdParty";
 
-vi.mock("../ThirdParty/TurnstileWidget", () => {
-  return {
-    default: ({ compact, successCB }: TurnstileWidgetProps) => {
+type TurnstileWidgetProps = TurnstileWidget.TurnstileWidgetProps;
+describe("renders the form for the contact page", () => {
+  let turnstileWidgetMock: MockInstance;
+  beforeEach(() => {
+    turnstileWidgetMock = vi.spyOn(TurnstileWidget, "default").mockImplementation(({ compact, successCB }: TurnstileWidgetProps) => {
       const compactClass = (compact) ? "compact" : "normal";
       return (<div className={compactClass}><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
-    }
-  }
-});
-
-// const tokenTurnstileMock = ({action, successCB, className }) => { //? Useful if using doMock like in line 21
-//   //* Why a button? Easiest way to activate callback + it matches the Turnstile Challenge button in terms of UX
-//   return (<div><button type="button" onClick={() => { successCB("123") }}>Dummy Node</button></div>);
-// }
-describe("renders the form for the contact page", () => {
-  // beforeEach(() => { jest.resetModules(); }) //* As of Jest 27, resetModules() seems bugged, crashing Functional React Components using Hooks
+    })
+  })
   test("that has a toggleable dark mode", async () => {
-    //? If just mocking the default export (and not importing any others) then the following works! OTHERWISE: See line 56
-    //* jest.doMock("../ThirdParty/TurnstileWidget", () => tokenTurnstileMock);
-    // const ContactPageForm = (await import("./ContactPageForm")).default; //? Must re-import ContactPageForm component every doMock test
     const { rerender } = render(<ContactPageForm darkMode={false} />);
     const formContainer = screen.getByTestId("form-container");
     expect(formContainer).not.toHaveClass("dark");
@@ -41,173 +31,171 @@ describe("renders the form for the contact page", () => {
   describe("that depends on '_CONTACTABLE' env var for conditionally rendering", () => {
     test("a spinner in the submit button when running an async task", async () => {
       expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
-      const user = userEvent.setup(); //? Best to call 1st or at least before render is called
-      const { unmount } = render(<ContactPageForm />); //* Contactable = true + isVerifying = true
+      const user = userEvent.setup(); //? Best to setup userEvent 1st or at least before render is called
+      const { unmount } = render(<ContactPageForm />);
+      //* WHEN VITE_CONTACTABLE == "true" + isVerifying = true, THEN the spinner is visible to show verification in process
       const submitButtonSpinner = screen.getByRole("status", { hidden: true });
       expect(submitButtonSpinner).toBeInTheDocument();
 
       import.meta.env.VITE_CONTACTABLE = "false";
       expect(import.meta.env.VITE_CONTACTABLE).toBe("false");
       unmount();
-      const { unmount: secondUnmount } = render(<ContactPageForm />); //* Contactable = false + isVerifying = false
+      const { unmount: secondUnmount } = render(<ContactPageForm />);
+      //* WHEN VITE_CONTACTABLE == "false" while isVerifying = true, THEN no spinner needed since no verification going to happen
       expect(screen.queryByRole("status", { hidden: true })).not.toBeInTheDocument();
 
       import.meta.env.VITE_CONTACTABLE = "true";
       secondUnmount();
-
-      //* Normal flow w/ mocked implementation
-      render(<ContactPageForm />); //* Contactable = true + isVerifying = true (BUT Turnstile widget's callback will run setIsVerifying(false) later!)
+      render(<ContactPageForm />);
+      //* WHEN VITE_CONTACTABLE == "true" + isVerifying = true, THEN spinner is visible
       const finalSubmitButtonSpinner = screen.getByRole("status", { hidden: true });
       expect(finalSubmitButtonSpinner).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Click turnstile widget button
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
+      //* AND once the verification completes, THEN the spinner will disappear
       expect(finalSubmitButtonSpinner).not.toBeInTheDocument();
     })
     test("a submit button with 'unavailable', 'verifying', or 'contact me' text states", async () => {
-      //? If multiple imports needed from file, then must return an object w/ following syntax (__esModule key is very important!)
-      //? Only want to partially mock the file? THEN Run "const originalModule = jest.requireActual('dir/path/from/here')", 
-      //? then add "...originalModule" to below returned obj, only overriding what's necessary
-      // jest.doMock('../ThirdParty/TurnstileWidget', () => { 
-      //   return { 
-      //     __esModule: true, 
-      //     default: ({action, successCB, className }) => {
-      //       //* Why a button? Easiest way to activate callback + it matches the Turnstile Challenge button in terms of UX
-      //       return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
-      //     } 
-      //   }
-      // });
-      // const ContactPageForm = (await import("./ContactPageForm")).default;
-      //* Currently Unavailable
       import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
-      const { unmount } = render(<ContactPageForm />); //* Contactable = true + isVerifying = true
+      const { unmount } = render(<ContactPageForm />); //* Starts as Contactable = false + isVerifying = true
+      //* WHEN VITE_CONTACTABLE == "false", THEN the submit button will read "currently unavailable"
       const unavailableSubmitButton = screen.getByRole("button", { name: /currently unavailable/i });
       expect(unavailableSubmitButton).toBeInTheDocument();
       unmount();
 
-      //* Checking You're Human then after Turnstile Challenge completed via button click, Contact Me appears in submit button
       import.meta.env.VITE_CONTACTABLE = "true";
       expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
-      const { unmount: secondUnmount } = render(<ContactPageForm />); //* Contactable = true + isVerifying = true
+      const { unmount: secondUnmount } = render(<ContactPageForm />); //* NOW: Starts as Contactable = true + isVerifying = true
+      //* WHEN VITE_CONTACTABLE == "true", THEN the submit button will read as "Checking you're human!" indicating verification started
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human!/i });
-      expect(verifyingSubmitButton).toBeInTheDocument(); //* Get "verifying" button, NOT "unavailable" button
+      expect(verifyingSubmitButton).toBeInTheDocument();
 
-      await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Click turnstile widget button
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
+      //* WHEN the Turnstile Verification completes onClick, THEN the submit button will read as "Contact Me"
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
-      expect(contactMeButton).toBeInTheDocument(); //* After verification succeeds and stops, "Contact Me" appears!
+      expect(contactMeButton).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /checking you're human!/i })).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
       secondUnmount();
     })
     test("a disabled submit button that won't run the submitFunc prop", async () => {
-      import.meta.env.VITE_CONTACTABLE = "false"; //* CONTACTABLE == false then no submit called
+      import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
-      const onSubmitFunc = vi.fn(e => e.preventDefault());
+      const onSubmitFunc = vi.fn();
       const { unmount } = render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
+      //* WHEN VITE_CONTACTABLE == "false", THEN contact button displays "currently unavailable"
       const submitButton = screen.getByRole("button", { name: /currently unavailable/i});
-      expect(onSubmitFunc).not.toBeCalled(); //* No click tried so naturally not called!
-      await user.click(submitButton); //* If used fireEvent for a submit event, form would fire the func anyway!
-      expect(onSubmitFunc).not.toBeCalled(); //* BUT even after a click, it's still not called due to disabled
+      expect(onSubmitFunc).not.toBeCalled(); //* Submit callback spy not yet called
+      await user.click(submitButton); //* FireEvent would force a form submission, so definitely better to use UserEvent
+      expect(onSubmitFunc).not.toBeCalled(); //* AND the submit spy is not called due to VITE_CONTACTABLE == "false"
 
       import.meta.env.VITE_CONTACTABLE = "true"; //* Even if CONTACTABLE == true, if isVerifying == true then no submit called
-      unmount(); //* Need full unmount to reset isVerifying to true, rerender won't call useState again
+      unmount(); //* Need full unmount to have useState reset isVerifying to its initial state of `true`
       render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human/i});
-      expect(onSubmitFunc).not.toBeCalled(); //* Fresh render and still not called
-      await user.click(verifyingSubmitButton);
-      expect(onSubmitFunc).not.toBeCalled(); //* In Verifying state, so still disabled, submitFunc still can't fire onClick
+      expect(onSubmitFunc).not.toBeCalled();
+      await user.click(verifyingSubmitButton); //* WHEN contact button clicked, and CONTACTABLE == "true" AND isVerifying == `true`
+      expect(onSubmitFunc).not.toBeCalled(); //* THEN the submit spy still won't run since the component is stuck verifying
+    })
+    test("a try again state in the submit button if bot detected trying to submit", async () => {
+      turnstileWidgetMock.mockImplementation(({ successCB }: TurnstileWidgetProps) => {
+        return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
+      })
+      const user = userEvent.setup();
+      render(<ContactPageForm />);
+
+      expect(screen.queryByRole("button", { name: /checking you're human!/i })).toBeInTheDocument();
+      //* WHEN Turnstile returns an undefined auth token
+      await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
+
+      //* THEN the Form's submit button should read "Try Again Later", not any other message
+      expect(screen.queryByRole("button", { name: /try again later/i })).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /checking you're human!/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /contact me/i })).not.toBeInTheDocument();
     })
   })
   test("that accepts a customizable onSubmit callback", async () => {
-    const validationMock = vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
-    const emailSenderMock = vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
-    const turnstileResponseMock = vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
-    //? preventDefault prevents a jest-dom form submit "not-implemented" err (better solution may one day come BUT this seems easiest/best)
-    //? ALSO this trick assumes usage in onClick or onSubmit that accepts an event param by default!, if the func isn't used in that type of prop
-    //? usage will not match since the func call probably won't have any params (or maybe too many!) and jest will throw an error that is e is undefined
+    vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
+    vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
+    vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
     const onSubmitFunc = vi.fn();
     const user = userEvent.setup();
     const { rerender } = render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
 
     await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Turnstile finishes verification process
-    const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i });
-    expect(onSubmitFunc).not.toBeCalled(); //* BUT haven't clicked "Contact Me" button yet
-    fireEvent.submit(screen.getByTestId("form-container")); //* Submit form parent is NOT async BUT the callback using onSubmitFunc IS
-    await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(1)); //* So must await it to finish & update mock's # of calls
+    const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i }); //* SO contact submit button now visible
+    expect(onSubmitFunc).not.toBeCalled(); //* Haven't clicked submit button yet so spy not called yet
+
+    //? preventDefault() + stopPropagation() in SubmitContactForm prevent a page reload AND jest-dom's "submit" not-implemented error
+    fireEvent.submit(screen.getByTestId("form-container")); //? whenever fireEvent causes a form submission
+    //* WHEN form submitted after successful Turnstile verification, THEN run the onSubmit callback
+    await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(1)); //* Wait for fireEvent's submission to run the callback
     
-    fireEvent.submit(contactSubmitButton); //* Submit the contact button itself
+    fireEvent.submit(contactSubmitButton); //* Submit by emitting a "submit" event from the contact button itself
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(2));
     
-    await user.click(contactSubmitButton);
+    await user.click(contactSubmitButton); //* Submit by directly pressing the contact button
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
 
-    const origErrorConsole = SilenceWarning(); //* Temp form submit not implemented error ignore
     rerender(<ContactPageForm />);
+    //* WHEN no submit callback prop passed to ContactPageForm
     fireEvent.submit(screen.getByTestId("form-container"));
-    //* submitFunc prop now undefined, so it shouldn't be called anymore!
-    expect(onSubmitFunc).toHaveBeenCalledTimes(3);
-
+    expect(onSubmitFunc).toHaveBeenCalledTimes(3); //* THEN my spy is not called anymore
+    //* No matter how the form is submitted
     fireEvent.submit(contactSubmitButton);
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
 
     await user.click(contactSubmitButton);
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
-
-    window.console.error = origErrorConsole; //* Restore error log
-    validationMock.mockRestore();
-    emailSenderMock.mockRestore();
-    turnstileResponseMock.mockRestore();
   })
   test("with validation error messages after invalid data submitted", async () => {
-    //! Setup
-    const emailSenderMock = vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
-    const turnstileResponseMock = vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
+    vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
+    vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
     const validationMock = vi.spyOn(Validator, "default").mockReturnValueOnce({ email: [], message: [] });
-
-    //! Initial click but no validation errors
     const user = userEvent.setup();
     render(<ContactPageForm />);
     await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
     const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i });
+    //* WHEN ContactPageForm submits after successful Turnstile verification
     await user.click(contactSubmitButton);
-    expect(validationMock).toHaveBeenCalledTimes(1);
+    expect(validationMock).toHaveBeenCalledTimes(1); //* THEN validator runs
 
-    //! Just 1 email validation error
     validationMock.mockReturnValueOnce({ email: ["Email invalid error"], message: [] });
     await user.click(contactSubmitButton);
     expect(validationMock).toHaveBeenCalledTimes(2);
-    expect(screen.getByText(/email invalid error/i)).toBeInTheDocument(); //* One error rendered
-    //! 2 email validation errors
+    //* WHEN validator returns an error message, THEN it is rendered as is
+    expect(screen.getByText(/email invalid error/i)).toBeInTheDocument();
+
     validationMock.mockReturnValueOnce({ email: ["Email invalid error 1", "Email invalid error 2"], message: [] });
     await user.click(contactSubmitButton);
     expect(validationMock).toHaveBeenCalledTimes(3);
-    expect(screen.getAllByText(/email invalid error/i).length).toBe(2); //* Both errors are rendered
-    //! Just 1 email and 1 message validation error
+    //* WHEN the validator returns multiple errors, THEN BOTH are rendered as is
+    expect(screen.getAllByText(/email invalid error/i).length).toBe(2);
+
     validationMock.mockReturnValueOnce({ email: ["Email invalid error"], message: ["Message invalid error"] });
     await user.click(contactSubmitButton);
     expect(validationMock).toHaveBeenCalledTimes(4);
-    expect(screen.getAllByText(/email invalid error/i).length).toBe(1); //* Back to 1 email error rendered
-    expect(screen.getByText(/message invalid error/i)).toBeInTheDocument(); //* BUT also have a message error rendered
-    //! 2 message validation errors
+    //* WHEN the validator returns an error for each field, THEN BOTH are rendered (albeit separately)
+    expect(screen.getAllByText(/email invalid error/i).length).toBe(1);
+    expect(screen.getByText(/message invalid error/i)).toBeInTheDocument();
+
     validationMock.mockReturnValueOnce({ email: [], message: ["Message invalid error 1", "Message invalid error 2"] });
     await user.click(contactSubmitButton);
     expect(validationMock).toHaveBeenCalledTimes(5);
-    expect(screen.getAllByText(/message invalid error/i).length).toBe(2); //* Similarly, 2 message errors can get rendered
-
-    validationMock.mockRestore();
-    emailSenderMock.mockRestore();
-    turnstileResponseMock.mockRestore();
+    //* WHEN the validator returns multiple errors, THEN BOTH are rendered as is (just like the "email" field before)
+    expect(screen.getAllByText(/message invalid error/i).length).toBe(2);
   })
-  test("using viewWidth to control the Turnstile Widget's size", () => {
+  test("using viewWidth to control the Turnstile Widget's size", async () => {
     const viewWidthContextSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(992);
     const { rerender } = render(<ContactPageForm />); 
-    //* If viewWidth > 320, the mock TurnstileWidget receives a false compact value, and sets a "normal" class on its container <div>
+    //* WHEN viewWidth > 320, THEN TurnstileWidget is rendered via "normal" css class
     expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("normal");
     
-    //* If viewWidth <= 320, the mock TurnstileWidget receives a true compact value, and sets a "compact" class on its container <div>
+    //* WHEN viewWidth <= 320,
     viewWidthContextSpy.mockReturnValue(320);
     rerender(<ContactPageForm />);
+    //* THEN TurnstileWidget is rendered via "compact" css class
     expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("compact");
-
-    viewWidthContextSpy.mockRestore();
   })
 })
