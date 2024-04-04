@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@react-spring/web": "^9.6.1",
-    "@types/jest": "^29.4.0",
     "@types/node": "^18.14.6",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -45,12 +44,6 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint src/**/*.ts{,x}"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
