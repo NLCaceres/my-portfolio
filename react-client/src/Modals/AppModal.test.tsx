@@ -42,7 +42,7 @@ describe("renders a react-bootstrap modal", () => {
 
     const footerTag = <h2>FoobarFooter</h2>;
     rerender(<AppModal show={true} ID="foobar" footer={footerTag}> <h3>Foobar</h3> </AppModal>);
-    const modalContent = modalBody.parentElement;
+    const modalContent = modalBody!.parentElement;
     expect(modalContent).toContainHTML(renderToStaticMarkup(footerTag)); //* Check JSX renders as expected
 
     rerender(<AppModal show={true} ID="foobar"> <h3>Foobar</h3> </AppModal>);
@@ -63,15 +63,15 @@ describe("renders a react-bootstrap modal", () => {
     const modalDialogBox = screen.getByRole("dialog").firstChild;
     expect(modalDialogBox).toHaveClass("dialogBox");
 
-    const modalContent = modalDialogBox.firstChild; //* Content within dialogBox which is in modal parent
+    const modalContent = modalDialogBox!.firstChild; //* Content within dialogBox which is in modal parent
     expect(modalContent).toHaveClass("content-class");
     expect(modalContent).toHaveClass("modal-content content content-class", { exact: true });
 
-    const modalHeader = modalContent.firstChild;
+    const modalHeader = modalContent!.firstChild;
     expect(modalHeader).toHaveClass("header-class"); 
     expect(modalHeader).toHaveClass("modal-header header-class", { exact: true });
 
-    const modalTitle = modalHeader.firstChild;
+    const modalTitle = modalHeader!.firstChild;
     expect(modalTitle).toHaveClass("title-class");
     expect(modalTitle).toHaveClass("fs-3 title-class modal-title", { exact: true });
 
@@ -101,6 +101,6 @@ describe("renders a react-bootstrap modal", () => {
     render(<AppModal show={true} onHide={mockFunc} ID="foobar" title={"FoobarTitle"} />);
     await user.click(screen.getByRole("button", { name: /close/i }));
     expect(mockFunc).toHaveBeenCalled();
-    //* Rerender with show = false, doesn't call onHide in jest so maybe a cypress test
+    //TODO: Rerender with show = false WON'T call onHide, SO a Cypress test is better
   })
 })
