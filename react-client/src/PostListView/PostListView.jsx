@@ -8,7 +8,6 @@ import UseNullableAsync from "../Hooks/UseAsync";
 import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
 import { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 //* "Import" loads statically, so if grabbing json data from files in a particular dir, have to grab each file one by one
 // import iOSProjects from "../TabPanelData/iOS.json";
 

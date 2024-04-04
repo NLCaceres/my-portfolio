@@ -1,6 +1,5 @@
 import BackgroundLoadImage from "./BackgroundLoadImage";
 import { useInView } from "@react-spring/web";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 /*//* An image that begins loading once the user crosses a threshold of the element containing the BackgroundLoadingImage used  */
 const IntersectLoadImage = ({ src, alt, placeholderText, onImgClick, className, imgClass }) => {

@@ -9,7 +9,6 @@ import ContactPageFormCss from "./ContactPageForm.module.css";
 import validate, { ContactFormValidationErrors } from "./validator";
 import { ProcessTurnstileResponse } from "../Data/Api/ThirdParty";
 import { SendEmail } from "../Data/Api/Common";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 interface ContactPageFormProps { 
   onSubmitForm?: (successful: boolean) => void, 
@@ -28,7 +27,7 @@ const ContactPageForm = ({ onSubmitForm, darkMode }: ContactPageFormProps & type
   //* If not contactable, don't verify. IsContactable var only used onMount, later rerenders remember most recent state
   const [isVerifying, setIsVerifying] = useState(IsContactable);
 
-  const [newEmail, setNewEmail] = useState({email: "", message: "", cfToken: ""});
+  const [newEmail, setNewEmail] = useState({email: "", message: "", cfToken: ""}); //* cfToken = Cloudflare's Turnstile auth token
   const updateEmailValue = (key: string, value: string) => { setNewEmail({ ...newEmail, [key]: value }) }; //* No useCallback needed
   const [validationErrors, setValidationErrors] = useState<ContactFormValidationErrors>({ email: [], message: [] });
 

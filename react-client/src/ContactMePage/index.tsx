@@ -2,7 +2,6 @@ import ContactPageForm from "./ContactPageForm";
 import IndexCss from "./index.module.css";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import { useRoutingContext } from "../Routing/AppRouting";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //* Page with contact me form
 const ContactPage = () => {

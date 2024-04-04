@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 /* //* Idea: Provide cancellable async functions that won't fire off state updates if component isn't mounted/rendered/alive
 @params: asyncFunc - Use to fetch some server data -- Tip: Usually best to pass in a useCallback-backed func to prevent endless rerenders
@@ -10,10 +9,10 @@ export default function UseNullableAsync(asyncFunc, onSuccess) {
     let isAlive = true;
     (async () => { //? Good trick to avoid old school promises.then(callback)
       const data = await asyncFunc();
-      if (onSuccess && isAlive) { //* If there's a callback to use, check if alive then run it 
+      if (onSuccess && isAlive) { //* If there's a callback to use, check if alive then run it
         (data) ? onSuccess(data) : onSuccess(); //* If it needs data, pass it, or just run it without a param
       }
-    })() //* Call this anonymous function/block of async code
-    return () => { isAlive = false }; //? When calling/parent component unmounts, effect WILL immediately cleanup, preventing onSuccess callback
+    })(); //* Call this anonymous function/block of async code
+    return () => { isAlive = false; }; //? When calling/parent component unmounts, effect WILL immediately cleanup, preventing onSuccess callback
   }, [asyncFunc, onSuccess]);
 }

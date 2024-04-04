@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Carousel from "react-bootstrap/Carousel";
 import CarouselCss from "./Carousel.module.css";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //todo How to Replace the Bootstrap Carousel?
 //todo One option is to render the representative img and if the array length > 1 then also render indicators

@@ -8,7 +8,6 @@ import AppCarousel from "../AppCarousel/AppCarousel";
 import IntersectLoadImage from "../AppImages/IntersectLoadImage";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Project from "../Data/Models/Project";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 interface BasePostCardProps {
   project: Project

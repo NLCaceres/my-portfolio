@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Alert from 'react-bootstrap/Alert'
 import FloatingAlertCss from './AppAlert.module.css';
-import ConsoleLogger from '../Utility/Functions/LoggerFuncs';
 
 //! An Alert to display for a variety of messages across the app, front and center floating at the bottom of the page
 

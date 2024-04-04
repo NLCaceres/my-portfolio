@@ -2,7 +2,6 @@ import { animated } from "@react-spring/web"
 import PlaceholderImgCss from "./PlaceholderImg.module.css";
 import AppSpinner from "../AppSpinner/AppSpinner";
 import IsString from "lodash/isString";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 //* Simple placeholder that displays text and spinner if used during a loading event
 const PlaceholderImg = ({ loading, children, className, style, textStyle }) => {

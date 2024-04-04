@@ -1,7 +1,6 @@
 import AppModalCss from "./AppModal.module.css";
 import Modal from "react-bootstrap/Modal";
 import { CreateID } from "../Utility/Functions/ComputedProps";
-import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 let modalCount = 0;
 const propIdOrModalId = id => {
