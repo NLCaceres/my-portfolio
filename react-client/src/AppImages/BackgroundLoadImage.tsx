@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode, type RefObject } from "react";
 import { animated, config, useResize, useSpring } from "@react-spring/web";
 import PlaceholderImg from "./PlaceholderImg";
 import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
+import { type AnimatableStyle } from "../Utility/Typings/ReactSpringTypes";
+
+type BackgroundImageProps = {
+  src: string, alt: string, placeholderText?: ReactNode, onImgClick?: () => void, onLoad?: (didLoad: boolean) => void,
+  className?: string, placeholderClass?: string, placeholderTextStyle?: AnimatableStyle, imgClass?: string, parentRef?: RefObject<HTMLDivElement>
+};
 
 //* Creates a cover via PlaceholderImg, allowing image to load behind it, then remove the cover once the image's onLoad says it has completed
 //* Therefore many of these params are needed to make the unveiling feel natural
@@ -13,7 +19,8 @@ import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
 //@params Currently the container css should limit the placeholder & img to around 400 wide by 250 tall
 //@params Meanwhile parent elements can pass a class that sets a max-width and max-height to maintain aspect-ratio. 
 //@params If a container "className" prop is used then larger images can be displayed by setting new 'max-width/height !important'
-const BackgroundLoadImage = ({src, alt, placeholderText, onImgClick, onLoad, className, placeholderClass, placeholderTextStyle, imgClass, parentRef}) => {
+const BackgroundLoadImage = (
+  { src, alt, placeholderText = "", onImgClick, onLoad, className, placeholderClass, placeholderTextStyle, imgClass, parentRef }: BackgroundImageProps) => {
   //! Animation Setup
   //? Height/width in useResize snap to window dimensions if the user changes the window's size (like when tilting the phone to landscape)
   const { height, width } = useResize({ config: config.molasses }); //? Use a default tension/friction setting to control animation speed
