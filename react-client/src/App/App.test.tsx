@@ -16,9 +16,9 @@ import * as Scroll from "../Utility/Functions/Browser";
 vi.mock("../ThirdParty/TurnstileWidget", () => {
   return {
     default: ({ successCB }: TurnstileWidgetProps) => {
-      return (<div><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
+      return (<div><button type="button" onClick={() => { successCB("123"); }}>Turnstile Verification Button</button></div>);
     }
-  }
+  };
 });
 
 beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
@@ -27,17 +27,17 @@ beforeAll(() => { //? Skip animating styles from Route Transitions, immediately 
   //? Workaround for Vitest since Testing-Lib/UserEvent uses Jest timers by default,
   //? making the typical userEvent.setup({ advanceTimers: vi.advanceTimersByTime }) useless without the following
   //? This workaround is not required unless using userEvent, ex: TurnstileWidget or Browser tests
-  // @ts-ignore: Ignore setting Jest since no type is available without the package itself
+  // @ts-expect-error: Ignore setting Jest since no type is available without the package itself
   const _jest = globalThis.jest;
 
-  // @ts-ignore
+  // @ts-expect-error: Merge original Jest settings with Vitest as the timer
   globalThis.jest = {
-    // @ts-ignore
+    // @ts-expect-error: Assert Jest setting is in global
     ...globalThis.jest,
     advanceTimersByTime: vi.advanceTimersByTime.bind(vi)
   };
 
-  // @ts-ignore
+  // @ts-expect-error: Restore Testing-Lib's original Jest timer
   return () => void (globalThis.jest = _jest); //? Cleanup function to reset the global Jest
 });
 

@@ -1,5 +1,5 @@
 import { MemoryRouter } from "react-router-dom";
-import { vi } from "vitest";
+import { vi, type MockInstance } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PostListView from "./PostListView";
@@ -10,19 +10,20 @@ import * as ProjectHelpers from "../Data/Models/Project";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 
 describe("renders a list of bootstrap cards filled with post objs", () => {
-  let ApiMock; let ViewWidthMock; let ImgSortingMock; let ProjectSortingMock
+  let ApiMock: MockInstance; let ViewWidthMock: MockInstance;
+  let ImgSortingMock: MockInstance; let ProjectSortingMock: MockInstance;
   beforeEach(() => {
     ApiMock = vi.spyOn(GetPostList, "default");
     ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
     ImgSortingMock = vi.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
     ProjectSortingMock = vi.spyOn(ProjectHelpers, "SortProjects");
-  })
+  });
   afterEach(() => {
-    ApiMock.mockRestore(); 
+    ApiMock.mockRestore();
     ViewWidthMock.mockRestore();
     ImgSortingMock.mockRestore();
     ProjectSortingMock.mockRestore();
-  })
+  });
 
   test("only if the list has a set of major or minor projects", async () => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
@@ -57,7 +58,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(placeholders.length).toBe(6); //* 6 headers are found -> 2 titles + 4 titles in individual placeholder cards
     const placeholderImgs = screen.getAllByRole("heading", { name: /project/i }); //* Find 4 PlaceholderImg components
     expect(placeholderImgs).toHaveLength(4); //* That render a div containing a h2 tag with "Project" written
-    for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText") } //* All have the class "placeholderText"
+    for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); } //* All have the class "placeholderText"
     expect(await screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument(); //* No PostListView actually renders
     expect(ProjectSortingMock).toHaveBeenCalledTimes(8);
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(7, []); //* BOTH major and minor projects are empty arrays
@@ -69,12 +70,12 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect((await screen.findAllByRole("heading")).length).toBe(6); //* Still expect 6 titles heading elems
     const morePlaceholderImgs = screen.getAllByRole("heading", { name: /project/i }); //* 4 with class "placeholderText"
     expect(morePlaceholderImgs).toHaveLength(4);
-    for (const placeholderImg of morePlaceholderImgs) { expect(placeholderImg).toHaveClass("placeholderText") }
+    for (const placeholderImg of morePlaceholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument();
     expect(ProjectSortingMock).toHaveBeenCalledTimes(10);
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(9, []); //* BOTH undefined minor and major projects so [] used
     expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 10th time is also called with an empty array
-  })
+  });
   describe("that depends on viewWidth for rendering", () => {
     test("a modal for multi-image posts", async () => {
       const twoImgProj = ProjectFactory.create(2); const noImgProj = ProjectFactory.create(); const oneImgProj = ProjectFactory.create(1);
@@ -82,25 +83,25 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       const user = userEvent.setup();
       expect(ImgSortingMock).toHaveBeenCalledTimes(0); //! Sanity check, ImgSortMock not polluting other tests. Restore() called
       const { rerender } = render(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
-      await user.click(await screen.findByRole("img", { name: twoImgProj.post_images[0].alt_text })); //* Use click to make modal appear
+      await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text })); //* Use click to make modal appear
       expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Called by each of the 3 Postcards Projects
       const modalOpenFirstTime = screen.getByRole("dialog");
       expect(modalOpenFirstTime).toBeInTheDocument(); expect(modalOpenFirstTime).toHaveClass("show"); //* Modal mounted and it's visible
       await user.click(screen.getByRole("button", { name: /close/i })); //* Close the modal
 
       //* Only have 1 img so a condition in ProjectSection says don't render a modal, just render an img
-      await user.click(await screen.findByRole("img", { name: oneImgProj.post_images[0].alt_text })); //* Only 1 image in [] so click doesn't work
+      await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text })); //* Only 1 image in [] so click doesn't work
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* Modal long gone
 
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       rerender(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
-      await user.click(await screen.findByRole("img", { name: twoImgProj.post_images[0].alt_text })); 
+      await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text }));
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* No modal renders since viewWidth < 768
-      await user.click(await screen.findByRole("img", { name: oneImgProj.post_images[0].alt_text }));
+      await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text }));
       //* Still no modal renders since two conditions fail in single img project post: viewWidth too small AND post only has 1 img
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
       expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Not called anymore
-    })
+    });
     test("a different size title", async () => {
       ApiMock.mockImplementation(() => ({ majorProjects: [ProjectFactory.create()], minorProjects: [] }));
 
@@ -108,14 +109,14 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       const mainTitle = await screen.findByRole("heading", { name: /foobar title/i }); //* Title in PostListView component aka iOS, android, etc...
       expect(mainTitle).toHaveClass("display-2");
       const projectSectionTitle = screen.getAllByRole("heading", { name: /projects/i }); //* Either about-me or major/minor in ProjectList component
-      for (const projectSectionType of projectSectionTitle) { expect(projectSectionType).toHaveClass("display-2") }
+      for (const projectSectionType of projectSectionTitle) { expect(projectSectionType).toHaveClass("display-2"); }
 
       ViewWidthMock.mockReturnValue(averageTabletLowEndWidth);
-      rerender(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>); 
+      rerender(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
       expect(mainTitle).toHaveClass("display-3"); //* Above 768 - slightly decrease font sizes
-      for (const projectSectionType of projectSectionTitle) { expect(projectSectionType).toHaveClass("display-3") }
-    })
-  })
+      for (const projectSectionType of projectSectionTitle) { expect(projectSectionType).toHaveClass("display-3"); }
+    });
+  });
   test("that depends on a url location prop to set headers", async () => {
     ApiMock.mockImplementation(() => ({ majorProjects: [ProjectFactory.create()] }));
     const { unmount } = render(<MemoryRouter initialEntries={["/foobar"]}> <PostListView /> </MemoryRouter>);
@@ -142,5 +143,5 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     render(<MemoryRouter initialEntries={[""]}> <PostListView /> </MemoryRouter>); //* "" or "/" simulate a redirect to "/portfolio/about-me"
     await screen.findByRole("heading", { name: "About Me" }); //* Instead will get "About Me" header
     expect(screen.getByRole("heading", { name: /nicholas/i })); //* And just below it, "Nicholas" appears as expected
-  })
-})
+  });
+});

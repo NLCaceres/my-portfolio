@@ -10,20 +10,20 @@ import * as GetPostList from "../Data/Api/ProjectAPI";
 vi.mock("../ThirdParty/TurnstileWidget", () => {
   return {
     default: () => (<div>Turnstile Verification Button</div>)
-  }
+  };
 });
 
 beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
   Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
-})
+});
 
 describe("renders react-router-dom routes", () => {
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     vi.spyOn(GetPostList, "default").mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
-  })
-  afterEach(() => { vi.restoreAllMocks() })
-  
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
   test("mapping a home page to '/' and '/portfolio/about-me'", async () => {
     //? Redirects seem to cause trouble when paired with React-Spring's useTransitions BUT by using my own key selection func +
     //? not passing <Routes /> a location prop, I can avoid headaches in tests AND production (See AppRouting.js line 13 & 23)
@@ -40,7 +40,7 @@ describe("renders react-router-dom routes", () => {
     const aboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/about-me"] });
     render(<RouterProvider router={aboutMeRouter} />);
     await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Will get redirect instead
-  })
+  });
 
   test("mapping out four main portfolio routes", async () => { //! iOS, Android, Front-End, Back-End
     const portfolioAboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/android"] });
@@ -66,7 +66,7 @@ describe("renders react-router-dom routes", () => {
     const iOSRouter = createMemoryRouter(RouteList, { initialEntries: ["/iOS"] });
     render(<RouterProvider router={iOSRouter} />);
     await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Just get redirect
-  })
+  });
 
   test("mapping a contact me page", async () => {
     const contactMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/contact-me"] });
@@ -77,7 +77,7 @@ describe("renders react-router-dom routes", () => {
     const portfolioContactMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/contact-me"] });
     render(<RouterProvider router={portfolioContactMeRouter} />);
     await screen.findByText(/Sorry/); //* Portfolio prefix not needed. Will redirect to not found page
-  })
+  });
 
   test("mapping a fallback route to a not found page", async () => {
     const fallbackRouter = createMemoryRouter(RouteList, { initialEntries: ["/foobar"] });
@@ -88,5 +88,5 @@ describe("renders react-router-dom routes", () => {
     const notFoundRouter = createMemoryRouter(RouteList, { initialEntries: ["/not-found"] });
     render(<RouterProvider router={notFoundRouter} />);
     await screen.findByText(/Sorry/); //* Goes straight to not found page
-  })
-})
+  });
+});

@@ -24,13 +24,13 @@ describe("renders a react-bootstrap modal", () => {
     );
     expect(modalRoot).toHaveAttribute("aria-labelledby", "foobar-modal");
     expect(titleTagFound).toHaveAttribute("id", "foobar-modal");
-  })
+  });
 
   test("requiring a body, optionally a title + footer, as strings or tags", () => {
-    const { rerender } = render( 
+    const { rerender } = render(
       <AppModal show={true} ID="foobar" title={"FoobarTitle"} footer={"FoobarFooter"}>
-        <h3>Barfoo</h3> 
-      </AppModal> 
+        <h3>Barfoo</h3>
+      </AppModal>
     );
     const modalTitle = screen.getByRole("heading", { name: /foobartitle/i });
     expect(modalTitle).toBeInTheDocument();
@@ -50,14 +50,14 @@ describe("renders a react-bootstrap modal", () => {
     expect(modalHeader).not.toBeInTheDocument();
     expect(modalFooter).not.toBeInTheDocument();
     expect(modalBody).toBeInTheDocument();
-  })
-  
+  });
+
   //* CSS class - dialogBox, content, header, title, body, footer
   test("each section able to pass in and calculate its CSS classes", () => {
     const { rerender } = render(
       <AppModal show={true} ID="foobar" contentClasses={"content-class"} headerClasses={"header-class"} bodyClasses={"body-class"}
         titleClasses={"title-class"} title={"FoobarTitle"} footerClasses={"footer-class"} footer={"FoobarFooter"}>
-          <h3>Barfoo</h3>
+        <h3>Barfoo</h3>
       </AppModal>
     );
     const modalDialogBox = screen.getByRole("dialog").firstChild;
@@ -68,7 +68,7 @@ describe("renders a react-bootstrap modal", () => {
     expect(modalContent).toHaveClass("modal-content content content-class", { exact: true });
 
     const modalHeader = modalContent!.firstChild;
-    expect(modalHeader).toHaveClass("header-class"); 
+    expect(modalHeader).toHaveClass("header-class");
     expect(modalHeader).toHaveClass("modal-header header-class", { exact: true });
 
     const modalTitle = modalHeader!.firstChild;
@@ -78,7 +78,7 @@ describe("renders a react-bootstrap modal", () => {
     const modalBody = screen.getByRole("heading", { name: /barfoo/i }).parentElement;
     expect(modalBody).toHaveClass("body-class"); //* Could use toHaveAttribute() to test EXACT string match (but possibly TOO specific)
     expect(modalBody).toHaveAttribute("class", "body-class modal-body"); //* Order matters! Leading + trailing whitespace too!
-    
+
     const modalFooter = screen.getByText(/foobarfooter/i);
     expect(modalFooter).toHaveClass("footer-class");
     expect(modalFooter).toHaveClass("modal-footer footer-class", { exact: true });
@@ -87,13 +87,13 @@ describe("renders a react-bootstrap modal", () => {
       <AppModal show={true} ID="foobar" title={"FoobarTitle"} footer={"FoobarFooter"}>
         <h3>Foobar</h3>
       </AppModal>
-    )
+    );
     expect(modalContent).not.toHaveClass("content-class");
     expect(modalHeader).not.toHaveClass("header-class");
     expect(modalTitle).not.toHaveClass("header-class");
     expect(modalBody).not.toHaveClass("body-class");
     expect(modalFooter).not.toHaveClass("footer-class");
-  })
+  });
 
   test("fires a custom onHide func when close button clicked", async () => {
     const mockFunc = vi.fn();
@@ -102,5 +102,5 @@ describe("renders a react-bootstrap modal", () => {
     await user.click(screen.getByRole("button", { name: /close/i }));
     expect(mockFunc).toHaveBeenCalled();
     //TODO: Rerender with show = false WON'T call onHide, SO a Cypress test is better
-  })
-})
+  });
+});

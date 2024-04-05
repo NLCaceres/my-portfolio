@@ -8,14 +8,14 @@ describe("renders a footer using a nav", () => {
     const user = userEvent.setup();
     const contactButtonClickCallback = vi.fn();
     const { rerender } = render(<Footer contactButtonOnClick={contactButtonClickCallback} />);
-    
+
     await user.click(screen.getByRole("button", { name: /contact me/i }));
     expect(contactButtonClickCallback).toHaveBeenCalledTimes(1);
 
     rerender(<Footer />);
     await user.click(screen.getByRole("button", { name: /contact me/i }));
     expect(contactButtonClickCallback).toHaveBeenCalledTimes(1);
-  })
+  });
   test("with specific css modules", () => {
     render(<Footer />);
     const navParent = screen.getByRole("navigation");
@@ -30,5 +30,5 @@ describe("renders a footer using a nav", () => {
     expect(reactSpan).toHaveClass("navbar-text navbarText text-dark", { exact: true });
     const herokuSpan = screen.getByText(/powered by/i);
     expect(herokuSpan).toHaveClass("navbar-text navbarText text-dark", { exact: true });
-  })
-})
+  });
+});

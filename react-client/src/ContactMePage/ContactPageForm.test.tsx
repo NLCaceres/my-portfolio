@@ -14,9 +14,9 @@ describe("renders the form for the contact page", () => {
   beforeEach(() => {
     turnstileWidgetMock = vi.spyOn(TurnstileWidget, "default").mockImplementation(({ compact, successCB }: TurnstileWidgetProps) => {
       const compactClass = (compact) ? "compact" : "normal";
-      return (<div className={compactClass}><button type="button" onClick={() => { successCB("123") }}>Turnstile Verification Button</button></div>);
-    })
-  })
+      return (<div className={compactClass}><button type="button" onClick={() => { successCB("123"); }}>Turnstile Verification Button</button></div>);
+    });
+  });
   test("that has a toggleable dark mode", async () => {
     const { rerender } = render(<ContactPageForm darkMode={false} />);
     const formContainer = screen.getByTestId("form-container");
@@ -27,7 +27,7 @@ describe("renders the form for the contact page", () => {
 
     rerender(<ContactPageForm />);
     expect(formContainer).not.toHaveClass("dark");
-  })
+  });
   describe("that depends on '_CONTACTABLE' env var for conditionally rendering", () => {
     test("a spinner in the submit button when running an async task", async () => {
       expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
@@ -53,7 +53,7 @@ describe("renders the form for the contact page", () => {
       await user.click(screen.getByRole("button", { name: /turnstile verification button/i }));
       //* AND once the verification completes, THEN the spinner will disappear
       expect(finalSubmitButtonSpinner).not.toBeInTheDocument();
-    })
+    });
     test("a submit button with 'unavailable', 'verifying', or 'contact me' text states", async () => {
       import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
@@ -77,7 +77,7 @@ describe("renders the form for the contact page", () => {
       expect(screen.queryByRole("button", { name: /checking you're human!/i })).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
       secondUnmount();
-    })
+    });
     test("a disabled submit button that won't run the submitFunc prop", async () => {
       import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
@@ -96,11 +96,11 @@ describe("renders the form for the contact page", () => {
       expect(onSubmitFunc).not.toBeCalled();
       await user.click(verifyingSubmitButton); //* WHEN contact button clicked, and CONTACTABLE == "true" AND isVerifying == `true`
       expect(onSubmitFunc).not.toBeCalled(); //* THEN the submit spy still won't run since the component is stuck verifying
-    })
+    });
     test("a try again state in the submit button if bot detected trying to submit", async () => {
       turnstileWidgetMock.mockImplementation(({ successCB }: TurnstileWidgetProps) => {
-        return (<div><button type="button" onClick={() => { successCB(undefined) }}>Turnstile Verification Button</button></div>);
-      })
+        return (<div><button type="button" onClick={() => { successCB(undefined); }}>Turnstile Verification Button</button></div>);
+      });
       const user = userEvent.setup();
       render(<ContactPageForm />);
 
@@ -113,8 +113,8 @@ describe("renders the form for the contact page", () => {
       expect(screen.queryByRole("button", { name: /checking you're human!/i })).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /currently unavailable/i })).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /contact me/i })).not.toBeInTheDocument();
-    })
-  })
+    });
+  });
   test("that accepts a customizable onSubmit callback", async () => {
     vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
@@ -131,10 +131,10 @@ describe("renders the form for the contact page", () => {
     fireEvent.submit(screen.getByTestId("form-container")); //? whenever fireEvent causes a form submission
     //* WHEN form submitted after successful Turnstile verification, THEN run the onSubmit callback
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(1)); //* Wait for fireEvent's submission to run the callback
-    
+
     fireEvent.submit(contactSubmitButton); //* Submit by emitting a "submit" event from the contact button itself
     await waitFor(() => expect(onSubmitFunc).toHaveBeenCalledTimes(2));
-    
+
     await user.click(contactSubmitButton); //* Submit by directly pressing the contact button
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
 
@@ -148,7 +148,7 @@ describe("renders the form for the contact page", () => {
 
     await user.click(contactSubmitButton);
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
-  })
+  });
   test("with validation error messages after invalid data submitted", async () => {
     vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
     vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
@@ -185,17 +185,17 @@ describe("renders the form for the contact page", () => {
     expect(validationMock).toHaveBeenCalledTimes(5);
     //* WHEN the validator returns multiple errors, THEN BOTH are rendered as is (just like the "email" field before)
     expect(screen.getAllByText(/message invalid error/i).length).toBe(2);
-  })
+  });
   test("using viewWidth to control the Turnstile Widget's size", async () => {
     const viewWidthContextSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(992);
-    const { rerender } = render(<ContactPageForm />); 
+    const { rerender } = render(<ContactPageForm />);
     //* WHEN viewWidth > 320, THEN TurnstileWidget is rendered via "normal" css class
     expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("normal");
-    
+
     //* WHEN viewWidth <= 320,
     viewWidthContextSpy.mockReturnValue(320);
     rerender(<ContactPageForm />);
     //* THEN TurnstileWidget is rendered via "compact" css class
     expect(screen.getByText("Turnstile Verification Button").parentElement).toHaveClass("compact");
-  })
-})
+  });
+});

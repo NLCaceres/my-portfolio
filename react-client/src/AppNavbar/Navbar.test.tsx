@@ -13,7 +13,7 @@ describe("renders a simple styled navbar", () => {
 
     const navItemContainer = collapseView.firstChild;
     expect(navItemContainer).toHaveClass("nav-container");
-  })
+  });
   describe("setting up a navBrand + 4 specific navLinks", () => {
     test("via a mapping function", () => {
       render(<AppNavbar />, { wrapper: MemoryRouter });
@@ -36,17 +36,17 @@ describe("renders a simple styled navbar", () => {
       const backEndNavLink = screen.getByText("Back-End Web");
       expect(backEndNavLink).toBeInTheDocument();
       expect(backEndNavLink.parentElement).toBeInTheDocument(); //* NavItem parent
-    })
+    });
     test("with a scroll up on click of a link", async () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
       const user = userEvent.setup();
       render(<AppNavbar />, { wrapper: MemoryRouter });
 
       await user.click(screen.getByText("Back-End Web"));
-      expect(scrollSpy).toHaveBeenCalled();  
-      
+      expect(scrollSpy).toHaveBeenCalled();
+
       scrollSpy.mockRestore();
-    })
+    });
     test("with specific CSS attributes", async () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1); //* Prevents "scrollTo not implemented" error
       const user = userEvent.setup();
@@ -62,12 +62,12 @@ describe("renders a simple styled navbar", () => {
       expect(backEndNavLink).toHaveClass("nav-link navButton"); //* Currently not the active route
 
       await user.click(backEndNavLink); //* Navigate to navLink's destination
-      
+
       const backEndNavItem = backEndNavLink.parentElement;
       expect(backEndNavItem).toHaveClass("border border-dark rounded navItem");
       expect(backEndNavLink).toHaveClass("nav-link navButton activeNavButton"); //* Now the activeRoute
 
       scrollSpy.mockRestore();
-    })
-  })
-})
+    });
+  });
+});

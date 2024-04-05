@@ -10,8 +10,8 @@ describe("render a single PostCard", () => {
   let ViewWidthMock: MockInstance;
   beforeEach(() => {
     ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
-  })
-  afterEach(() => { ViewWidthMock.mockRestore() })
+  });
+  afterEach(() => { ViewWidthMock.mockRestore(); });
 
   const dumbImgClickFunc = () => "void";
   //* Main PostCard Func Component
@@ -29,7 +29,7 @@ describe("render a single PostCard", () => {
     rerender(<PostCard project={testProject} className="foobar" onImgClick={dumbImgClickFunc} rowClasses="foobar" />);
     expect(rootElem).toHaveClass("foobar");
     expect(rowElem).toHaveClass("foobar");
-  })
+  });
 
   //! CardImage Func Component
   describe("with a representative image column", () => {
@@ -40,7 +40,7 @@ describe("render a single PostCard", () => {
       //* Not an img tag so use getByRole to grab .placeholderImg container div's h2 text
       const placeHolderImg = screen.getByRole("heading", { name: /project/i }).parentElement;
       expect(placeHolderImg).toBeInTheDocument(); //* Checking container
-      
+
       //! Add 1 image to the project obj - placeholder disappears, single rep img appears
       testProject.post_images = [ProjectImageFactory.create()];
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
@@ -63,7 +63,7 @@ describe("render a single PostCard", () => {
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(await screen.findByTestId("app-carousel")).toBeInTheDocument();
       expect(screen.getAllByRole("img", { name: /barfooalt/i })).toHaveLength(2); //* Imgs technically still there! but in carousel!
-    })
+    });
     test("that hints + allows clicks at specific viewWidths", async () => {
       const testProject = ProjectFactory.create(); const mockImgClickFunc = vi.fn();
       const user = userEvent.setup();
@@ -88,7 +88,7 @@ describe("render a single PostCard", () => {
       expect(screen.getByRole("img", { name: /barfooalt/i })).not.toHaveClass("clickable");
       await user.click(screen.getByRole("img", { name: /barfooalt/i }));
       expect(mockImgClickFunc).toHaveBeenCalledTimes(2);
-      
+
       //! Finally at desktop viewWidth but still only single img, so no CSS hint added
       ViewWidthMock.mockReturnValue(smallDesktopLowEndWidth);
       rerender(<PostCard project={testProject} onImgClick={mockImgClickFunc} />);
@@ -117,8 +117,8 @@ describe("render a single PostCard", () => {
       expect(screen.getByRole("img", { name: /barfooalt/i }).parentElement).toHaveClass("clickable");
       await user.click(screen.getByRole("img", { name: /barfooalt/i }));
       expect(mockImgClickFunc).toHaveBeenCalledTimes(5);
-    })
-  })
+    });
+  });
 
   //! CardDetails Func Component
   describe("with a text column", () => {
@@ -147,6 +147,6 @@ describe("render a single PostCard", () => {
       const homepageLinkButton = screen.getByRole("button", { name: /home page/i });
       expect(homepageLinkButton).toBeInTheDocument();
       expect(homepageLinkButton).toHaveClass("blockButton fw-bold pageLink");
-    })
-  })
-})
+    });
+  });
+});
