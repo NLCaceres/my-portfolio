@@ -9,7 +9,7 @@ describe("rendering a 'BackgroundLoadImage' component that only begins load on i
     //? Problem is it appears as a property to Vitest due to Babel treating re-exported funcs
     //? SO Cypress is probably the better testing method, similar to testing the hover indicators of the AppCarousel
     // const useInViewSpy = vi.spyOn(ReactSpring, "useInView").mockReturnValue([{ current: null }, false]);
-    /* const { rerender } =  */render(<IntersectLoadImage src="foobar.jpeg" />);
+    /* const { rerender } =  */render(<IntersectLoadImage src="foobar.jpeg" alt="" />);
     const img = screen.getByRole("img");
     expect(img).toHaveAttribute("src", ""); //* Bad src is injected so no loading occurs
 
@@ -18,5 +18,5 @@ describe("rendering a 'BackgroundLoadImage' component that only begins load on i
     // expect(img).toHaveAttribute("src", "foobar.jpeg"); //* Src is injected and real loading begins
 
     vi.restoreAllMocks();
-  })
-})
+  });
+});

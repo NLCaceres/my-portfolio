@@ -14,13 +14,13 @@ type PlaceholderImgProps = { loading?: boolean, className?: string, style?: Anim
 const PlaceholderImg = ({ loading = false, children, className = "", style = undefined, textStyle = undefined }: PropsWithChildren<PlaceholderImgProps>) => {
   const childElem = (children === undefined || IsString(children)) //* If a string, use the default h2 tag
     ? <animated.h2 className={`${PlaceholderImgCss.placeholderText}`} style={textStyle}>{ children || "Project" }</animated.h2>
-    : children //* Otherwise, it's expected to be a JSX element so insert it into the DOM
+    : children; //* Otherwise, it's expected to be a JSX element so insert it into the DOM
   return (
     <animated.div className={`${PlaceholderImgCss.placeholderImg} ${className}`.trim()} style={{ ...style }}>
       { loading && <AppSpinner className="mb-2" color="secondary" /> }
       { childElem }
     </animated.div>
-  )
-}
+  );
+};
 
 export default animated(PlaceholderImg);
