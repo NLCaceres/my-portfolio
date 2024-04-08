@@ -6,7 +6,7 @@ import BackgroundLoadImage from "../AppImages/BackgroundLoadImage";
 
 //* NotFoundPage that renders a fun image on redirect/fallback from an unknown URL
 const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no need for useLocation
-  const [imgSrc, setImgSrc] = useState(undefined);
+  const [imgSrc, setImgSrc] = useState("");
   const [placeholderText, setPlaceholderText] = useState("One Cute Puppy Incoming!");
   const [containerCSS, setContainerCSS] = useState(`${NotFoundCss.container} will-change-contents`);
   
@@ -14,8 +14,8 @@ const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no
   if (location.pathname !== "/not-found") { window.history.replaceState(null, "", "/not-found") }
 
   //! PuppyLoaded is called regardless if image successfully loads or fails
-  const [flingSpring, flingAPI] = useSpring(() => ({ from: { x: "0%", transform: "rotate(0deg)" }}));  
-  const puppyLoaded = async (successful) => {
+  const [flingSpring, flingAPI] = useSpring(() => ({ from: { x: "0%", transform: "rotate(0deg)" }}));
+  const puppyLoaded = async (successful: boolean) => {
     const flingSteps = [{ x: "-50%", transform: "rotate(-40deg)" }, { x: "150%", transform: "rotate(350deg)" }]
     if (successful) { flingSteps.shift() } //* If image loads correctly, animate fling w/out windup
     const delay = (successful) ? 0 : 500;
@@ -41,7 +41,7 @@ const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no
       "https://imgur.com/2EEuwzP.png", "https://imgur.com/wkdXneC.png", "https://imgur.com/DnGZrfn.png", 
       "https://imgur.com/UYxIDEk.png", "https://imgur.com/KXnbSAi.png", "https://imgur.com/Ow4Vn9x.png"
     ];
-    const rand = Math.floor(Math.random() * 9);
+    const rand = Math.floor(Math.random() * randomImgSet.length);
     setImgSrc(randomImgSet[rand]); //* Image now begins loading
   }, []) //* No dependencies means this effect only runs onMount!
   
