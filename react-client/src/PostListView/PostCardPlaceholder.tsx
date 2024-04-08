@@ -7,7 +7,7 @@ import PlaceholderCss from "./PostCardPlaceholder.module.css";
 import PlaceholderImg from "../AppImages/PlaceholderImg";
 
 // @params: NumPlaceholders: Default is 4 cards rendered. Creates 4 item array + uses its indexes to map over
-const PostCardPlaceholderList = ({ numPlaceholders = 4 }) => {
+const PostCardPlaceholderList = ({ numPlaceholders = 4 }: { numPlaceholders?: number }) => {
   return (
     <> {/*//! Starts with title and subtitle placeholders then renders "n" # of PlaceholderCards */}
       <Placeholder className="ms-2 my-2" animation="glow" as="div">
@@ -22,7 +22,7 @@ const PostCardPlaceholderList = ({ numPlaceholders = 4 }) => {
   );
 }
 
-const PostCardPlaceholder = ({ className, rowClasses }) => {
+const PostCardPlaceholder = ({ className, rowClasses }: { className?: string, rowClasses?: string }) => {
   return (
     <Card className={`${PostCardCss.postCard} ${PlaceholderCss.postCard} ${className || ""}`.trim()}>
       <Row className={`g-0 ${PlaceholderCss.cardRow} ${rowClasses || ""}`.trim()} data-testid="placeholder-row">
