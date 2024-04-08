@@ -20,15 +20,33 @@
 //* the IntersectLoadCarousel's desired classes with AppCarousel's desired class list.
 //? Because AppCarousel would likely run "<ItemComponent className="AppCarouselCss.foobar" />", we can rename the prop while destructuring
 //? A prop named className can be renamed like so ---> "const { className: newName } = { className: 'some-class' }" OR in a func's args as seen below
+
+import { type ComponentType } from "react"; //? ComponentType includes BOTH class-based components and functional components
+//? It doesn't perfectly type props, in particular in this case where className is the focus, since ALL components that
+//? have a className prop eventually boil down to an HTML element that, of course, has a className prop
+
+type ClassedComponent = { className: string }; //? The generic param of the HOC func extends this type to constrain the param value accepted
+
 //@params: Component is a render function allowing for endless HOCs to be passed in
 //@params: className is the focus, enabling composition of a func component passed into a prop in render func form
-const withClassName = (Component, className) => 
-  ( ({ className: otherClasses, ...props }) => <Component className={`${className} ${otherClasses || ""}`.trim()} {...props} /> )
+function withClassName<P extends ClassedComponent>(Component: ComponentType<P>, className: string) {
+
+  const ComponentWithClassName = ({ className: otherClasses, ...props }: { className?: string }) =>
+    <Component { ...(props as P) } className={`${className} ${otherClasses || ""}`.trim()} />;
+  //? Above `props` needs `as P` due to bug in Typescript 3.2+ --- "https://github.com/Microsoft/TypeScript/issues/28938"
+
+  //? Add a display name to help with debugging in React Dev Tools
+  const originalName = Component.displayName ?? "Component";
+  ComponentWithClassName.displayName = `${originalName}-with-${className}-CSS-class`;
+
+  return ComponentWithClassName;
+}
 
 //! Example of using "withClassName"
 //! <AppCarousel images={ images } className={ className } ItemComponent={ withClassName(IntersectLoadImage, imgClassName) } />
 
-//! There is a somewhat simpler way to accomplish my goal in this case though!
+
+//! ALTERNATE SIMPLER SOLUTION THAT I USED:
 //* What if instead of passing AppCarousel a customized component for Carousel.Item's map() to use,
 //* I pass an array of Carousel.Items made via a map() into the 'children' prop of AppCarousel
 //* Instead of passing AppCarousel an 'images' prop, I take that images array I'd normally pass into the prop and 
