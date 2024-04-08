@@ -7,18 +7,22 @@ import PlaceholderImg from "../AppImages/PlaceholderImg";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import IntersectLoadImage from "../AppImages/IntersectLoadImage";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
-import Project from "../Data/Models/Project";
+import type Project from "../Data/Models/Project";
 
-interface BasePostCardProps {
+//? Type Intersection is a nice alternative to typical interface based inheritance/extension
+type BasePostCardProps = {
   project: Project
 }
-interface PostCardWithImgProps extends BasePostCardProps {
-  onImgClick: Function
+//? One slight issue is how VSCode sees the type hint
+type PostCardWithImgProps = BasePostCardProps & {
+  onImgClick: () => void
 }
-interface StyledImgPostCardProps extends PostCardWithImgProps {
+type StyledImgPostCardProps = PostCardWithImgProps & {
   className?: string,
   rowClasses?: string
 }
+//? The other actual issue is Type Intersections allow name conflicts on declaration BUT will forbid explicit creation
+//? Interfaces will display an error on declaration AND, of course, not be creatable
 
 //@params: Following = Expected Props -  project (a data prop)
 //@params: onImgClick (img elem click hook)
