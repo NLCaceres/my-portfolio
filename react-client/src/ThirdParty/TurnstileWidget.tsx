@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import TurnstileWidgetCss from "./TurnstileWidget.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
-export interface TurnstileWidgetProps {
-  action: string, compact: boolean, successCB: Function, className?: string
+export type TurnstileWidgetProps = {
+  action: string, compact: boolean, successCB: (token?: string) => void, className?: string
 }
 const defaultProps = { //? Ensures props get defaults when placed in layout when using ".defaultProps"
   compact: false
