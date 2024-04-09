@@ -96,7 +96,7 @@ describe("render a simple react-bootstrap carousel", () => {
       //* The following specific classList signifies the default item has rendered
       for (const imageTag of defaultImgTags) { expect(imageTag).toHaveClass("img-fluid slide", { exact: true }) }
 
-      const itemComponent = ({src, alt}) => (<><div>{src}</div><div>{alt}</div></>);
+      const itemComponent = ({ src, alt_text }: { src: string, alt_text: string }) => (<><div>{src}</div><div>{alt_text}</div></>);
       rerender(<AppCarousel images={imageSet} ItemComponent={itemComponent} />);
       const srcDivs = screen.getAllByText(/foobarsrc/i); //* Should still be two! Same # as the images array
       expect(srcDivs).toHaveLength(2); //* BUT no longer able to pass in classes
