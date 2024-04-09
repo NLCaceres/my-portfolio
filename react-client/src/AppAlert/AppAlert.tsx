@@ -8,8 +8,8 @@ import FloatingAlertCss from './AppAlert.module.css';
 export type AlertState = { title?: string, message?: string, color?: string, timeoutID?: NodeJS.Timeout }
 
 //* Currently used for contact-me email submission: Green on success & red on error
-interface AlertProps {
-  title?: string, message?: string, color?: string, onClose?: Function
+type AlertProps = {
+  title?: string, message?: string, color?: string, onClose?: () => void
 }
 //@params - 1/2: title & message simply determine if a 'h' or 'p' tag are required, and then display the text
 //@params - 3: color works based on Bootstrap variants - primary, secondary, info, warning, danger, success

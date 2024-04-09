@@ -3,7 +3,7 @@ import { animated, useTransition } from "@react-spring/web";
 import AppRoutingCss from "./AppRouting.module.css";
 import { type AlertFunc, type ModalFunc } from "../App/App";
 
-interface AppRoutingProps {
+type AppRoutingProps = {
   context: [ModalFunc, AlertFunc]
 }
 

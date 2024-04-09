@@ -1,7 +1,7 @@
 import { ElementType } from "react";
 import Spinner from "react-bootstrap/Spinner";
 
-interface SpinnerProps {
+type SpinnerProps = {
   tag?: ElementType<any>, className?: string, color?: string, small?: boolean
 }
 //* Create a simple to use Spinner with accessibility in mind by default!

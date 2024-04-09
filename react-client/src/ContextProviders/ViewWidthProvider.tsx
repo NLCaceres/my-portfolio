@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext, ReactNode } from "react
 import debounce from "lodash/debounce";
 
 //* Could use Type instead BUT using interface allows exporting & mixing in via 'implements'
-interface SlotProp { //? WHICH is especially helpful given how common 'children slot' props can be
+type SlotProp = { //? WHICH is especially helpful given how common 'children slot' props can be
   children: ReactNode
 }
 
