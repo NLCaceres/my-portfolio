@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Carousel from "react-bootstrap/Carousel";
 import CarouselCss from "./Carousel.module.css";
@@ -13,14 +13,19 @@ import CarouselCss from "./Carousel.module.css";
 //todo 3. Deck of cards that swap out and around each other.
 //todo Bonus: Display alt_text or a new description property in the foreground of the jumbotron'd rep img
 
+type CarouselImage = { image_url: string, alt_text: string, caption?: string };
+type CarouselProps = { children?: ReactNode, images?: CarouselImage[], ItemComponent?: (itemProps: CarouselItem) => JSX.Element, className?: string };
+
 //! Bootstrap Carousel with defaults set - no control arrows or interval
-const AppCarousel = ({ children, images, ItemComponent, className }) => {
+const AppCarousel = ({ children, images, ItemComponent, className }: CarouselProps ) => {
   const viewWidth = useViewWidth();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const goToIndex = (newIndex, e) => {
+  //? Disable unused-var since goToIndex() is typed with `e` to satisfy Carousel's onSelect
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const goToIndex = (newIndex: number, _e?: Record<string, unknown> | null) => { //? Add _ to `e` to disable the warning too
     setActiveIndex(newIndex);
-  }
+  };
 
   const [usingHoverClass, setUsingHoverClass] = useState(false);
   useEffect(() => { //* At wider viewports (Large tablets + desktops), when mounting, fade the arrow icons in and out
@@ -41,8 +46,8 @@ const AppCarousel = ({ children, images, ItemComponent, className }) => {
       (
         <Carousel.Item key={ image.image_url }>
           { (ItemComponent) ?
-              <ItemComponent src={ image.image_url } alt={ image.alt_text } /> : 
-              <DefaultItem src={ image.image_url } alt={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} /> 
+              <ItemComponent src={ image.image_url } alt_text={ image.alt_text } /> : 
+              <DefaultItem src={ image.image_url } alt_text={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} /> 
           }
         </Carousel.Item>
       )
@@ -58,14 +63,16 @@ const AppCarousel = ({ children, images, ItemComponent, className }) => {
   );
 }
 
-const DefaultItem = ({ src, alt, caption, viewWidth }) => {
+type CarouselItem = { src: string, alt_text: string };
+type DefaultCarouselItem = CarouselItem & { caption?: string, viewWidth?: number };
+const DefaultItem = ({ src, alt_text, caption, viewWidth = 0 }: DefaultCarouselItem) => {
   //? Set height/width to ensure good aspect ratio for images in the Carousel
   const height = (viewWidth > 991) ? 450 : (viewWidth > 767) ? 500 : (viewWidth > 575) ? 550 : 450;
   const width = (viewWidth > 767) ? 350 : (viewWidth > 575) ? 425 : (viewWidth > 359) ? 330 : 280;
 
   return (
     <>
-      <img className={`img-fluid ${CarouselCss.slide}`} src={ src } alt={ alt } height={ height } width={ width } />
+      <img className={`img-fluid ${CarouselCss.slide}`} src={ src } alt={ alt_text } height={ height } width={ width } />
       { caption && <Carousel.Caption> <h3>{ caption }</h3> </Carousel.Caption> }
     </>
   )
