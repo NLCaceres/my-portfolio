@@ -12,14 +12,14 @@ const AppNavbar = () => {
   const [expanded, setExpanded] = useState(false); //* Init state = false
   useEffect(() => {
     function expansionListener(event: Event) {
-      if (!event.target || !(event.target instanceof Element)) { return } //* Early return if target is falsy or not type Element
+      if (!event.target || !(event.target instanceof Element)) { return; } //* Early return if target is falsy or not type Element
       //? Contains() works on DomNodes + better supported than String.includes()
       (event.target.classList.contains("navbar-toggler") || event.target.className === "navbar-toggler-icon") ?
         setExpanded(!expanded) : setExpanded(false); //* If not the toggler or icon, then click must close nav
     }
-    document.addEventListener("click", expansionListener)
-    return () => { document.removeEventListener("click", expansionListener) } //* Cleanup listener
-  })
+    document.addEventListener("click", expansionListener);
+    return () => { document.removeEventListener("click", expansionListener); }; //* Cleanup listener
+  });
   return (
     <Navbar className={NavbarCss.header} expand="md" expanded={expanded}>
       <Container fluid>
@@ -27,14 +27,14 @@ const AppNavbar = () => {
         <FullNav />
       </Container>
     </Navbar>
-  )
-}
+  );
+};
 
 const FullNav = () => {
   return ( //* Collapse receives 'order: 2' in CSS Module to place it after Brand on mobile (avoiding weird collapsible section)
     <>
-      <Navbar.Collapse className={`${NavbarCss['nav-collapse']}`} data-testid="nav-collapse">
-        <Nav variant="pills" className={`${`${NavbarCss['nav-container']}`}`}>
+      <Navbar.Collapse className={`${NavbarCss["nav-collapse"]}`} data-testid="nav-collapse">
+        <Nav variant="pills" className={`${`${NavbarCss["nav-container"]}`}`}>
           <NavButtons />
         </Nav>
       </Navbar.Collapse>
@@ -48,20 +48,20 @@ const FullNav = () => {
 };
 
 const NavButtons = () => {
-  const tabProperNames = { iOS: "iOS", android: "Android", 
+  const tabProperNames = { iOS: "iOS", android: "Android",
     "front-end": "Front-End Web", "back-end": "Back-End Web" };
 
   //? Must pass this func to React-Router-Dom's NavLink so it can apply certain classes when it's the active/matching route
   const isActiveClasses = ({ isActive }: { isActive: boolean }) => //? Must include 'nav-link' class to adopt Bootstrap styles
-    `nav-link ${NavbarCss.navButton} ${(isActive) ? NavbarCss.activeNavButton : ""}`.trim()
+    `nav-link ${NavbarCss.navButton} ${(isActive) ? NavbarCss.activeNavButton : ""}`.trim();
 
   return (Object.keys(tabProperNames) as Array<keyof typeof tabProperNames>).map(keyName => {
     return (
       <Nav.Item className={`border border-dark rounded ${NavbarCss.navItem}`}
         key={ tabProperNames[keyName] }>
-          <NavLink to={`portfolio/${keyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
-              { tabProperNames[keyName] }
-          </NavLink>
+        <NavLink to={`portfolio/${keyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
+          { tabProperNames[keyName] }
+        </NavLink>
       </Nav.Item>
     );
   });

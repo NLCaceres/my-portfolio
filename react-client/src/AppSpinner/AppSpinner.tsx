@@ -2,8 +2,9 @@ import { ElementType } from "react";
 import Spinner from "react-bootstrap/Spinner";
 
 type SpinnerProps = {
-  tag?: ElementType<any>, className?: string, color?: string, small?: boolean
-}
+  tag?: ElementType, //? Allow ElementType to use its default typing (giving nice autocomplete for acceptable HTML tag names)
+  className?: string, color?: string, small?: boolean
+};
 //* Create a simple to use Spinner with accessibility in mind by default!
 const AppSpinner = ({ tag, className, color, small }: SpinnerProps) => {
   //? Adding "aria-hidden='true'" prop may hide the invisible span inside from screen readers
@@ -14,7 +15,7 @@ const AppSpinner = ({ tag, className, color, small }: SpinnerProps) => {
         Loading...
       </span>
     </Spinner>
-  )
-}
+  );
+};
 
 export default AppSpinner;

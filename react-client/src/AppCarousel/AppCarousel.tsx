@@ -29,15 +29,15 @@ const AppCarousel = ({ children, images, ItemComponent, className }: CarouselPro
 
   const [usingHoverClass, setUsingHoverClass] = useState(false);
   useEffect(() => { //* At wider viewports (Large tablets + desktops), when mounting, fade the arrow icons in and out
-    if (viewWidth < 768) { return }
+    if (viewWidth < 768) { return; }
     let iterations = 0;
     const fadeEffectInterval = setInterval(() => {
       iterations++; //* 6 runs! On 6th we clear THEN hide by class removal
       //* 1st iteration = Show, 2nd = hide, so on and so forth
       if (iterations > 5) clearInterval(fadeEffectInterval); //* Able to clear itself!
       setUsingHoverClass(prevState => !prevState);
-    }, 750)
-    return () => { clearInterval(fadeEffectInterval) }
+    }, 750);
+    return () => { clearInterval(fadeEffectInterval); };
   }, [viewWidth]);
 
   const child = ( //* Either take the passed in "children" OR create a list based on the "images" prop
@@ -46,22 +46,22 @@ const AppCarousel = ({ children, images, ItemComponent, className }: CarouselPro
       (
         <Carousel.Item key={ image.image_url }>
           { (ItemComponent) ?
-              <ItemComponent src={ image.image_url } alt_text={ image.alt_text } /> : 
-              <DefaultItem src={ image.image_url } alt_text={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} /> 
+            <ItemComponent src={ image.image_url } alt_text={ image.alt_text } /> :
+            <DefaultItem src={ image.image_url } alt_text={ image.alt_text } viewWidth={ viewWidth } caption={image.caption} />
           }
         </Carousel.Item>
       )
     )
-  )
+  );
 
   const classList = `${CarouselCss.full} ${className || ""} ${(usingHoverClass) ? "hovered-indicators" : ""}`.trim();
   return (
     <Carousel activeIndex={ activeIndex } onSelect={ goToIndex } controls={false}
       interval={null} data-testid="app-carousel" className={ classList }>
-        { child }
+      { child }
     </Carousel>
   );
-}
+};
 
 type CarouselItem = { src: string, alt_text: string };
 type DefaultCarouselItem = CarouselItem & { caption?: string, viewWidth?: number };
@@ -75,7 +75,7 @@ const DefaultItem = ({ src, alt_text, caption, viewWidth = 0 }: DefaultCarouselI
       <img className={`img-fluid ${CarouselCss.slide}`} src={ src } alt={ alt_text } height={ height } width={ width } />
       { caption && <Carousel.Caption> <h3>{ caption }</h3> </Carousel.Caption> }
     </>
-  )
-}
+  );
+};
 
 export default AppCarousel;
