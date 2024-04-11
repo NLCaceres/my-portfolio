@@ -13,13 +13,13 @@ describe("renders any component passed in with the desired classes", () => {
     render(<ProperArgComponent />);
     const failedHocDiv = screen.getByTestId("failed-hoc");
     expect(failedHocDiv).not.toHaveAttribute("class"); //* Or else it won't get any classes put on it
-    
+
     //* By accepting a className prop that actually sets the Component's classes, THEN
     const SuccessArgComponent = withClassName(({className}) => <div data-testid="success-hoc" className={className} />, "foobar");
     render(<SuccessArgComponent />);
     const successHocDiv = screen.getByTestId("success-hoc");
     expect(successHocDiv).toHaveClass("foobar"); //* We can successfully apply specific classes via the HOC func
-  })
+  });
   test("with a convenient display name for React Debug Tools", () => {
     const SomeComponent = () => <div data-testid="failed-hoc" />;
     SomeComponent.displayName = "SomeComponent";
@@ -31,4 +31,4 @@ describe("renders any component passed in with the desired classes", () => {
     const ValidHocDiv = withClassName(ValidComponent, "BARFOO");
     expect(ValidHocDiv.displayName).toBe("Valid-Component-with-BARFOO-CSS-class");
   });
-})
+});
