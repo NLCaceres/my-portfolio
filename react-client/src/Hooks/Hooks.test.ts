@@ -1,9 +1,9 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { vi } from "vitest";
+import { type Mock, vi } from "vitest";
 import UseNullableAsync from "./UseAsync";
 
 describe("enables async fetch requests and their callbacks to be cancelled if component rerenders", () => {
-  let asyncFuncMock; let callbackMock;
+  let asyncFuncMock: Mock; let callbackMock: Mock;
   beforeEach(() => {
     asyncFuncMock = vi.fn();
     callbackMock = vi.fn();
@@ -36,22 +36,26 @@ describe("enables async fetch requests and their callbacks to be cancelled if co
     });
   });
   test("calling only ONCE unless the fetch function or its callback changes", async () => {
-    //? Not sure exactly how the following object creation works in renderHook's 1st render function param - (propsObj) => yourHook
-    //? Seems that you can pass an object which you define the properties for, set their values, THEN set it equal to an empty object
-    //? Which allows usage of those object props/vals for all future renderings in the hook you originally passed in
-    const { rerender } = renderHook(({ asyncFunc = asyncFuncMock, callbackFunc = callbackMock } = {}) => UseNullableAsync(asyncFunc, callbackFunc));
+    //? RenderHook is actually a convenience wrapper for the typical Testing-Lib render func, so you can more easily test hooks
+    //? 1st Param accepts `(props?) => yourHook`, so it can optionally accept props to pass to your Hook
+    //? The 2nd param accepts options with the initialProps option being particularly useful
+    //? Since it allows you to pass initial values to your Hook to use on start
+    const { rerender } = renderHook(
+      ({ asyncFunc, onSuccess }: { asyncFunc: Mock, onSuccess: Mock }) => UseNullableAsync(asyncFunc, onSuccess),
+      { initialProps: { asyncFunc: asyncFuncMock, onSuccess: callbackMock }}
+    );
     expect(asyncFuncMock).toHaveBeenCalledTimes(1);
     await waitFor(() => { expect(callbackMock).toHaveBeenCalledTimes(1); });
 
     const changedAsync = vi.fn();
-    //? Here the 1st render func param expects the same props as line 42 so it can access their new values to use in a rerendering of my hook
-    rerender({ asyncFunc: changedAsync, callbackFunc: callbackMock });
+    //? Use rerender to pass new values to the render func declared on line 45 so it can re-create my Hook with params
+    rerender({ asyncFunc: changedAsync, onSuccess: callbackMock });
     expect(asyncFuncMock).toHaveBeenCalledTimes(1); //* Will not be called again since it was replaced
     expect(changedAsync).toHaveBeenCalledTimes(1); //* Will be called instead of the above asyncFuncMock
     await waitFor(() => { expect(callbackMock).toHaveBeenCalledTimes(2); }); //* Will have been called again on 2nd success
 
     const changedCallback = vi.fn();
-    rerender({ asyncFunc: changedAsync, callbackFunc: changedCallback });
+    rerender({ asyncFunc: changedAsync, onSuccess: changedCallback });
     expect(changedAsync).toHaveBeenCalledTimes(2); //* Will be called for second time due to rerender
     await waitFor(() => { expect(callbackMock).toHaveBeenCalledTimes(2); }); //* Will no longer be called so it remains at 2
     await waitFor(() => { expect(changedCallback).toHaveBeenCalledTimes(1); }); //* Now firing this callback on success
