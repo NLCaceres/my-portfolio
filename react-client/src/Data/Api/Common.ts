@@ -2,7 +2,7 @@ import { PostData } from "./Utility";
 
 //* Contains endpoints for Common Rails server endpoints like listing Routes or sending an Email
 
-type Email = {
+export type Email = {
   email: string,
   message: string
 };
