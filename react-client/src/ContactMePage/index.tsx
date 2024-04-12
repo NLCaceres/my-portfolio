@@ -13,12 +13,12 @@ const ContactPage = () => {
     }
     else {
       showAlert({ color: "danger", title: "Sorry! Your email wasn't sent!",
-        message: "Hopefully I'll have everything back up and running soon! In the mean time, enjoy the rest of my portfolio. Thanks!" 
+        message: "Hopefully I'll have everything back up and running soon! In the mean time, enjoy the rest of my portfolio. Thanks!"
       });
     }
-  }
+  };
   const viewWidth = useViewWidth();
-  
+
   return (
     <div className={IndexCss["contact-page"]}>
       <h1 className={`fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>Contact Me!</h1>
@@ -27,6 +27,6 @@ const ContactPage = () => {
       </div>
     </div>
   );
-}
+};
 
 export default ContactPage;
