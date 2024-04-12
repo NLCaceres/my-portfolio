@@ -1,10 +1,10 @@
 import FooterCss from "./Footer.module.css";
-import Container from "react-bootstrap/Container"
+import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Navbar from "react-bootstrap/Navbar";
 import { type MouseEventHandler } from "react";
 
-const Footer = ({ contactButtonOnClick }: { contactButtonOnClick?: MouseEventHandler<HTMLButtonElement> }) => { 
+const Footer = ({ contactButtonOnClick }: { contactButtonOnClick?: MouseEventHandler<HTMLButtonElement> }) => {
   return (
     <Navbar variant="dark" expand="md" className={FooterCss.navFooter}>
       <Container fluid>

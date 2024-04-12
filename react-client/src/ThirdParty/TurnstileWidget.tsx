@@ -4,13 +4,13 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 export type TurnstileWidgetProps = {
   action: string, compact: boolean, successCB: (token?: string) => void, className?: string
-}
+};
 const defaultProps = { //? Ensures props get defaults when placed in layout when using ".defaultProps"
   compact: false
-}
+};
 
 const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWidgetProps & typeof defaultProps) => {
-  const turnstileSize = (compact) ? "compact" : "normal"
+  const turnstileSize = (compact) ? "compact" : "normal";
   useEffect(() => {
     const turnstileRenderTimeoutID = setTimeout(() => {
       //? Config Options - https://developers.cloudflare.com/turnstile/get-started/client-side-rendering
@@ -35,14 +35,14 @@ const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWid
         }
       }); //? Until Cloudflare provides a retry/refresh-callback, intricate styling (like via document.query) can be
       //? reset by the widget's Refresh Button, so stick to basic height/width changes via this parent-div for now
-    }, 750) //? A timeout w/ a delay helps when rendering a Widget in a Component entering via Routing Nav Animation
+    }, 750); //? A timeout w/ a delay helps when rendering a Widget in a Component entering via Routing Nav Animation
 
-    return () => { clearTimeout(turnstileRenderTimeoutID) }
+    return () => { clearTimeout(turnstileRenderTimeoutID); };
 
   }, [action, turnstileSize, successCB]);
 
-  return (<div id="turnstile-widget-container" className={`${className || ""} ${TurnstileWidgetCss.turnstileContainer}`}></div>)
-} //todo Could render a placeholder labeled "Initializing Turnstile Verification Widget" while timeout is waiting
+  return (<div id="turnstile-widget-container" className={`${className || ""} ${TurnstileWidgetCss.turnstileContainer}`}></div>);
+}; //todo Could render a placeholder labeled "Initializing Turnstile Verification Widget" while timeout is waiting
 
 TurnstileWidget.defaultProps = defaultProps;
 export default TurnstileWidget;
