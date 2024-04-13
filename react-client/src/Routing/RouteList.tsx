@@ -49,6 +49,6 @@ export const RouteList = [{
 }];
 
 //? createBrowser will rank routes so order shouldn't matter
-const Router = createBrowserRouter(RouteList)
+const Router = createBrowserRouter(RouteList);
 
-export default Router
+export default Router;
