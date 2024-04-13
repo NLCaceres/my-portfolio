@@ -10,8 +10,8 @@ import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 //import * as serviceWorker from "./serviceWorker";
 
-export type ModalFunc = (show: boolean) => void
-export type AlertFunc = ({ title, message, color }: AlertState) => void
+export type ModalFunc = (show: boolean) => void;
+export type AlertFunc = ({ title, message, color }: AlertState) => void;
 
 const Layout = () => {
   const width = useViewWidth();
@@ -22,23 +22,23 @@ const Layout = () => {
   const showAlertBriefly = (newState: AlertState) => { //* Displays alert for 5 seconds BUT allows early dismissal
     const alertTimeout = setTimeout(() => setShowAlert({ title: "", message: "", color: "" }), 5000); //* Auto-dismiss after 5 seconds
     setShowAlert({ ...newState, timeoutID: alertTimeout }); //* Set timeout so it can be cleared in case the user dismisses alert early
-  }
+  };
   const closeAlert = () => {
     clearTimeout(alertState.timeoutID);
-    //* AppAlert already hid itself BUT line 34 setShowAlert update causes 1 final (but mostly skipped) rerender, 
+    //* AppAlert already hid itself BUT line 34 setShowAlert update causes 1 final (but mostly skipped) rerender,
     //* the alert remains hidden since its useEffect setShow() is skipped due to the value passed in not being actually changed/different
     setShowAlert({});
-  }
+  };
 
   //! Contact Button Functionality
   const navigate = useNavigate();
   const contactButtonClicked = () => {
-    if (width >= 576) { setShowModal(true) }
-    else { 
+    if (width >= 576) { setShowModal(true); }
+    else {
       SmoothScroll();
       navigate("contact-me");
     }
-  }
+  };
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />
   const submitContactForm = (successful: boolean) => {
     setShowModal(false);
@@ -48,32 +48,32 @@ const Layout = () => {
     }
     else {
       showAlertBriefly({ color: "danger", title: "Sorry! Your email wasn't sent!",
-        message: "Hopefully I'll have everything back up and running soon! In the mean time, enjoy the rest of my portfolio. Thanks!" 
+        message: "Hopefully I'll have everything back up and running soon! In the mean time, enjoy the rest of my portfolio. Thanks!"
       });
     }
-  }
+  };
 
   return (
     <>
       <AppNavbar />
-    
+
       <AppRouting context={[setShowModal, showAlertBriefly]} />
-      
+
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
-      
+
       <Footer contactButtonOnClick={contactButtonClicked} />
-      
+
       <AppModal ID="contact-me" show={ showModal } onHide={ () => setShowModal(false) } title="Send Me a Message!"
         headerClasses="pt-2 pb-1" titleClasses="fw-bolder text-white">
-          <ContactPageForm onSubmitForm={submitContactForm} />
+        <ContactPageForm onSubmitForm={submitContactForm} />
       </AppModal>
     </>
   );
-}
+};
 
 //? ContextProviders are only properly observed if they exist ABOVE the component calling useContext(), NOT the same level
 const App = () => {
-  return <ViewWidthProvider> <Layout /> </ViewWidthProvider>
-}
+  return <ViewWidthProvider> <Layout /> </ViewWidthProvider>;
+};
 
 export default App;
