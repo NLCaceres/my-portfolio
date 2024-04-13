@@ -13,21 +13,21 @@ const PostCardPlaceholderList = ({ numPlaceholders = 4 }: { numPlaceholders?: nu
       <Placeholder className="ms-2 my-2" animation="glow" as="div">
         <Placeholder xs={5} md={4} as="h1" className={`${PlaceholderCss.header}`}  />
       </Placeholder>
-      <Placeholder className="ms-2 mb-2" animation="glow" as="div"> 
+      <Placeholder className="ms-2 mb-2" animation="glow" as="div">
         <Placeholder xs={9} md={6} as="h1" className={`${PlaceholderCss.header}`} />
       </Placeholder>
       {/* No stable ID so use index for the following Placeholder Cards, should always render the same anyway */}
       { [...Array(numPlaceholders)].map((_, i) => <PostCardPlaceholder className={"mx-sm-4"} key={i} />) }
     </>
   );
-}
+};
 
 const PostCardPlaceholder = ({ className, rowClasses }: { className?: string, rowClasses?: string }) => {
   return (
     <Card className={`${PostCardCss.postCard} ${PlaceholderCss.postCard} ${className || ""}`.trim()}>
       <Row className={`g-0 ${PlaceholderCss.cardRow} ${rowClasses || ""}`.trim()} data-testid="placeholder-row">
-        <Col xs="12" md="3" lg="2" className="d-flex justify-content-center align-self-center"> 
-          <PlaceholderImg /> 
+        <Col xs="12" md="3" lg="2" className="d-flex justify-content-center align-self-center">
+          <PlaceholderImg />
         </Col>
         <Col xs="12" md="9" lg="10">
           <Card.Body className="px-4 px-md-3">
@@ -50,6 +50,6 @@ const PostCardPlaceholder = ({ className, rowClasses }: { className?: string, ro
       </Row>
     </Card>
   );
-}
+};
 
 export default PostCardPlaceholderList;

@@ -12,15 +12,15 @@ import type Project from "../Data/Models/Project";
 //? Type Intersection is a nice alternative to typical interface based inheritance/extension
 type BasePostCardProps = {
   project: Project
-}
+};
 //? One slight issue is how VSCode sees the type hint
 type PostCardWithImgProps = BasePostCardProps & {
   onImgClick: () => void
-}
+};
 type StyledImgPostCardProps = PostCardWithImgProps & {
   className?: string,
   rowClasses?: string
-}
+};
 //? The other actual issue is Type Intersections allow name conflicts on declaration BUT will forbid explicit creation
 //? Interfaces will display an error on declaration AND, of course, not be creatable
 
@@ -49,8 +49,8 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
   const postImages = project.post_images ?? [];
   const placeholderText = (project.id?.toString() === import.meta.env.VITE_ABOUT_ME_ID) ? "My Photo" : "Project Photo";
   //* If receiving an empty array or no images in the array then render placeholder (Likely Rails will always send at least an empty [])
-  if (postImages.length === 0) { return <PlaceholderImg children={ placeholderText } /> }
-  
+  if (postImages.length === 0) { return <PlaceholderImg>{ placeholderText }</PlaceholderImg>; }
+
   //* One small issue with the following: onRender, you either get a Carousel or an IntersectLoadImg
   //* BUT what happens with a mobile phone going from vertical to horizontal?
   //* Posts with more than 1 image, flip from a Carousel to a single representative IntersectLoadImg!
@@ -58,26 +58,26 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
   //? Fix? useMemo on the rep child? Or finally drop Bootstrap's carousel and write my own implementation? (See "AppCarousel.jsx")
   if (viewWidth < 768 && postImages.length > 1) { //* If received multiple images + small screen, then just render a carousel
     return (
-      <AppCarousel className={ PostCardCss.imgTopMargin }> 
+      <AppCarousel className={ PostCardCss.imgTopMargin }>
         { postImages.map(image => {
           return (
-            <div className="carousel-item" key={ image.image_url }> 
+            <div className="carousel-item" key={ image.image_url }>
               <IntersectLoadImage src={ image.image_url } alt={ image.alt_text } placeholderText={ placeholderText }
-                className={`${PostCardCss.cardImgContainer} mx-auto`} /> 
+                className={`${PostCardCss.cardImgContainer} mx-auto`} />
             </div>
-          )
+          );
         })}
       </AppCarousel>
     );
   }
 
   let classString = `${PostCardCss.cardImgContainer} ${PostCardCss.imgTopMargin}`; //* Base classList
-  if (viewWidth >= 992 && postImages.length > 1) { classString += ` ${PostCardCss.clickable}` } //* Add in CSS at specific viewport width
+  if (viewWidth >= 992 && postImages.length > 1) { classString += ` ${PostCardCss.clickable}`; } //* Add in CSS at specific viewport width
   return ( //* At desktop sizes, render a single image that can open a modal if the project has multiple imgs
     <IntersectLoadImage src={ postImages[0].image_url } alt={ postImages[0].alt_text }
       placeholderText={ placeholderText } onImgClick={ onImgClick } className={ classString } />
-  )
-}
+  );
+};
 
 //@params: Passed down props - project
 const CardDetails = ({ project }: BasePostCardProps) => {
@@ -100,7 +100,7 @@ const CardDetails = ({ project }: BasePostCardProps) => {
         </Button>
       )}
     </Card.Body>
-  )
-}
+  );
+};
 
 export default PostCard;
