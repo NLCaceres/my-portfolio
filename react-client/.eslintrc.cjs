@@ -35,6 +35,10 @@ module.exports = {
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
+    "react/no-unescaped-entities": ["error", { "forbid": [{ char: ">", alternatives: ["&gt;"] }, { char: "}", alternatives: ["&#125;"] }] }],
+  },
+  settings: {
+    react: { version: "detect" }
   },
   overrides: [
     {
