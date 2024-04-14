@@ -18,7 +18,6 @@
     "noEmit": true,
 
     "allowJs": true,
-    "checkJs": true,
 
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
