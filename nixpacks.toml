@@ -5,10 +5,10 @@ nixPkgs = ['nodejs']
 cmds = ['bundle config set deployment true', 'bundle config set without development test', 'bundle install --jobs 1']
 
 [phases."node:install"]
-cmds = ['npm railway-install']
+cmds = ['pnpm railway-install']
 
 [phases.build]
-cmds = ['npm railway-deploy', 'bundle exec rake assets:precompile']
+cmds = ['pnpm railway-deploy', 'bundle exec rake assets:precompile']
 
 [phases.release]
 dependsOn = ['build']
