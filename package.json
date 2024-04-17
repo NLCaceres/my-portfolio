@@ -10,7 +10,7 @@
   "scripts": {
     "railway-install": "pnpm -C react-client install --frozen-lockfile",
     "railway-build": "pnpm -C react-client build",
-    "railway-copy": "cp -a react-client/build/. public/",
+    "railway-copy": "cp -a react-client/dist/. public/",
     "railway-rename-index": "mv public/index.html public/main.html",
     "railway-deploy": "pnpm railway-build && pnpm railway-copy && pnpm railway-rename-index"
   }
