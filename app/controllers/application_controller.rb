@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def production?
-    ENV['RAILS_ENV'] == 'production'
+    ENV['RAILS_ENV'] == 'production' || ENV['IS_STAGING'] == 'true'
   end
 
   def set_csrf_cookie
