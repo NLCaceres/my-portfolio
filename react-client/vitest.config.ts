@@ -2,7 +2,6 @@ import { defineConfig } from "vitest/config";
 import reactPlugin from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "",
   plugins: [reactPlugin()],
   test: {
     include: ["./**/*.test.tsx", "./**/*.test.ts"],
@@ -21,7 +20,7 @@ export default defineConfig({
       },
       include: ["**/*.{js,jsx,ts,tsx}"],
       exclude: [
-        "build/**",
+        "dist/**",
         "public/**",
         "**/node_modules/**",
         "src/index.tsx",
@@ -31,4 +30,4 @@ export default defineConfig({
       ]
     }
   },
-})
+});
