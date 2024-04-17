@@ -3,7 +3,9 @@ import reactPlugin from "@vitejs/plugin-react";
 import viteTSConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  base: "",
+  build: {
+    assetsDir: "static"
+  },
   plugins: [reactPlugin(), viteTSConfigPaths()],
   server: {
     port: 3000,
