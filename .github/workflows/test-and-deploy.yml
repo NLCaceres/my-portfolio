@@ -37,7 +37,7 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby based on ruby-version file
         uses: ruby/setup-ruby@v1
       - name: Set deployment config
@@ -61,13 +61,13 @@ jobs:
         node-version: ['18.x', 20.9.0]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use PNPM 8
         uses: pnpm/action-setup@v3
         with:
           version: 8
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install PNPM dependencies
@@ -86,9 +86,9 @@ jobs:
         node-version: [20.9.0]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install Railway CLI
