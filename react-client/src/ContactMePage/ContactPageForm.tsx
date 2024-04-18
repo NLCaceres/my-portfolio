@@ -71,7 +71,8 @@ const ContactPageForm = ({ onSubmitForm, darkMode }: ContactPageFormProps & type
       </Form.Group>
 
       <div className={ContactPageFormCss["button-container"]}>
-        <TurnstileWidget action="Contact-Page-Form" compact={viewWidth <= 320} successCB={turnstileSuccessCallback} />
+        { /* Render TurnstileWidget if Contactable, otherwise use an empty div to keep the layout structure and prevent unneeded calls to Cloudflare */ }
+        { IsContactable ? <TurnstileWidget action="Contact-Page-Form" compact={viewWidth <= 320} successCB={turnstileSuccessCallback} /> : <div/> }
 
         <Button className={ContactPageFormCss.submitButton} type="submit" disabled={ !IsContactable || isVerifying }>
           { (isVerifying && IsContactable) && <AppSpinner tag="span" small /> } { /*//* Show when verifying and NOT disabled */ }

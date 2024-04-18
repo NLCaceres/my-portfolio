@@ -12,6 +12,8 @@ type TurnstileWidgetProps = TurnstileWidget.TurnstileWidgetProps;
 describe("renders the form for the contact page", () => {
   let turnstileWidgetMock: MockInstance;
   beforeEach(() => {
+    import.meta.env.VITE_CONTACTABLE = "false"; //* Default to not rendering the following TurnstileWidget
+    //* Set VITE_CONTACTABLE = "true" if the following mock needs to be rendered
     turnstileWidgetMock = vi.spyOn(TurnstileWidget, "default").mockImplementation(({ compact, successCB }: TurnstileWidgetProps) => {
       const compactClass = (compact) ? "compact" : "normal";
       return (<div className={compactClass}><button type="button" onClick={() => { successCB("123"); }}>Turnstile Verification Button</button></div>);
@@ -29,7 +31,27 @@ describe("renders the form for the contact page", () => {
     expect(formContainer).not.toHaveClass("dark");
   });
   describe("that depends on '_CONTACTABLE' env var for conditionally rendering", () => {
+    test("a turnstile widget", async () => {
+      import.meta.env.VITE_CONTACTABLE = "true";
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
+      const { unmount } = render(<ContactPageForm />);
+      //* WHEN VITE_CONTACTABLE = "true", THEN render the Turnstile Widget
+      expect(screen.getByText("Turnstile Verification Button")).toBeInTheDocument();
+      unmount();
+
+      import.meta.env.VITE_CONTACTABLE = "false";
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("false");
+      render(<ContactPageForm />);
+      const unavailableButton = screen.getByRole("button", { name: /currently unavailable/i });
+      expect(unavailableButton).toHaveClass("submitButton");
+      //* WHEN VITE_CONTACTABLE = "false", THEN still render two elements in the ContactPageForm's button container
+      expect(unavailableButton.parentElement!.childElementCount).toBe(2);
+      expect(unavailableButton.previousElementSibling).toBeEmptyDOMElement(); //* BUT just render a simple empty div
+      expect(unavailableButton.previousElementSibling).not.toHaveClass("submitButton"); //* Double check not looking at the submit button
+      expect(screen.queryByText("Turnstile Verification Button")).not.toBeInTheDocument(); //* DON'T render the TurnstileWidget
+    });
     test("a spinner in the submit button when running an async task", async () => {
+      import.meta.env.VITE_CONTACTABLE = "true";
       expect(import.meta.env.VITE_CONTACTABLE).toBe("true");
       const user = userEvent.setup(); //? Best to setup userEvent 1st or at least before render is called
       const { unmount } = render(<ContactPageForm />);
@@ -55,9 +77,9 @@ describe("renders the form for the contact page", () => {
       expect(finalSubmitButtonSpinner).not.toBeInTheDocument();
     });
     test("a submit button with 'unavailable', 'verifying', or 'contact me' text states", async () => {
-      import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
       const { unmount } = render(<ContactPageForm />); //* Starts as Contactable = false + isVerifying = true
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("false"); //* All ContactPageForm tests start with VITE_CONTACTABLE = "false"
       //* WHEN VITE_CONTACTABLE == "false", THEN the submit button will read "currently unavailable"
       const unavailableSubmitButton = screen.getByRole("button", { name: /currently unavailable/i });
       expect(unavailableSubmitButton).toBeInTheDocument();
@@ -79,10 +101,10 @@ describe("renders the form for the contact page", () => {
       secondUnmount();
     });
     test("a disabled submit button that won't run the submitFunc prop", async () => {
-      import.meta.env.VITE_CONTACTABLE = "false";
       const user = userEvent.setup();
       const onSubmitFunc = vi.fn();
       const { unmount } = render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
+      expect(import.meta.env.VITE_CONTACTABLE).toBe("false"); //* All ContactPageForm tests start with VITE_CONTACTABLE = "false"
       //* WHEN VITE_CONTACTABLE == "false", THEN contact button displays "currently unavailable"
       const submitButton = screen.getByRole("button", { name: /currently unavailable/i});
       expect(onSubmitFunc).not.toBeCalled(); //* Submit callback spy not yet called
@@ -98,6 +120,7 @@ describe("renders the form for the contact page", () => {
       expect(onSubmitFunc).not.toBeCalled(); //* THEN the submit spy still won't run since the component is stuck verifying
     });
     test("a try again state in the submit button if bot detected trying to submit", async () => {
+      import.meta.env.VITE_CONTACTABLE = "true";
       turnstileWidgetMock.mockImplementation(({ successCB }: TurnstileWidgetProps) => {
         return (<div><button type="button" onClick={() => { successCB(undefined); }}>Turnstile Verification Button</button></div>);
       });
@@ -116,6 +139,7 @@ describe("renders the form for the contact page", () => {
     });
   });
   test("that accepts a customizable onSubmit callback", async () => {
+    import.meta.env.VITE_CONTACTABLE = "true";
     vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
     vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
@@ -150,6 +174,7 @@ describe("renders the form for the contact page", () => {
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
   });
   test("with validation error messages after invalid data submitted", async () => {
+    import.meta.env.VITE_CONTACTABLE = "true";
     vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123");
     vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse").mockResolvedValue(true);
     const validationMock = vi.spyOn(Validator, "default").mockReturnValueOnce({ email: [], message: [] });
@@ -187,6 +212,7 @@ describe("renders the form for the contact page", () => {
     expect(screen.getAllByText(/message invalid error/i).length).toBe(2);
   });
   test("using viewWidth to control the Turnstile Widget's size", async () => {
+    import.meta.env.VITE_CONTACTABLE = "true";
     const viewWidthContextSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(992);
     const { rerender } = render(<ContactPageForm />);
     //* WHEN viewWidth > 320, THEN TurnstileWidget is rendered via "normal" css class
