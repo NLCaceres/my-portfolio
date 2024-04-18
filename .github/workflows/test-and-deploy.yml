@@ -58,7 +58,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.9.0]
+        node-version: ['18.x', 20.9.0]
 
     steps:
       - uses: actions/checkout@v3
@@ -83,7 +83,7 @@ jobs:
     environment: production
     strategy:
       matrix:
-        node-version: [18.9.0]
+        node-version: [20.9.0]
 
     steps:
       - uses: actions/checkout@v3
