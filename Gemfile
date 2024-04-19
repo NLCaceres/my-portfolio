@@ -29,10 +29,9 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'sassc-rails'
 # ActiveAdmin (With API version 'rails g devise:install' command followed by 'rails g active_admin:install' required to get things working as needed)
 gem 'devise', '~> 4.8'
-gem 'activeadmin', '~> 2.10'
+gem 'activeadmin', '~> 3.2'
 # Rack-Attack (Adds throttling and blacklisting to Rack apps like Rails)
 gem 'rack-attack', '>= 6.5', '< 6.8' # Based on current pace, 6.8 would drop ruby 2.7 BUT Rails 7 may be ready + have Ruby 3 support
-gem 'net-http' # Correct issue w/ net-imap, a dependency of mail, which ActionMail depends on (Likely fixed by Ruby3)
 
 gem 'aws-sdk-s3', '~> 1' # Thanks to V3's Modularization, it's best to take ONLY the AWS service gem you need
 
@@ -46,7 +45,6 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'solargraph'
   gem 'rubocop'
 end
 
