@@ -16,6 +16,9 @@ gem 'puma', '~> 5.0' # '~> 4.1'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Automatically loads Env vars when Rails starts + provides Rake tasks with a 'dotenv' task
+gem 'dotenv', '~> 3.1'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
