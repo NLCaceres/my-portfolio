@@ -1,8 +1,11 @@
 require 'aws-sdk-s3'
+require 'dotenv/tasks' #? No foreman required!
+
 namespace :s3 do
   #? Calling :environment in any task, ensures the App loads in, models can be made, the DB is available (and more!)
+  #? Similarly, `require 'dotenv/tasks'` provides the :dotenv task to load in ENV vars
   desc 'Update Database URLS to new S3-Backed Cloudfront Links'
-  task update_img_urls: :environment do
+  task update_img_urls: %i[environment dotenv] do
     credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'], ENV['AWS_SESSION_TOKEN'])
     client = Aws::S3::Client.new(region: 'us-west-2', credentials:)
     resource = Aws::S3::Resource.new(client:) #? Ruby 3.1 lets you easily input args (like client) with matching names
@@ -38,12 +41,9 @@ def find_post_image_by(image_url)
   post_images
 end
 
-#? Following can be run with `bin/rails s3_update`
-#? Which runs the equivalent of `bundle exec foreman run bin/rails s3:update_img_urls`
-#? `bundle exec` is generally used to run gems you loaded in from the Bundler Gemfile
-#? Making it pretty simple to include foreman via the development group of my Gemfile
-#! BUT!!! Foreman can be installed locally via Homebrew
-#* Foreman itself advises against bundling it in the Gemfile BUT does it matter if it's in the development group?
+#? Following command can be run with `bin/rails s3_update`
+#? WHICH runs the equivalent of `bundle exec bin/rails s3:update_img_urls`
+#? `bundle exec` is generally used to run gems you installed and loaded in from the Bundler Gemfile
 task :s3_update do
-  exec 'foreman run bin/rails s3:update_img_urls'
+  system('bin/rails s3:update_img_urls') || abort('\n== Amazon S3 Update Command failed ==')
 end
