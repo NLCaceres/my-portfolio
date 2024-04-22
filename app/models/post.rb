@@ -10,4 +10,8 @@ class Post < ApplicationRecord
     select(column_names - columns.map(&:to_s)) #* 'to_s' passed in as map() block to run on variadic param Arr
     #? Rubocop avoids explicit 'return' statements SO FYI we're returning the select func here to use in method chaining
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[title github_url homepage_url post_images_count]
+  end
 end
