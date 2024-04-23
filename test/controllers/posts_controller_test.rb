@@ -59,7 +59,8 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get about_post_only_url, headers: accept_header
     about_post_only = @response.parsed_body
     #? Only one Post should be returned, so 'to_json()' returns a hash, not an array
-    assert_instance_of Hash, about_post_only
+    #? ActiveSupport's Hash allows strings and symbols to be treated equally, so 'key' and :key return the same value
+    assert_instance_of ActiveSupport::HashWithIndifferentAccess, about_post_only
     assert_equal 'https://github.com/NLCaceres', about_post_only['github_url']
   end
 
