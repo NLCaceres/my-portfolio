@@ -19,7 +19,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     get '/health-check'
     #* Following represents typical fallback_redirect development route
     assert_response :redirect
-    assert_redirected_to 'http://www.example.com:3000/portfolio'
+    assert_redirected_to 'http://www.example.com:3000/portfolio/about-me'
   end
 
   test 'most routes should redirect' do
@@ -30,7 +30,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     ENV['RAILS_ENV'] = 'test'
     get '/bar'
     assert_response :redirect
-    assert_redirected_to 'http://www.example.com:3000/portfolio'
+    assert_redirected_to 'http://www.example.com:3000/portfolio/about-me'
 
     get '/admin/login' #* The ONE admin request that won't redirect
     assert_response :success

@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     elsif production? #* If no React file found, 404 Front-End does not exist!
       head :not_found
     else #? In dev + tests, redirect to 'localhost:3000/', so the React dev server can send the app
-      redirect_to "#{request.protocol}#{request.host}:3000/portfolio"
+      redirect_to "#{request.protocol}#{request.host}:3000/portfolio/about-me"
     end
   end
   #? Using 'render' w/out 'file' or 'public' symbol, i.e. render 'index', sends the 'application/index.html.erb' layout

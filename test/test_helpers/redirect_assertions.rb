@@ -12,7 +12,7 @@ module RedirectAssertions
       assert_match 'Foobar', @response.body
     else
       assert_response :redirect
-      assert_redirected_to 'http://www.example.com:3000/portfolio'
+      assert_redirected_to 'http://www.example.com:3000/portfolio/about-me'
     end
   end
 end
