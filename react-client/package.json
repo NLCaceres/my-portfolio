@@ -26,16 +26,17 @@
     "vite-tsconfig-paths": "^4.3.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.1.1",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^15.0.2",
     "@testing-library/user-event": "^14.4.3",
     "@types/lodash": "^4.14.192",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "@typescript-eslint/parser": "^7.7.0",
     "@vitest/coverage-v8": "^1.5.0",
-    "eslint": "^8.55.0",
+    "eslint": "^9.1.1",
     "eslint-plugin-react": "^7.33.2",
+    "globals": "^15.0.0",
     "jsdom": "^24.0.0",
+    "typescript-eslint": "^7.7.1",
     "vitest": "^1.5.0"
   },
   "scripts": {
@@ -44,7 +45,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "lint": "eslint src/**/*.ts{,x}"
+    "lint": "eslint \"src/**/*.ts{,x}\""
   },
   "browserslist": {
     "production": [
