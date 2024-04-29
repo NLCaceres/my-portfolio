@@ -1,0 +1,2 @@
+#* An empty YML file for PostImages prevents PostgreSQL from running referential integrity checks
+#* Like Foreign Key and NULL check constraints, in particular because PostgreSQL expects superuser privileges to disable triggers
