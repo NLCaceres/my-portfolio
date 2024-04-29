@@ -8,9 +8,11 @@
     - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
     - As an alternative to useSWR, React-Router seems to provide similar pre-loading
       - Additionally, React-Router now provides an option to render in a component while this loading occurs (like Suspense!)
+    - As an alternative to useSWR, TanStack offers its Query system AND a Router like NextJS
 - General Design
   - Drop React-Bootstrap and use React Portals to provide modal + a fancier carousel?
-    - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding the super common "Bootstrap look" as well as the more recent "TailwindUI look"
+    - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding
+    the super common "Bootstrap look" as well as the more recent "TailwindUI look"
     - Using the `<dialog>` element is also a great newer option in HTML since it provides accessibility by default! It just needs styling!
   - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
     - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
@@ -18,16 +20,19 @@
       - Material Design with flip animation to switch between smaller image container and flip out into text container on tap for mobile.
         - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
   - RPG-based Homepage to reduce wall of text feeling
+  - Add recent work section that makes requests to the Github API to track recent commits to projects
+  - Likely will update the last component, Modal, to Typescript via [a11y-dialog](https://a11y-dialog.netlify.app/), which has a React version already
+
 #### Changes Coming Soon
-- Finalize Typescript migration ('.tsx' is mandatory when writing components or using them in tests)
-  - Images, HOCs, NotFoundPage, and PostListView
-  - Carousel? Or time to drop in favor of an implementation with improved lazy-loading with AWS in mind AND that doesn't use Bootstrap?
-  - Modal? Or better to drop and rewrite via `<dialog>`?
+- Improve Carousel UX by dropping Bootstrap and re-implementing with lazy-loading images
+  - May alter the UX altogether with 1 of a few ideas (See AppCarousel for details)
 - React-Spring
   - React-Spring animations may be packable into hooks that can be reused
     - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
     - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
       - "position: absolute" likely should always be used in Transitions since they usually deal with lists
+- ESLint 9 works with every plugin EXCEPT the React plugin. Once that React plugin gets update for ESLint 9,
+then this project's migration should be complete
 
 ## Recent Changes
 - Upgraded to React 18!
@@ -36,15 +41,14 @@
     - Reorganize folders to be oriented around individual components and their usage
     - useContext pattern packed into a useViewWidth hook allowing access to viewWidth across the App without prop drilling
   - React Router 6 and 6.4 Data API added in
-  - Beginning Typescript Migration
-    - PostCard updated and also given a ProjectImage sort based on new "importance" property
-    - ContactPage alongside its TurnstileWidget with new Turnstile types
-    - Index + App file with the ViewWidthProvider as well as the Router Data API and the Routing component 
-    - Utility Files all updated
-    - Common AppSpinner, AppAlert, AppNavbar, and Footer
+  - Typescript Migration 99% complete
+    - Likely will update the last component, Modal, to Typescript via [a11y-dialog](https://a11y-dialog.netlify.app/), which has a React version already
   - Implement PostListView sort by "start_date" and new "importance" property. 
     - For Desktop users, project images are also sorted to better showcase the selected project in the AppModal
-  - Embrace React 17+ JSX transform by dropping React top import
+  - Embrace Vite as the new build tool for React as well as Vitest for React Testing
+    - Since React-scripts seems to have been abandoned, Vite appears to be the recommended way to build and bundle ReactJS (at least without NextJS or Remix)
+    - Vitest added to match Vite, since it's a fairly simple and powerful drop-in replacement for Jest
+  - Using Node 20, NPM 10 and, now, PNPM 8
 - Bootstrap 5 + React-Bootstrap 2 migration
   - CSS Modules used whenever possible to reduce the # of times props.viewWidth is prop drilled
     - Fixes NavBar being oversized on very small mobile devices!
@@ -65,34 +69,18 @@
   - Lazy load images on intersection via useInView hook
     - Even Carousel lazy loads in mobile image section of Card 
     - Desktop modal does not lazy load BUT maybe it should given some projects have 8+ imgs that would load at once
-- Update engines to Node 18, NPM 8, Yarn 1.22.19 and move from Heroku to Railway for deployments
-  - Configure Jest Coverage settings
+- Migrated to ESLint 9's flat config file with Typescript-ESLint being responsible for the merging process
+  - Typescript-ESLint now prefers to use `typescript-eslint` to bundle its parser and plugin together
+  - ESLint split its own recommended config into the `@eslint/js` package
+    - Similarly, style based rules are now deprecated in ESLint and fall under [ESLint Stylistic](https://eslint.style/guide/getting-started)
+    split into 3 packages plus a supplementary package for extra styling rules. You can use `@stylistic/eslint-plugin` to get all 4 plugins.
 
-## Quick Notes
-- React 17 decided to put its testing dependencies in package.json's normal dependencies list. Why?
-  - If you're just bundling the project up into a static directory, then it makes no difference! So in the case of this project, it's totally fine to do the same and list them in the normal dependency area BUT it does mean that vulnerability audits will show the testing library security concerns even if they're harmless
-- React-Scripts 5 FINALLY fixed most of the vulnerability issues BUT as a reminder, any future vulnerabilities SHOULDN'T be a concern since React-Scripts is a simple
-build tool, not a true production dependency. Unless you're already compromised, the script's vulnerabilities shouldn't be exploitable. This package is ONLY necessary 
-in production to make your build on Railway or Vercel. Finally, the issues highlight the fact that NPM + yarn's audits are warnings and not perfect
-  - New vulnerabilities are beginning to accumulate, but still not a real concern since it is a dev-dependency and not likely to ever come into play except if any other really bad supply-side NPM shenanigans occur. Thankfully Github + NPM and other repositories are doing a fairly good job cracking down (locked down through Top 100-500ish projects online)
-
-### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Yarn CLI Commands (Note: Yarn 2 is available if wanted, but way too many breaking changes)
-- `yarn install` -> Usually run as expected to create a lock file + package install, but also often run when major package changes are added to package.json
-- `yarn start` -> Run the app in dev mode (typically localhost:3000) with hot reloading 
-- `yarn test` -> Launch test runner in interactive watch mode
-  - To force all tests to run, use `--watchAll`
-  - To get coverage, use `--coverage` (No middle double-dash needed, i.e. `yarn test -- --coverage`)
-    - Be aware of jest settings in `package.json`, which can accidentally exclude tests or include unnecessary files
-  - To run once without watching, either use `CI=true` env var as a prefix or `--ci` flag which is, of course, helpful in Continuous Integration environments
-  where a single run-through all the tests is all that's needed
-- `yarn build` -> Build app for production in /build dir, minified and hashed filenames
-    - Problem minifying? https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-- `yarn eject` -> One way operation! Instead of yarn controlling webpack, babel, etc,
-  it'll be entirely on you to configure them as needed for the project. Yarn Commands will still work
-  (minus eject) but all config files will be in your project dir for you to alter.
-
-### Code Splitting -> https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Deployment -> https://facebook.github.io/create-react-app/docs/deployment
+## PNPM CLI Commands
+- `pnpm start` - Launches the Vite dev server
+- `pnpm test` - Launches the test runner in watch mode
+  - To get coverage, use `pnpm coverage`
+    - Under the hood, this command runs `vitest run --coverage` where `vitest run` launches the tests without watch mode and
+    the coverage flag gathers info via V8
+- `pnpm build` - Type check and build app for production in /dist dir, minified and hashed filenames
+- `pnpm preview` - Launches a production build locally for preview purposes only
+- `pnpm lint` - Runs ESLint/Typescript-ESLint against all TS and TSX files
