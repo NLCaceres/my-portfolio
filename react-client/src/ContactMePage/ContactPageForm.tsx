@@ -15,14 +15,11 @@ type ContactPageFormProps = {
   darkMode: boolean
 };
 
-const defaultProps = {
-  darkMode: false
-};
 type EmailWithTurnstileAuth = Email & {
   cfToken?: string //* cfToken = Cloudflare's Turnstile auth token
 };
 
-const ContactPageForm = ({ onSubmitForm, darkMode }: ContactPageFormProps & typeof defaultProps) => {
+const ContactPageForm = ({ onSubmitForm, darkMode = false }: ContactPageFormProps) => {
   //! Computed Prop
   const IsContactable = (import.meta.env.VITE_CONTACTABLE === "true") ? true : false; //* All env vars are actually strings
   const viewWidth = useViewWidth();
@@ -86,5 +83,4 @@ const ContactPageForm = ({ onSubmitForm, darkMode }: ContactPageFormProps & type
   );
 };
 
-ContactPageForm.defaultProps = defaultProps;
 export default ContactPageForm;

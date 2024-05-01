@@ -5,11 +5,8 @@ import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 export type TurnstileWidgetProps = {
   action: string, compact: boolean, successCB: (token?: string) => void, className?: string
 };
-const defaultProps = { //? Ensures props get defaults when placed in layout when using ".defaultProps"
-  compact: false
-};
 
-const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWidgetProps & typeof defaultProps) => {
+const TurnstileWidget = ({ action, compact = false, successCB, className }: TurnstileWidgetProps) => {
   const turnstileSize = (compact) ? "compact" : "normal";
   useEffect(() => {
     const turnstileRenderTimeoutID = setTimeout(() => {
@@ -44,5 +41,4 @@ const TurnstileWidget = ({ action, compact, successCB, className }: TurnstileWid
   return (<div id="turnstile-widget-container" className={`${className || ""} ${TurnstileWidgetCss.turnstileContainer}`}></div>);
 }; //todo Could render a placeholder labeled "Initializing Turnstile Verification Widget" while timeout is waiting
 
-TurnstileWidget.defaultProps = defaultProps;
 export default TurnstileWidget;
