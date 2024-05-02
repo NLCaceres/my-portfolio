@@ -3,7 +3,7 @@ import TurnstileWidgetCss from "./TurnstileWidget.module.css";
 import ConsoleLogger from "../Utility/Functions/LoggerFuncs";
 
 export type TurnstileWidgetProps = {
-  action: string, compact: boolean, successCB: (token?: string) => void, className?: string
+  action: string, compact?: boolean, successCB: (token?: string) => void, className?: string
 };
 
 const TurnstileWidget = ({ action, compact = false, successCB, className }: TurnstileWidgetProps) => {

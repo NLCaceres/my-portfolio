@@ -12,7 +12,7 @@ import { SendEmail, type Email } from "../Data/Api/Common";
 
 type ContactPageFormProps = {
   onSubmitForm?: (successful: boolean) => void,
-  darkMode: boolean
+  darkMode?: boolean //? Making this prop optional allows the JS default param value below to be used, i.e. `{ ..., darkMode = false }`
 };
 
 type EmailWithTurnstileAuth = Email & {
