@@ -1,13 +1,8 @@
-import { createContext, useState, useEffect, useContext, ReactNode } from "react";
+import { createContext, useState, useEffect, useContext, type PropsWithChildren } from "react";
 import debounce from "lodash/debounce";
 
-//* Could use Type instead BUT using interface allows exporting & mixing in via 'implements'
-type SlotProp = { //? WHICH is especially helpful given how common 'children slot' props can be
-  children: ReactNode
-};
-
 const ViewWidthContext = createContext(992); //* Default value
-export const ViewWidthProvider = ({ children }: SlotProp ) => {
+export const ViewWidthProvider = ({ children }: PropsWithChildren ) => {
   const [width, setWidth] = useState(window.innerWidth); //* Pass this window.innerWidth value in as real default!
 
   useEffect(() => { //? Use debounce to group all resize events into a single setWidth call
