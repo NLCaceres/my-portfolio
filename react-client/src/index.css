@@ -39,6 +39,19 @@ h4 {
   font-weight: 500 !important;
 }
 
+/** Hides an element visually BUT ensures a screen reader can still announce it to the user */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .will-change-contents { /* Providing this reusable class allows me to easily remove it when the animation has finished! */
   will-change: contents; /* Alternatively could use the "custom-ident" option which takes any CSS property name */
   /* Usually "custom-ident" is used with 'transform' or 'opacity' i.e. "will-change: transform, opacity;" */
