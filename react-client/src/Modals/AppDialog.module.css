@@ -1,0 +1,88 @@
+/** The container and its child should spread across the entire window */
+.container,
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/** Hover the container and its descendants + add flex for easy centering */
+.container {
+  z-index: 2112;
+  display: flex;
+}
+
+/** When aria-hidden, the container AND any descendants should be invisible and not focusable */
+.container[aria-hidden='true'] {
+  display: none;
+}
+
+/** Make the overlay look slightly opaque */
+.overlay {
+  background-color: #00000099;
+}
+
+/** Vertically AND horizontally centered hovering over the opaque overlay background */
+.dialog {
+  margin: auto 0.5rem;
+  z-index: 2112;
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #333333;
+  border-radius: 0.6rem;
+}
+/** Prevent dialog from growing too wide at mobile views */
+@media only screen and (min-width: 576px) {
+  .dialog {
+    margin: auto;
+    max-width: 500px;
+  }
+}
+
+/** Arrange the title and close button via flex + underline the section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid white;
+}
+/** When the title is invisible (except to screen-readers), then we can remove the underline style border,
+  shift the close button and shrink the header section equal to the height of the close button */
+.header.hidden {
+  border: none;
+  justify-content: end;
+  margin-bottom: -45px;
+}
+
+/** Offset the title closer to the header's underline border via margin */
+.title {
+  margin-bottom: -5px;
+  color: white;
+  font-weight: bolder;
+  font-size: calc(1.5rem + .6vw);
+}
+
+/** Set a specific height/width, offset the position via margin, + use a background image to create an "X" */
+/*? Using background to set the image works ONLY because the button has an accessibility label to convey the meaning/purpose/usage */
+.closeButton {
+  height: 45px;
+  width: 45px;
+  margin: -5px -10px 0 0;
+  padding: 1rem;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1rem auto no-repeat;
+  background-color: white;
+  opacity: 0.75;
+  border-radius: 0.5rem;
+}
+.closeButton:hover {
+  background-color: #aaaaaa;
+}
+
+/** Create padding for any children inserted into the dialog's main content section */
+.content {
+  padding: 1rem;
+}
