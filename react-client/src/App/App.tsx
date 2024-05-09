@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useViewWidth, { ViewWidthProvider } from "../ContextProviders/ViewWidthProvider";
 import AppAlert, { AlertState } from "../AppAlert/AppAlert";
-import AppModal from "../Modals/AppModal";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import ContactPageForm from "../ContactMePage/ContactPageForm";
 import Footer from "../Footer/Footer";
 import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
+import AppDialog from "../Modals/AppDialog";
+import { type A11yDialogInstance } from "react-a11y-dialog";
 //import * as serviceWorker from "./serviceWorker";
 
 export type ModalFunc = (show: boolean) => void;
@@ -15,7 +16,6 @@ export type AlertFunc = ({ title, message, color }: AlertState) => void;
 
 const Layout = () => {
   const width = useViewWidth();
-  const [showModal, setShowModal] = useState(false);
   const [alertState, setShowAlert] = useState<AlertState>({ title: "", message: "", color: "" });
 
   //! App Alert Functionality
@@ -32,8 +32,12 @@ const Layout = () => {
 
   //! Contact Button Functionality
   const navigate = useNavigate();
+  const dialog = useRef<A11yDialogInstance | undefined>();
+  const showDialog = (show: boolean) => { show ? dialog.current?.show() : dialog.current?.hide(); };
   const contactButtonClicked = () => {
-    if (width >= 576) { setShowModal(true); }
+    if (width >= 576) {
+      dialog.current?.show();
+    }
     else {
       SmoothScroll();
       navigate("contact-me");
@@ -41,7 +45,7 @@ const Layout = () => {
   };
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />
   const submitContactForm = (successful: boolean) => {
-    setShowModal(false);
+    dialog.current?.hide();
     //! In the future, may need VITE_CONTACTABLE env var but currently ContactPageForm component handles it
     if (successful) { //* For better UX, this provides feedback on what happened with user's email message onSubmit
       showAlertBriefly({ color: "success", title: "Email sent!", message: "Successfully sent your message! I should get back to you soon!" });
@@ -57,16 +61,13 @@ const Layout = () => {
     <>
       <AppNavbar />
 
-      <AppRouting context={[setShowModal, showAlertBriefly]} />
+      <AppRouting context={[showAlertBriefly, showDialog]} />
 
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
 
       <Footer contactButtonOnClick={contactButtonClicked} />
 
-      <AppModal ID="contact-me" show={ showModal } onHide={ () => setShowModal(false) } title="Send Me a Message!"
-        headerClasses="pt-2 pb-1" titleClasses="fw-bolder text-white">
-        <ContactPageForm onSubmitForm={submitContactForm} />
-      </AppModal>
+      <AppDialog title="Send Me a Message!" dialogRef={dialog}><ContactPageForm onSubmitForm={submitContactForm} /></AppDialog>
     </>
   );
 };

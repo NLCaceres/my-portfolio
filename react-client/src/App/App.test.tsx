@@ -100,9 +100,10 @@ describe("renders the whole app", () => {
       expect(modal).toBeInTheDocument();
       expect(scrollSpy).not.toHaveBeenCalled(); //* No scroll needed, just open the modal
 
-      const modalCloser = screen.getByLabelText("Close"); //* Close the modal now
+      const modalCloser = screen.getByLabelText(/close/i); //* Close the modal now
       await user.click(modalCloser);
-      expect(modal).not.toBeInTheDocument();
+      expect(modal).toHaveAttribute("aria-hidden", "true"); //* Invisible to screen readers via "aria-hidden"
+      expect(modal).toBeInTheDocument(); //* BUT it is still in the document body
 
       useViewWidthSpy.mockReturnValue(mobileHighEndWidth); //* Rerender as mobile version
       rerender(<RouterProvider router={router} />);
