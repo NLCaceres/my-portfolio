@@ -11,8 +11,6 @@ import AppDialog from "../Modals/AppDialog";
 import { type A11yDialogInstance } from "react-a11y-dialog";
 //import * as serviceWorker from "./serviceWorker";
 
-export type ModalFunc = (show: boolean) => void;
-export type AlertFunc = ({ title, message, color }: AlertState) => void;
 
 const Layout = () => {
   const width = useViewWidth();
