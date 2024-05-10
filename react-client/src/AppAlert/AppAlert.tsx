@@ -6,6 +6,7 @@ import FloatingAlertCss from "./AppAlert.module.css";
 
 //* Alert State for those that only appear briefly (closing on timeout)
 export type AlertState = { title?: string, message?: string, color?: string, timeoutID?: NodeJS.Timeout };
+export type AlertHandler = ({ title, message, color }: AlertState) => void;
 
 //* Currently used for contact-me email submission: Green on success & red on error
 type AlertProps = {
