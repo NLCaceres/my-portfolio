@@ -59,7 +59,7 @@ const Layout = () => {
     <>
       <AppNavbar />
 
-      <AppRouting context={[showAlertBriefly, showDialog]} />
+      <AppRouting context={{ showAlert: showAlertBriefly, showDialog }} />
 
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
 
