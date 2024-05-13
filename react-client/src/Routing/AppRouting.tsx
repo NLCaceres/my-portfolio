@@ -1,12 +1,17 @@
 import { useLocation, Outlet, useOutletContext } from "react-router-dom";
 import { animated, useTransition } from "@react-spring/web";
 import AppRoutingCss from "./AppRouting.module.css";
-import { type AlertFunc, type ModalFunc } from "../App/App";
+import { type AlertHandler } from "../AppAlert/AppAlert";
+import { type DialogOpener } from "../Modals/AppDialog";
 
-type AppRoutingProps = {
-  context: [ModalFunc, AlertFunc]
+type RoutingOutletContext = {
+  showAlert: AlertHandler,
+  showDialog: DialogOpener
 };
 
+type AppRoutingProps = {
+  context: RoutingOutletContext
+};
 const AppRouting = ({ context }: AppRoutingProps) => {
   //! Animations
   const location = useLocation();
@@ -24,8 +29,10 @@ const AppRouting = ({ context }: AppRoutingProps) => {
   ));
 };
 
+//? Thanks to React-Router's Outlet component any components rendered via the router
+//? gets access to the Routing Context and all objects/funcs it provides
 export function useRoutingContext() {
-  return useOutletContext<[ModalFunc, AlertFunc]>();
+  return useOutletContext<RoutingOutletContext>();
 }
 
 export default AppRouting;
