@@ -19,7 +19,7 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
 describe("renders a simple contact page with a form component", () => {
   test("with a parent & form container using css modules, & form in dark mode", () => {
     vi.spyOn(RoutingContext, "useRoutingContext")
-      .mockReturnValue([() => { return true; }, () => { }]); //? Simple mocks that won't get called anyway (so type doesn't matter)
+      .mockReturnValue({ showAlert: () => true, showDialog: () => { } }); //? Simple mocks that won't get called anyway (so type doesn't matter)
     render(<ContactPage />);
     const headerTag = screen.getByRole("heading", { name: /contact me/i });
     const parentContainer = headerTag.parentElement;
@@ -36,7 +36,7 @@ describe("renders a simple contact page with a form component", () => {
   });
   test("that depends on viewWidth for correct title font size", () => {
     vi.spyOn(RoutingContext, "useRoutingContext")
-      .mockReturnValue([() => { return true; }, () => { }]); //* Simple mocks that won't get called
+      .mockReturnValue({ showAlert: () => true, showDialog: () => { } }); //* Simple mocks that won't get called
     const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletLowEndWidth);
 
     const { rerender } = render(<ContactPage />);
@@ -48,10 +48,10 @@ describe("renders a simple contact page with a form component", () => {
     expect(title).toHaveClass("display-2");
   });
   test("that depends and uses callbacks from the RoutingContext", async () => {
-    const showModalMock = vi.fn();
     const showAlertMock = vi.fn();
+    const showDialogMock = vi.fn();
     vi.spyOn(RoutingContext, "useRoutingContext")
-      .mockReturnValue([showModalMock, showAlertMock]);
+      .mockReturnValue({ showAlert: showAlertMock, showDialog: showDialogMock });
     vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     vi.spyOn(CommonAPI, "SendEmail").mockImplementation(() => Promise.resolve("123")); //? Mocked to avoid network request
     vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse") //? Mocked just to save time (since no network request is run here)
@@ -61,7 +61,7 @@ describe("renders a simple contact page with a form component", () => {
     fireEvent.submit(screen.getByTestId("form-container"));
     //* WHEN the form submits, THEN it will run the RoutingContext provided func, showAlert, via ContactPage's submitContactForm method
     await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1)); //* ONLY showAlert is used
-    expect(showModalMock).toHaveBeenCalledTimes(0); //* NOT the showModal RoutingContext provides
+    expect(showDialogMock).toHaveBeenCalledTimes(0); //* NOT the showModal RoutingContext provides
 
     rerender(<ContactPage />);
     fireEvent.submit(screen.getByTestId("form-container"));
