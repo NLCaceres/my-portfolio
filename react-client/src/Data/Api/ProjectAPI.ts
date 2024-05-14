@@ -1,4 +1,4 @@
-import IsPlainObject from "lodash/isPlainObject";
+import { IsPlainObject } from "../../Utility/Typings/TypePredicates";
 import GetData from "./Utility";
 import Post from "../Models/Project";
 
@@ -12,7 +12,7 @@ export default async function GetPostList(qParams = "null") {
     projectList.majorProjects = jsonResponse.filter(project => project["project_size"] === "major_project");
     projectList.minorProjects = jsonResponse.filter(project => project["project_size"] === "small_project");
   }
-  else if (IsPlainObject(jsonResponse)) { // Based on TS, should be a Post BUT as a double check, use lodash to verify we get an "object"
+  else if (IsPlainObject(jsonResponse)) { //? Ensures a JS object received (most likely in the shape of Post)
     const majorProjSizeCheck = jsonResponse.project_size && jsonResponse.project_size === "major_project";
     const minorProjSizeCheck = jsonResponse.project_size && jsonResponse.project_size === "small_project";
     const idCheck = jsonResponse.id && jsonResponse.id.toString() === import.meta.env.VITE_ABOUT_ME_ID;
