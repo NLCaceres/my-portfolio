@@ -1,4 +1,4 @@
-import { IsEmpty, IsString, Strip, TitleCase } from "./StringExt";
+import { IsEmpty, Strip, TitleCase } from "./StringExt";
 
 describe("provides utility functions for string types", () => {
   test("checking if a string or arrays are empty", () => {
@@ -10,29 +10,6 @@ describe("provides utility functions for string types", () => {
     //* Only two valid options should be blank strings or empty arrays
     expect(IsEmpty([])).toBe(true);
     expect(IsEmpty("")).toBe(true);
-  });
-  test("checking if some variable is a string type", () => {
-    expect(IsString(0)).toBe(false);
-    expect(IsString(0.0)).toBe(false);
-    expect(IsString(1)).toBe(false);
-    expect(IsString(1.0)).toBe(false);
-    expect(IsString(2)).toBe(false);
-    expect(IsString(2.0)).toBe(false);
-
-    expect(IsString({})).toBe(false);
-    expect(IsString({ foo: "bar" })).toBe(false);
-
-    expect(IsString([])).toBe(false);
-    expect(IsString(["foo"])).toBe(false);
-
-    expect(IsString(true)).toBe(false);
-    expect(IsString(false)).toBe(false);
-    expect(IsString(null)).toBe(false);
-    expect(IsString(undefined)).toBe(false);
-
-    //* Only typical strings should return true
-    expect(IsString("")).toBe(true);
-    expect(IsString("foobar")).toBe(true);
   });
 
   test("provides an alternative method of calling trim to remove whitespace", () => {

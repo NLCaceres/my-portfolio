@@ -1,8 +1,7 @@
-//* Provides functions that act directly on strings to provide quick and simple functionality common in other languages */
+import { IsString } from "../Typings/TypePredicates";
 
-export function IsString(value: unknown): value is string {
-  return typeof value === "string" || value instanceof String;
-}
+
+//* Provides functions that act directly on strings to provide quick and simple functionality common in other languages */
 
 export function IsEmpty<T>(value: string | Array<T>) {
   return value.length === 0;
