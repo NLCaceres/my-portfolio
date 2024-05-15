@@ -1,6 +1,30 @@
-import { IsPlainObject } from "./TypePredicates";
+import { IsPlainObject, IsString } from "./TypePredicates";
 
 describe("provides common type predicates to assert value typing across the app", () => {
+  test("checking if some variable is a string type", () => {
+    expect(IsString(0)).toBe(false);
+    expect(IsString(0.0)).toBe(false);
+    expect(IsString(1)).toBe(false);
+    expect(IsString(1.0)).toBe(false);
+    expect(IsString(2)).toBe(false);
+    expect(IsString(2.0)).toBe(false);
+
+    expect(IsString({})).toBe(false);
+    expect(IsString({ foo: "bar" })).toBe(false);
+
+    expect(IsString([])).toBe(false);
+    expect(IsString(["foo"])).toBe(false);
+
+    expect(IsString(true)).toBe(false);
+    expect(IsString(false)).toBe(false);
+    expect(IsString(null)).toBe(false);
+    expect(IsString(undefined)).toBe(false);
+
+    //* Only typical strings should return true
+    expect(IsString("")).toBe(true);
+    expect(IsString("foobar")).toBe(true);
+  });
+
   test("checking for a plain javascript object", () => {
     //* All the basic types fail to return true
     expect(IsPlainObject(undefined)).toBe(false);
