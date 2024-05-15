@@ -2,7 +2,7 @@ import { type PropsWithChildren } from "react";
 import { animated } from "@react-spring/web";
 import PlaceholderImgCss from "./PlaceholderImg.module.css";
 import AppSpinner from "../AppSpinner/AppSpinner";
-import IsString from "lodash/isString";
+import { IsString } from "../Utility/Typings/TypePredicates";
 import { type AnimatableStyle } from "../Utility/Typings/ReactSpringTypes";
 
 //? Making all props optional allows the Func Component to set each prop's defaults to non-optional values,
