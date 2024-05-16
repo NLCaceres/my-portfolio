@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext, type PropsWithChildren } from "react";
-import debounce from "lodash/debounce";
+import { debounce } from "../Utility/Functions/Debounce";
 
 const ViewWidthContext = createContext(992); //* Default value
 export const ViewWidthProvider = ({ children }: PropsWithChildren ) => {
