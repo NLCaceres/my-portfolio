@@ -2,11 +2,9 @@ import { useLocation, Outlet, useOutletContext } from "react-router-dom";
 import { animated, useTransition } from "@react-spring/web";
 import AppRoutingCss from "./AppRouting.module.css";
 import { type AlertHandler } from "../AppAlert/AppAlert";
-import { type DialogOpener } from "../Modals/AppDialog";
 
 type RoutingOutletContext = {
   showAlert: AlertHandler,
-  showDialog: DialogOpener
 };
 
 type AppRoutingProps = {
