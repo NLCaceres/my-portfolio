@@ -31,7 +31,6 @@ const Layout = () => {
   //! Contact Button Functionality
   const navigate = useNavigate();
   const dialog = useRef<A11yDialogInstance | undefined>();
-  const showDialog = (show: boolean) => { show ? dialog.current?.show() : dialog.current?.hide(); };
   const contactButtonClicked = () => {
     if (width >= 576) {
       dialog.current?.show();
@@ -59,7 +58,7 @@ const Layout = () => {
     <>
       <AppNavbar />
 
-      <AppRouting context={{ showAlert: showAlertBriefly, showDialog }} />
+      <AppRouting context={{ showAlert: showAlertBriefly }} />
 
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
 
