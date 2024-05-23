@@ -3,9 +3,6 @@ import { createPortal } from "react-dom";
 import { type A11yDialogInstance, useA11yDialog } from "react-a11y-dialog";
 import AppDialogCss from "./AppDialog.module.css";
 
-//* Generally, the following is implemented as `(show: boolean) => { show ? ref.open() : ref.hide(); }`
-export type DialogOpener = (show: boolean) => void;
-
 type DialogProps = {
   title: string //? Required to help assistive tech identify the dialog to users
   hideTitle?: boolean,
