@@ -45,6 +45,24 @@ describe("renders an accessible dialog view over the window", () => {
     expect(titleElement.parentElement).toHaveClass("header hidden", { exact: true });
     expect(titleElement).toBeInTheDocument();
     expect(titleElement).toHaveClass("sr-only", { exact: true }); //* AND even if the title is visually hidden
+    mockRef.current!.hide(); //* Ensure hidden for next rerender
+
+    //! hideTitle set to false acts the same as when its undefined on the initial render
+    rerender(<AppDialog dialogRef={mockRef} title="Visible Dialog" hideTitle={false} />);
+    //* WHEN the dialog's title is explicitly made visible
+    const anotherDialog = screen.getByRole("dialog", { hidden: true });
+    expect(anotherDialog).toBeInTheDocument();
+    expect(anotherDialog).toHaveAttribute("aria-hidden", "true");
+    //* THEN the title is still hidden when the dialog is hidden
+    expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
+
+    mockRef.current!.show();
+    //* WHEN the dialog is made visible
+    const definitelyVisibleDialog = screen.getByRole("dialog", { hidden: false });
+    expect(definitelyVisibleDialog).toBeInTheDocument();
+    expect(definitelyVisibleDialog).not.toHaveAttribute("aria-hidden");
+    //* THEN the title becomes visible
+    expect(screen.getByRole("heading", { level: 1, name: "Visible Dialog" })).toBeInTheDocument();
   });
   test("uses `A11y-Dialog`'s hook and the useId hook to setup the dialog functionality and accessibility", () => {
     const mockRef: MutableRefObject<A11yDialogInstance | undefined> = { current: undefined };
