@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useViewWidth, { ViewWidthProvider } from "../ContextProviders/ViewWidthProvider";
 import AppAlert, { AlertState } from "../AppAlert/AppAlert";
@@ -7,8 +7,7 @@ import ContactPageForm from "../ContactMePage/ContactPageForm";
 import Footer from "../Footer/Footer";
 import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
-import AppDialog from "../Modals/AppDialog";
-import { type A11yDialogInstance } from "react-a11y-dialog";
+import useDialog, { DialogProvider } from "../ContextProviders/DialogProvider";
 //import * as serviceWorker from "./serviceWorker";
 
 
@@ -30,10 +29,10 @@ const Layout = () => {
 
   //! Contact Button Functionality
   const navigate = useNavigate();
-  const dialog = useRef<A11yDialogInstance | undefined>();
+  const { showDialog } = useDialog();
   const contactButtonClicked = () => {
-    if (width >= 576) {
-      dialog.current?.show();
+    if (width >= 576 && showDialog) {
+      showDialog({ title: "Send Me a Message!", children: <ContactPageForm onSubmitForm={submitContactForm} /> });
     }
     else {
       SmoothScroll();
@@ -42,7 +41,7 @@ const Layout = () => {
   };
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />
   const submitContactForm = (successful: boolean) => {
-    dialog.current?.hide();
+    showDialog && showDialog(false);
     //! In the future, may need VITE_CONTACTABLE env var but currently ContactPageForm component handles it
     if (successful) { //* For better UX, this provides feedback on what happened with user's email message onSubmit
       showAlertBriefly({ color: "success", title: "Email sent!", message: "Successfully sent your message! I should get back to you soon!" });
@@ -63,15 +62,13 @@ const Layout = () => {
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
 
       <Footer contactButtonOnClick={contactButtonClicked} />
-
-      <AppDialog title="Send Me a Message!" dialogRef={dialog}><ContactPageForm onSubmitForm={submitContactForm} /></AppDialog>
     </>
   );
 };
 
 //? ContextProviders are only properly observed if they exist ABOVE the component calling useContext(), NOT the same level
 const App = () => {
-  return <ViewWidthProvider> <Layout /> </ViewWidthProvider>;
+  return <ViewWidthProvider> <DialogProvider> <Layout /> </DialogProvider> </ViewWidthProvider>;
 };
 
 export default App;
