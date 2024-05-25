@@ -19,7 +19,7 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
 describe("renders a simple contact page with a form component", () => {
   test("with a parent & form container using css modules, & form in dark mode", () => {
     vi.spyOn(RoutingContext, "useRoutingContext")
-      .mockReturnValue({ showAlert: () => true, showDialog: () => { } }); //? Simple mocks that won't get called anyway (so type doesn't matter)
+      .mockReturnValue({ showAlert: () => true }); //? Simple mocks that won't get called anyway (so type doesn't matter)
     render(<ContactPage />);
     const headerTag = screen.getByRole("heading", { name: /contact me/i });
     const parentContainer = headerTag.parentElement;
@@ -36,7 +36,7 @@ describe("renders a simple contact page with a form component", () => {
   });
   test("that depends on viewWidth for correct title font size", () => {
     vi.spyOn(RoutingContext, "useRoutingContext")
-      .mockReturnValue({ showAlert: () => true, showDialog: () => { } }); //* Simple mocks that won't get called
+      .mockReturnValue({ showAlert: () => true }); //* Simple mocks that won't get called
     const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletLowEndWidth);
 
     const { rerender } = render(<ContactPage />);
@@ -51,7 +51,7 @@ describe("renders a simple contact page with a form component", () => {
     const showAlertMock = vi.fn();
     const showDialogMock = vi.fn();
     vi.spyOn(RoutingContext, "useRoutingContext")
-      .mockReturnValue({ showAlert: showAlertMock, showDialog: showDialogMock });
+      .mockReturnValue({ showAlert: showAlertMock });
     vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
     vi.spyOn(CommonAPI, "SendEmail").mockImplementation(() => Promise.resolve("123")); //? Mocked to avoid network request
     vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse") //? Mocked just to save time (since no network request is run here)
