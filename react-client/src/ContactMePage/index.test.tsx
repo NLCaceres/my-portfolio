@@ -1,7 +1,9 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import ContactPage from ".";
 import { averageTabletLowEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
+import * as ContactPageForm from "./ContactPageForm";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as RoutingContext from "../Routing/AppRouting";
 import * as CommonAPI from "../Data/Api/Common";
@@ -17,6 +19,8 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
 });
 
 describe("renders a simple contact page with a form component", () => {
+  afterEach(() => { vi.restoreAllMocks(); });
+
   test("with a parent & form container using css modules, & form in dark mode", () => {
     vi.spyOn(RoutingContext, "useRoutingContext")
       .mockReturnValue({ showAlert: () => true }); //? Simple mocks that won't get called anyway (so type doesn't matter)
@@ -33,6 +37,27 @@ describe("renders a simple contact page with a form component", () => {
     const formComponent = formParentContainer!.firstChild;
     expect(formComponent).toBeInTheDocument();
     expect(formComponent).toHaveClass("dark");
+  });
+  test("providing a submit contact function to its child", async () => {
+    const user = userEvent.setup();
+    const showAlertMock = vi.fn();
+    vi.spyOn(RoutingContext, "useRoutingContext")
+      .mockReturnValue({ showAlert: showAlertMock });
+    let isSuccessful = true;
+    vi.spyOn(ContactPageForm, "default").mockImplementation(({ onSubmitForm }: { onSubmitForm?: (successful: boolean) => void, darkMode?: boolean }) => {
+      return <button onClick={() => { onSubmitForm && onSubmitForm(isSuccessful); }}>Foobar</button>;
+    });
+    render(<ContactPage />);
+    expect(showAlertMock).not.toHaveBeenCalled();
+    await user.click(screen.getByText("Foobar"));
+    expect(showAlertMock).toHaveBeenCalledOnce();
+    expect(showAlertMock).toHaveBeenLastCalledWith({ color: "success", title: "Email sent!", message: "Successfully sent your message! I should get back to you soon!" });
+
+    isSuccessful = false;
+    await user.click(screen.getByText("Foobar"));
+    expect(showAlertMock).toHaveBeenLastCalledWith({ color: "danger", title: "Sorry! Your email wasn't sent!",
+      message: "Hopefully I'll have everything back up and running soon! In the mean time, enjoy the rest of my portfolio. Thanks!"
+    });
   });
   test("that depends on viewWidth for correct title font size", () => {
     vi.spyOn(RoutingContext, "useRoutingContext")
