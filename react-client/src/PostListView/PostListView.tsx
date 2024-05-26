@@ -2,17 +2,17 @@ import { useCallback, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import PostCard from "./PostCard";
-import CardImageModal from "../Modals/CardImageModal";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
 import UseNullableAsync from "../Hooks/UseAsync";
 import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
 import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
+import useDialog from "../ContextProviders/DialogProvider";
+import AppCarousel from "../AppCarousel/AppCarousel";
 
 //! Helpful types for PostListView useState
 type SplitProjectList = { majorProjects: Project[], minorProjects: Project[] };
 type ProjectTitleAndImage = Pick<Project, "title" | "post_images">;
-type ProjectModalState = { showModal: boolean, modalProject?: ProjectTitleAndImage };
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
 const PostListView = () => {
@@ -26,16 +26,21 @@ const PostListView = () => {
   const title = (projectType === "front-end" || projectType === "back-end")
     ? KebabCaseToKebabTitleCase(projectType) : KebabCaseToTitleCase(projectType);
 
-  //! State of this component: ModalState + ProjectList
-  const [projectList, setProjectList] = useState<SplitProjectList>({ majorProjects: [], minorProjects: [] });
-  const [modalState, setModalState] = useState<ProjectModalState>({ showModal: false, modalProject: undefined });
+  //! State + Computed Props of the component
+  const { showDialog } = useDialog();
   const openModal = (newProject?: ProjectTitleAndImage) => {
-    if (viewWidth < 768) { return; } //* No modal rendered for mobile so end func here
-    setModalState(prevState => ({ showModal: !prevState.showModal, modalProject: newProject }));
+    if (viewWidth < 768 || !newProject || !newProject.post_images || newProject.post_images.length <= 1) {
+      showDialog && showDialog(false);
+      return;
+    } //* No modal rendered for mobile so end func here
+    showDialog && showDialog({
+      title: newProject?.title, children: <AppCarousel key={newProject.title} images={newProject.post_images ?? []} className="px-4 mt-3" />
+    });
   };
 
-  //! Computed Props of this component
   const viewWidth = useViewWidth();
+
+  const [projectList, setProjectList] = useState<SplitProjectList>({ majorProjects: [], minorProjects: [] });
   const sortingCallback = useCallback((projectList?: SplitProjectList) => {
     const sortedMajorProjects = SortProjects(projectList?.majorProjects ?? []).map(project => {
       project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
@@ -57,9 +62,6 @@ const PostListView = () => {
     (projectList?.majorProjects?.length > 0 || projectList?.minorProjects?.length > 0) ?
       (
         <div>
-          { viewWidth >= 768 && ( //? ImageModal is completely unmounted until img click mounts it then injects project images list
-            <CardImageModal onHide={ () => openModal() } show={ modalState.showModal } project={ modalState.modalProject } />
-          )}
           { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ title }</h1> }
           <ProjectList projectList={ projectList } projectType={ projectType } viewWidth={ viewWidth } modalControl={ openModal } />
         </div>
@@ -81,7 +83,7 @@ const ProjectList = ({ projectList, projectType, viewWidth, modalControl }: Proj
     return (
       <div key={`${projectType} ${properSize}`}>
         <h1 className={`ms-2 my-1 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ aboutMeTitle || properSize }</h1>
-        <ProjectSection postCardClasses="mx-sm-4" projects={ projects } viewWidth = { viewWidth } modalControl={ modalControl } />
+        <ProjectSection postCardClasses="mx-sm-4" projects={ projects } modalControl={ modalControl } />
       </div>
     );
   });
@@ -90,13 +92,12 @@ const ProjectList = ({ projectList, projectType, viewWidth, modalControl }: Proj
 //* Project Section returns the list of either major or small projects
 //* On small screens the cards are always setup left to right. On big screens, they zig-zag (left to right / right to left)
 //* If no posts are returned from the server, a fallback Not Found Component will render
-type ProjectSectionProps = { projects: Project[], viewWidth: number, postCardClasses?: string, modalControl: (project: Project) => void };
-const ProjectSection = ({ projects, viewWidth, postCardClasses, modalControl }: ProjectSectionProps) => {
+type ProjectSectionProps = { projects: Project[], postCardClasses?: string, modalControl: (project: Project) => void };
+const ProjectSection = ({ projects, postCardClasses, modalControl }: ProjectSectionProps) => {
   return (Array.isArray(projects) && projects?.length > 0) && //* Rails will ALWAYS return array (even if only 1 post returned)
     projects.map((project) => {
-      const modalRendered = (viewWidth >= 768 && (project.post_images ?? []).length > 1);
       return <PostCard key={ project.title } className={ postCardClasses }
-        project={ project } onImgClick={ () => { if (modalRendered) modalControl(project); } } />;
+        project={ project } onImgClick={ () => { modalControl(project); } } />;
     }
     );
 };

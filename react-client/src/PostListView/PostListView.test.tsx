@@ -7,6 +7,7 @@ import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 import * as GetPostList from "../Data/Api/ProjectAPI";
 import * as ProjectHelpers from "../Data/Models/Project";
+import * as DialogProvider from "../ContextProviders/DialogProvider";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 
 describe("renders a list of bootstrap cards filled with post objs", () => {
@@ -77,7 +78,10 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 10th time is also called with an empty array
   });
   describe("that depends on viewWidth for rendering", () => {
-    test("a modal for multi-image posts", async () => {
+    test("a dialog for multi-image posts", async () => {
+      const showDialogMock = vi.fn();
+      vi.spyOn(DialogProvider, "default")
+        .mockReturnValue({ showDialog: showDialogMock });
       const twoImgProj = ProjectFactory.create(2); const noImgProj = ProjectFactory.create(); const oneImgProj = ProjectFactory.create(1);
       ApiMock.mockImplementation(() => ({ majorProjects: [twoImgProj, noImgProj], minorProjects: [oneImgProj] }));
       const user = userEvent.setup();
@@ -85,21 +89,20 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       const { rerender } = render(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text })); //* Use click to make modal appear
       expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Called by each of the 3 Postcards Projects
-      const modalOpenFirstTime = screen.getByRole("dialog");
-      expect(modalOpenFirstTime).toBeInTheDocument(); expect(modalOpenFirstTime).toHaveClass("show"); //* Modal mounted and it's visible
-      await user.click(screen.getByRole("button", { name: /close/i })); //* Close the modal
+      expect(showDialogMock).toHaveBeenCalledOnce(); //* Dialog opener ONLY ever called if viewWidth > 768 AND project has > 1 image
 
       //* Only have 1 img so a condition in ProjectSection says don't render a modal, just render an img
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text })); //* Only 1 image in [] so click doesn't work
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* Modal long gone
+      expect(showDialogMock).toHaveBeenCalledTimes(2); //* Dialog opener called again
+      expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false as the param value indicating no dialog opening needed
 
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       rerender(<MemoryRouter initialEntries={["/foobar-title"]}> <PostListView /> </MemoryRouter>);
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text }));
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* No modal renders since viewWidth < 768
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text }));
-      //* Still no modal renders since two conditions fail in single img project post: viewWidth too small AND post only has 1 img
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(showDialogMock).toHaveBeenCalledTimes(3); //* Still called
+      expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false again, so no Dialog needed to be opened
       expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Not called anymore
     });
     test("a different size title", async () => {
