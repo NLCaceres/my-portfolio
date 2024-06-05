@@ -31,7 +31,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-       
+
     # Apply the following ENV vars to all of the following steps of this job
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
@@ -62,10 +62,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use PNPM 8
+      - name: Use PNPM 9
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -75,7 +75,7 @@ jobs:
       - name: Run React tests
         run: pnpm -C react-client test
 
-  
+
   deploy:
     name: Deploy to Railway
     needs: [ruby_on_rails_test, react_tests]
