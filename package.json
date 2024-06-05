@@ -5,11 +5,11 @@
   "engines": {
     "node": "^20.9.0",
     "npm": "^10.5.0",
-    "pnpm": "^9.1.4"
+    "pnpm": "^9.2.0"
   },
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.2.0",
   "scripts": {
-    "railway-install": "pnpm -C react-client install --frozen-lockfile",
+    "railway-install": "pnpm -C react-client install --frozen-lockfile --prod",
     "railway-build": "pnpm -C react-client build",
     "railway-copy": "cp -a react-client/dist/. public/",
     "railway-rename-index": "mv public/index.html public/main.html",
