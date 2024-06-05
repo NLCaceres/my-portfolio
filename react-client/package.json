@@ -9,6 +9,7 @@
     "npm": "^10.5.0",
     "pnpm": "^9.1.4"
   },
+  "packageManager": "pnpm@9.1.4",
   "dependencies": {
     "@react-spring/web": "^9.7.3",
     "@types/node": "^20.14.1",
