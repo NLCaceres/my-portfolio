@@ -22,6 +22,20 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to 'http://www.example.com:3000/portfolio/about-me'
   end
 
+  test 'should exclude health-check from SSL redirect' do
+    get '/health-check'
+    #? Rails forces SSL in production, causing a 308 redirect when Railway tries to reach the health-check endpoint
+    #? Railway wants a 200 status code, so in `production.rb:56` I've excluded the specific endpoint from using SSL
+    assert %r{^/(health-check)$}.match?(@request.path) #? via this Regex that should ONLY match true for "/health-check"
+    #? The good thing is Railway will enforce SSL regardless once the health-check succeeds and the app deploys
+
+    #* The following nearly match BUT aren't the match I'm looking for, so let SSL function as normally expected
+    assert_not %r{^/(health-check)$}.match?('/api/health-check')
+    assert_not %r{^/(health-check)$}.match?('/foo/bar/health-check')
+    assert_not %r{^/(health-check)$}.match?('health-check')
+    assert_not %r{^/(health-check)$}.match?('/health-chec')
+  end
+
   test 'most routes should redirect' do
     ENV['RAILS_ENV'] = 'production'
     get '/foo' #* Fires off request on port 3001 but will always redirect to 3000

@@ -52,6 +52,10 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
+  #? Enforce SSL Redirect (http to HTTPS) for ALL endpoints paths except specifically "/health-check"
+  config.ssl_options = { redirect: { exclude: ->(request) { %r{^/(health-check)$}.match?(request.path) } } }
+  #? The above ONLY overwrites SSL Redirect's Exclude key. Other options of the Redirect hash stay their default values
+  #? Secure Cookies and HTTP Strict Transport Security (HSTS) remain setup as normal, i.e. Enabled by default
 
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
