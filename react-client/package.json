@@ -42,7 +42,9 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "type-check": "tsc",
+    "type-check-build": "tsc --project tsconfig.build.json",
+    "build": "pnpm type-check-build && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
