@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
 
   "compilerOptions": {
-    "types": ["vite/client"]
+    "types": ["node", "vite/client"]
   },
 
   "exclude": ["src/**/*.test.ts*"]
