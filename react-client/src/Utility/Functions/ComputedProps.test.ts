@@ -18,17 +18,17 @@ describe("provides functions to transform data into UI-ready forms", () => {
     expect(DropSpecialChars("Foobar")).toBe("Foobar");
     expect(DropSpecialChars("Foo Bar")).toBe("Foo Bar");
 
-    //* Trim whitespace
+    // - Trim whitespace
     expect(DropSpecialChars("  Foo Bar")).toBe("  Foo Bar");
     expect(DropSpecialChars("Foo Bar  ")).toBe("Foo Bar");
 
-    //* All the special chars should be dropped from the end
+    // - All the special chars should be dropped from the end
     expect(DropSpecialChars("Foo Bar+")).toBe("Foo Bar");
     expect(DropSpecialChars("Foo Bar_")).toBe("Foo Bar");
     expect(DropSpecialChars("Foo Bar-")).toBe("Foo Bar");
     expect(DropSpecialChars("Foo Bar~")).toBe("Foo Bar");
 
-    //* As long these chars are at the end of the str, they will all be removed
+    // - As long these chars are at the end of the str, they will all be removed
     expect(DropSpecialChars("Foo Bar_+ ")).toBe("Foo Bar");
     expect(DropSpecialChars("_+ Foo Bar")).toBe("_+ Foo Bar");
 
@@ -46,16 +46,21 @@ describe("provides functions to transform data into UI-ready forms", () => {
     const uppercaseSpacedPhrase = CamelCaseToTitleCase("theCowGoesMoo");
     expect(uppercaseSpacedPhrase).toBe("The Cow Goes Moo");
     const normalSpacedPhrase = CamelCaseToTitleCase("theCow goesMoo");
-    expect(normalSpacedPhrase).toBe("The Cow goes Moo"); //* "goes" is NOT capitalized since it's split as ["the", "Cow goes", "moo"]
+    expect(normalSpacedPhrase).toBe("The Cow goes Moo"); // - "goes" is NOT capitalized since it's split as ["the", "Cow goes", "moo"]
     const uppercaseWord = CamelCaseToTitleCase("the");
     expect(uppercaseWord).toBe("The");
     const uppercaseTwoLetterWord = CamelCaseToTitleCase("is");
     expect(uppercaseTwoLetterWord).toBe("Is");
     const uppercaseLetter = CamelCaseToTitleCase("t");
     expect(uppercaseLetter).toBe("T");
+    const emptyString = CamelCaseToTitleCase("");
+    expect(emptyString).toBe("");
   });
 
   test("removes html unsafe chars and kebabs the remainder of a phrase", () => {
+    const emptyString = CleanAndKebabString("");
+    expect(emptyString).toBe("");
+
     const testString = CleanAndKebabString("Foo!Bar/Bam:Dan?Fred[Tom`Kim{Em~");
     expect(testString).toBe("foobarbamdanfredtomkimem");
 
@@ -70,14 +75,14 @@ describe("provides functions to transform data into UI-ready forms", () => {
   });
 
   test("transform kebab-case phrase into uppercase whitespace delimited phrase", () => {
-    //* Used to consider all falsy values, but now only strings SHOULD ever be passed in
+    // - Used to consider all falsy values, but now only strings SHOULD ever be passed in
     const emptyStrPhrase = KebabCaseToTitleCase("");
     expect(emptyStrPhrase).toBe("");
 
     const uppercaseSpacedPhrase = KebabCaseToTitleCase("the-cow-goes-moo");
     expect(uppercaseSpacedPhrase).toBe("The Cow Goes Moo");
     const normalSpacedPhrase = KebabCaseToTitleCase("the cow goes moo");
-    expect(normalSpacedPhrase).toBe("The cow goes moo"); //* Only "the" is capitalized
+    expect(normalSpacedPhrase).toBe("The cow goes moo"); // - Only "the" is capitalized
     const uppercaseWord = KebabCaseToTitleCase("the");
     expect(uppercaseWord).toBe("The");
     const uppercaseTwoLetterWord = KebabCaseToTitleCase("is");
@@ -85,7 +90,7 @@ describe("provides functions to transform data into UI-ready forms", () => {
     const uppercaseLetter = KebabCaseToTitleCase("t");
     expect(uppercaseLetter).toBe("T");
 
-    //* Need to re-kebab certain phrases
+    // - Need to re-kebab certain phrases
     const hyphenatedFrontEnd = KebabCaseToTitleCase("front-end");
     expect(hyphenatedFrontEnd).not.toBe("Front-End");
     expect(hyphenatedFrontEnd).toBe("Front End");
@@ -100,7 +105,7 @@ describe("provides functions to transform data into UI-ready forms", () => {
     const uppercaseSpacedPhrase = KebabCaseToKebabTitleCase("the-cow-goes-moo");
     expect(uppercaseSpacedPhrase).toBe("The-Cow-Goes-Moo");
     const normalSpacedPhrase = KebabCaseToKebabTitleCase("the cow goes moo");
-    expect(normalSpacedPhrase).toBe("The cow goes moo"); //* Only "the" is capitalized
+    expect(normalSpacedPhrase).toBe("The cow goes moo"); // - Only "the" is capitalized
     const uppercaseWord = KebabCaseToKebabTitleCase("the");
     expect(uppercaseWord).toBe("The");
     const uppercaseTwoLetterWord = KebabCaseToKebabTitleCase("is");
