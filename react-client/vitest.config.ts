@@ -4,7 +4,7 @@ import reactPlugin from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [reactPlugin()],
   test: {
-    include: ["./**/*.test.tsx", "./**/*.test.ts"],
+    include: ["./**/*.test.{ts,tsx}"],
     globals: true,
     environment: "jsdom",
     css: { modules: { classNameStrategy: "non-scoped" } },
@@ -20,6 +20,7 @@ export default defineConfig({
       },
       include: ["**/*.{js,jsx,ts,tsx}"],
       exclude: [
+        "build/**",
         "dist/**",
         "public/**",
         "**/node_modules/**",
