@@ -63,7 +63,7 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
           return (
             <div className="carousel-item" key={ image.image_url }>
               <IntersectLoadImage src={ image.image_url } alt={ image.alt_text } placeholderText={ placeholderText }
-                className={`${PostCardCss.cardImgContainer} mx-auto`} />
+                                  className={`${PostCardCss.cardImgContainer} mx-auto`} />
             </div>
           );
         })}
@@ -75,7 +75,7 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
   if (viewWidth >= 992 && postImages.length > 1) { classString += ` ${PostCardCss.clickable}`; } //* Add in CSS at specific viewport width
   return ( //* At desktop sizes, render a single image that can open a modal if the project has multiple imgs
     <IntersectLoadImage src={ postImages[0].image_url } alt={ postImages[0].alt_text }
-      placeholderText={ placeholderText } onImgClick={ onImgClick } className={ classString } />
+                        placeholderText={ placeholderText } onImgClick={ onImgClick } className={ classString } />
   );
 };
 
@@ -89,14 +89,15 @@ const CardDetails = ({ project }: BasePostCardProps) => {
       <Card.Text className={ PostCardCss.cardText }>
         { project.description }
       </Card.Text>
-      <Button href={ project.github_url } className={`${PostCardCss.githubLink} ${PostCardCss.blockButton}
-        fw-bold ms-4 ms-md-3 mt-3 mt-md-4`}> { /* "mt-3" used to resemble postCardPlaceholder's margins */}
-          Github Page
+      { /* "mt-3" used in this button to resemble postCardPlaceholder's margins */ }
+      <Button href={ project.github_url }
+              className={`${PostCardCss.githubLink} ${PostCardCss.blockButton} fw-bold ms-4 ms-md-3 mt-3 mt-md-4`}>
+        Github Page
       </Button>
       { project.homepage_url && (
-        <Button className={`${PostCardCss.blockButton} ${PostCardCss.pageLink}
-          fw-bold ms-2 ms-md-4 mt-3 mt-md-4`} href={ project.homepage_url }>
-            Home Page
+        <Button href={ project.homepage_url }
+                className={`${PostCardCss.blockButton} ${PostCardCss.pageLink} fw-bold ms-2 ms-md-4 mt-3 mt-md-4`}>
+          Home Page
         </Button>
       )}
     </Card.Body>

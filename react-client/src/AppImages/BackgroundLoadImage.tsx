@@ -54,13 +54,13 @@ const BackgroundLoadImage = (
     <animated.div className={`${BackgroundLoadImageCss.container} ${className || ""}`} ref={parentRef} style={{ height, width }}>
       { (loading || !successfulLoad) && /*//* Cover img tag when loading and display as backup if load failed or threw errors */
         <PlaceholderImg loading={loading} className={`${BackgroundLoadImageCss.placeholder} ${placeholderClass || ""}`.trim()}
-          style={fadeOutSpring} textStyle={placeholderTextStyle}>
+                        style={fadeOutSpring} textStyle={placeholderTextStyle}>
           { placeholderText }
         </PlaceholderImg>
       }
       { (loading || successfulLoad) && /*//* Once loading is set true, let the image load! If the src url fails, then remove the img! */
         <animated.img src={src} alt={alt} onClick={onImgClick} onLoad={loadFinished} onError={loadFailed}
-          className={`${BackgroundLoadImageCss.photo} ${imgClass || ""}`.trim()} style={fadeInSpring} />
+                      className={`${BackgroundLoadImageCss.photo} ${imgClass || ""}`.trim()} style={fadeInSpring} />
       }
     </animated.div>
   );

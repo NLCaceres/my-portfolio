@@ -57,13 +57,13 @@ const ContactPageForm = ({ onSubmitForm, darkMode = false }: ContactPageFormProp
       <Form.Group controlId="inputEmail" as={ Col } xs="10" sm="8" className="mb-3">
         <Form.Label className={ContactPageFormCss.formLabel}>Email Address</Form.Label>
         <Form.Control className="px-2" type="email" placeholder="Please enter your email"
-          isInvalid={validationErrors.email.length > 0} onChange={e => updateEmailValue("email", e.target.value) } />
+                      isInvalid={validationErrors.email.length > 0} onChange={e => updateEmailValue("email", e.target.value) } />
         { validationErrors.email.map((error) => <Form.Control.Feedback key={error} type="invalid">{ error }</Form.Control.Feedback>) }
       </Form.Group>
       <Form.Group controlId="inputMessage" className="mb-3">
         <Form.Label className={ContactPageFormCss.formLabel}>Message</Form.Label>
         <Form.Control className="px-2" type="message" placeholder="Your Message" as="textarea" rows={ 3 }
-          isInvalid={validationErrors.message.length > 0} onChange={e => updateEmailValue("message", e.target.value) } />
+                      isInvalid={validationErrors.message.length > 0} onChange={e => updateEmailValue("message", e.target.value) } />
         { validationErrors.message.map((error) => <Form.Control.Feedback key={error} type="invalid">{ error }</Form.Control.Feedback>) }
       </Form.Group>
 

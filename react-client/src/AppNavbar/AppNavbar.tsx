@@ -57,8 +57,7 @@ const NavButtons = () => {
 
   return (Object.keys(tabProperNames) as Array<keyof typeof tabProperNames>).map(keyName => {
     return (
-      <Nav.Item className={`border border-dark rounded ${NavbarCss.navItem}`}
-        key={ tabProperNames[keyName] }>
+      <Nav.Item key={ tabProperNames[keyName] } className={`border border-dark rounded ${NavbarCss.navItem}`}>
         <NavLink to={`portfolio/${keyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
           { tabProperNames[keyName] }
         </NavLink>

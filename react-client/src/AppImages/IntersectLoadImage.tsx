@@ -11,7 +11,7 @@ const IntersectLoadImage = ({ src, alt, placeholderText, onImgClick, className, 
   const [ref, inView] = useInView({ amount: 0.6, once: true }); //* ref attaches to element while inView simply notifies us when the threshold is crossed
   return (
     <BackgroundLoadImage src={inView ? src : ""} alt={alt} parentRef={ref} className={className}
-      placeholderText={placeholderText} onImgClick={onImgClick} imgClass={imgClass} />
+                         placeholderText={placeholderText} onImgClick={onImgClick} imgClass={imgClass} />
   );
 };
 

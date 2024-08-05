@@ -49,7 +49,8 @@ const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no
     <div className={containerCSS}>
       <h1>Sorry! Not Much to See Here!</h1>
       <BackgroundLoadImage src={imgSrc} alt="A Cute Pup!" onLoad={puppyLoaded} className={`${NotFoundCss.backgroundContainer}`}
-        placeholderClass={`${NotFoundCss.image}`} placeholderText={placeholderText} placeholderTextStyle={flingSpring} imgClass={`${NotFoundCss.image}`} />
+                           placeholderClass={`${NotFoundCss.image}`} placeholderText={placeholderText}
+                           placeholderTextStyle={flingSpring} imgClass={`${NotFoundCss.image}`} />
       <h4 className={`${NotFoundCss.caption}`}>So Here's a Puppy to Make Up for It!</h4>
     </div>
   );

@@ -56,7 +56,7 @@ describe("renders a react-bootstrap modal", () => {
   test("each section able to pass in and calculate its CSS classes", () => {
     const { rerender } = render(
       <AppModal show={true} ID="foobar" contentClasses={"content-class"} headerClasses={"header-class"} bodyClasses={"body-class"}
-        titleClasses={"title-class"} title={"FoobarTitle"} footerClasses={"footer-class"} footer={"FoobarFooter"}>
+                titleClasses={"title-class"} title={"FoobarTitle"} footerClasses={"footer-class"} footer={"FoobarFooter"}>
         <h3>Barfoo</h3>
       </AppModal>
     );

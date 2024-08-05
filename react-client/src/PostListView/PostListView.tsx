@@ -97,7 +97,7 @@ const ProjectSection = ({ projects, postCardClasses, modalControl }: ProjectSect
   return (Array.isArray(projects) && projects?.length > 0) && //* Rails will ALWAYS return array (even if only 1 post returned)
     projects.map((project) => {
       return <PostCard key={ project.title } className={ postCardClasses }
-        project={ project } onImgClick={ () => { modalControl(project); } } />;
+                       project={ project } onImgClick={ () => { modalControl(project); } } />;
     }
     );
 };

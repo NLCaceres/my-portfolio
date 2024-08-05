@@ -57,7 +57,7 @@ const AppCarousel = ({ children, images, ItemComponent, className }: CarouselPro
   const classList = `${CarouselCss.full} ${className || ""} ${(usingHoverClass) ? "hovered-indicators" : ""}`.trim();
   return (
     <Carousel activeIndex={ activeIndex } onSelect={ goToIndex } controls={false}
-      interval={null} data-testid="app-carousel" className={ classList }>
+              interval={null} data-testid="app-carousel" className={ classList }>
       { child }
     </Carousel>
   );
