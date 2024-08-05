@@ -3,13 +3,12 @@
 import eslint from '@eslint/js';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
+import styleEslint from "@stylistic/eslint-plugin";
 // import react from 'eslint-plugin-react'; //? Disabled until it finishes ESLint 9 migration
 
-//? tsEslint provides an awesome tool `config(...configObjs[])` for setting up a config with type hinting!
-//? Especially compared to the standard Eslint 9 `export default []` syntax
+// ?: tsEslint provides an awesome tool `config(...configObjs[])` for setting up a config with type hinting!
+// ?: Especially compared to the standard Eslint 9 `export default []` syntax
 export default tsEslint.config(
-  eslint.configs.recommended,
-  ...tsEslint.configs.recommended,
   // { //? Eslint-plugin-react currently doesn't play nice with typescript-eslint's Flat Config type def
   //   //? SO instead, just being completely explicit about the React plugin's recommended and JSX-runtime config
   //   files: ['**/*.tsx'],
@@ -52,10 +51,13 @@ export default tsEslint.config(
   //   },
   // },
   {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: { //? A LOT of properties from ".eslintrc" (like `parser`) have been placed in `languageOptions`
+    files: ['src/**/*.{ts,tsx}'],
+    extends: [
+      eslint.configs.recommended, ...tsEslint.configs.recommended
+    ],
+    languageOptions: { // ?: A LOT of properties from ".eslintrc" (like `parser`) have been placed in `languageOptions`
       ecmaVersion: 2022,
-      globals: { //? Env from ".eslintrc" was generally replaced by `languageOptions.globals`
+      globals: { // ?: Env from ".eslintrc" was generally replaced by `languageOptions.globals`
         ...globals.browser,
         ...globals.node,
       },
@@ -64,21 +66,20 @@ export default tsEslint.config(
     },
     plugins: {
       '@typescript-eslint': tsEslint.plugin,
+      stylistic: styleEslint
     },
     rules: {
-      "linebreak-style": ["error", "unix"],
-      "no-trailing-spaces": "error",
-      "indent": "off",
-      "@typescript-eslint/indent": ["error", 2],
-      "quotes": "off",
-      "@typescript-eslint/quotes": "error",
-      "semi": "off",
-      "@typescript-eslint/semi": "error",
+      "stylistic/linebreak-style": ["error", "unix"],
+      "stylistic/no-trailing-spaces": "error",
+      "stylistic/indent": ["error", 2],
+      "stylistic/quotes": "error",
+      "stylistic/semi": "error",
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }]
     }
   },
-  { //? Adding a separate config object is the equivalent of "overrides" from ".eslintrc" files
-    files: ['**/*.test.tsx'],
+  { // ?: Adding a separate config object is the equivalent of "overrides" from ".eslintrc" files
+    files: ['src/**/*.test.tsx'],
     languageOptions: {
       globals: {
         ...globals.jest

@@ -49,6 +49,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "lint": "eslint \"src/**/*.ts{,x}\""
+    "lint": "eslint --quiet",
+    "lint-strict": "eslint"
   }
 }
