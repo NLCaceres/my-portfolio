@@ -21,12 +21,12 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
   };
 });
 
-beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
-  Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
+beforeAll(() => { // ?: Skip animating styles from Route Transitions, immediately finish their interpolation
+  Globals.assign({ skipAnimation: true }); // ?: So tests run quick BUT props are updated as expected!
 
-  //? Workaround for Vitest since Testing-Lib/UserEvent uses Jest timers by default,
-  //? making the typical userEvent.setup({ advanceTimers: vi.advanceTimersByTime }) useless without the following
-  //? This workaround is not required unless using userEvent, ex: TurnstileWidget or Browser tests
+  // ?: Workaround for Vitest since Testing-Lib/UserEvent uses Jest timers by default,
+  // ?: making the typical userEvent.setup({ advanceTimers: vi.advanceTimersByTime }) useless without the following
+  // ?: This workaround is not required unless using userEvent, ex: TurnstileWidget or Browser tests
   // @ts-expect-error: Ignore setting Jest since no type is available without the package itself
   const _jest = globalThis.jest;
 
@@ -38,7 +38,7 @@ beforeAll(() => { //? Skip animating styles from Route Transitions, immediately 
   };
 
   // @ts-expect-error: Restore Testing-Lib's original Jest timer
-  return () => void (globalThis.jest = _jest); //? Cleanup function to reset the global Jest
+  return () => void (globalThis.jest = _jest); // ?: Cleanup function to reset the global Jest
 });
 
 describe("renders the whole app", () => {
@@ -50,38 +50,38 @@ describe("renders the whole app", () => {
   afterEach(() => { vi.restoreAllMocks(); });
   describe("controls the opening of an app-wide alert element", () => {
     test("showing a danger alert if contact-me submit button fires without permission", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); //? VERY IMPORTANT due to setTimeout being used internally!
-      vi.useFakeTimers(); //? OTHERWISE Vitest's fakeTimers will freeze userEvents entirely (like in line 58)
-      vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); //* Invalid response so Turnstile thinks user is a computer
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); // ?: VERY IMPORTANT due to setTimeout being used internally!
+      vi.useFakeTimers(); // ?: OTHERWISE Vitest's fakeTimers will freeze userEvents entirely (like in line 58)
+      vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
       const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
       render(<RouterProvider router={router} />);
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
-      await submitContactForm(user); //* Despite invalid user, trying to submit anyway fails behind the scenes
+      await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
 
-      const dangerAlert = await screen.findByRole("alert"); //* Failing behind the scenes, the alert appears, providing feedback that email wasn't sent
-      expect(dangerAlert).toHaveClass("alert-danger"); //* Correct color red on unsuccessful
-      expect(screen.getByText(/email wasn't sent/i)).toBeInTheDocument(); //* Email not sent title
-      expect(screen.getByText(/back up and running/i)).toBeInTheDocument(); //* Not working as expected message
+      const dangerAlert = await screen.findByRole("alert"); // - Failing behind the scenes, the alert appears, providing feedback that email wasn't sent
+      expect(dangerAlert).toHaveClass("alert-danger"); // - Correct color red on unsuccessful
+      expect(screen.getByText(/email wasn't sent/i)).toBeInTheDocument(); // - Email not sent title
+      expect(screen.getByText(/back up and running/i)).toBeInTheDocument(); // - Not working as expected message
 
       completeAlertTimeoutDismiss();
     });
     test("showing a success alert if contact-me submit button fires when expected", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); //? VERY IMPORTANT due to setTimeout being used internally!
-      vi.useFakeTimers(); //? OTHERWISE Vitest's fakeTimers will freeze userEvents entirely
-      vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue( //* Must return a valid response for Turnstile to provide a success response
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); // ?: VERY IMPORTANT due to setTimeout being used internally!
+      vi.useFakeTimers(); // ?: OTHERWISE Vitest's fakeTimers will freeze userEvents entirely
+      vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue( // - Must return a valid response for Turnstile to provide a success response
         { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       );
       const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
       render(<RouterProvider router={router} />);
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
-      await submitContactForm(user); //* User seems human so valid turnstile response received and email is sending
+      await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
 
-      const successAlert = await screen.findByRole("alert"); //* After submitting the alert appears, providing feedback that email sent successfully!
-      expect(successAlert).toHaveClass("alert-success"); //* Correct color green on success
-      expect(screen.getByText(/email sent/i)).toBeInTheDocument(); //* Email sent successfully title!
-      expect(screen.getByText(/successfully sent/i)).toBeInTheDocument(); //* Successfully sent message
+      const successAlert = await screen.findByRole("alert"); // - After submitting the alert appears, providing feedback that email sent successfully!
+      expect(successAlert).toHaveClass("alert-success"); // - Correct color green on success
+      expect(screen.getByText(/email sent/i)).toBeInTheDocument(); // - Email sent successfully title!
+      expect(screen.getByText(/successfully sent/i)).toBeInTheDocument(); // - Successfully sent message
 
       completeAlertTimeoutDismiss();
     });
@@ -90,53 +90,54 @@ describe("renders the whole app", () => {
       const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
       const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
-      const { rerender } = render(<RouterProvider router={router} />);
-      //* This expect() checks the API responded & inserted stubbed PostCards into the DOM at "/portfolio/about-me"
+      const { unmount } = render(<RouterProvider router={router} />);
+      // - This expect() checks the API responded & inserted stubbed PostCards into the DOM at "/portfolio/about-me"
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
-      await user.click(contactMeButton); //* Should work as a button opening a modal
+      await user.click(contactMeButton); // - Should work as a button opening a modal
       const modal = screen.getByRole("dialog");
       expect(modal).toBeInTheDocument();
-      expect(scrollSpy).not.toHaveBeenCalled(); //* No scroll needed, just open the modal
+      expect(scrollSpy).not.toHaveBeenCalled(); // - No scroll needed, just open the modal
 
-      const modalCloser = screen.getByLabelText(/close/i); //* Close the modal now
+      const modalCloser = screen.getByLabelText(/close/i); // - Close the modal now
       await user.click(modalCloser);
-      expect(modal).toHaveAttribute("aria-hidden", "true"); //* Invisible to screen readers via "aria-hidden"
-      expect(modal).toBeInTheDocument(); //* BUT it is still in the document body
+      expect(modal).toHaveAttribute("aria-hidden", "true"); // - Invisible to screen readers via "aria-hidden"
+      expect(modal).toBeInTheDocument(); // - BUT it is still in the document body
+      unmount();
 
-      useViewWidthSpy.mockReturnValue(mobileHighEndWidth); //* Rerender as mobile version
-      rerender(<RouterProvider router={router} />);
+      useViewWidthSpy.mockReturnValue(mobileHighEndWidth); // - Rerender as mobile version
+      render(<RouterProvider router={router} />);
       const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
-      await user.click(contactMeButtonLink); //* Now at large mobile width, so should work as a link, navigating to "/contact-me"
-      //? W/out location prop on <Routes>, <Routes> updates B4 leaving MEANWHILE a duplicate is entering so have to wait for original to leave
+      await user.click(contactMeButtonLink); // - Now at large mobile width, so should work as a link, navigating to "/contact-me"
+      // ?: W/out location prop on <Routes>, <Routes> updates B4 leaving MEANWHILE a duplicate is entering so have to wait for original to leave
       await waitFor(() => { expect(screen.getAllByRole("heading", { name: /contact me!/i, level: 1 })).toHaveLength(1); });
-      expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 })).toBeInTheDocument(); //? Now only have one "Contact Me!"
-      expect(scrollSpy).toHaveBeenCalledTimes(1); //* Smooth scroll occurs on route transition, NOT modal opening
+      expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 })).toBeInTheDocument(); // ?: Now only have one "Contact Me!"
+      expect(scrollSpy).toHaveBeenCalledTimes(1); // - Smooth scroll occurs on route transition, NOT modal opening
     });
   });
 });
 
-//! Helper Functions
-async function submitContactForm(user: UserEvent) { //* Provide a reusable way of firing the contact form
+// !: Helper Functions
+async function submitContactForm(user: UserEvent) { // - Provide a reusable way of firing the contact form
   const contactMeButton = screen.getByRole("button", { name: /contact me/i });
-  await user.click(contactMeButton); //* Open Contact Form Modal
+  await user.click(contactMeButton); // - Open Contact Form Modal
   const modal = screen.getByRole("dialog");
   expect(modal).toBeInTheDocument();
 
-  const emailInput = screen.getByLabelText("Email Address"); //* Input email address into form
+  const emailInput = screen.getByLabelText("Email Address"); // - Input email address into form
   await user.type(emailInput, "someEmail@example.com");
   expect(emailInput).toHaveValue("someEmail@example.com");
 
-  const messageInput = screen.getByLabelText("Message"); //* Input email message body into form
+  const messageInput = screen.getByLabelText("Message"); // - Input email message body into form
   await user.type(messageInput, "Hello World!");
   expect(messageInput).toHaveValue("Hello World!");
 
-  await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Verify user is human
+  await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); // - Verify user is human
 
-  const contactButtons = screen.getAllByRole("button", { name: /contact me/i }); //* Find the modal form's submit button
+  const contactButtons = screen.getAllByRole("button", { name: /contact me/i }); // - Find the modal form's submit button
   const correctContactButton = (contactButtons[0].className === "submitButton btn btn-primary") ? contactButtons[0] : contactButtons[1];
-  await user.click(correctContactButton); //* Click the actual submit button (not the button used to open the modal)
+  await user.click(correctContactButton); // - Click the actual submit button (not the button used to open the modal)
 }
 function completeAlertTimeoutDismiss() { //! This tests if alert disappears on a 5s timeout
   //? Even if vi.useFakeTimers() was called here, line 59 "user.click" OR App's "setShowAlert" seemed to freeze the test, failing it
