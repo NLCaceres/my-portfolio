@@ -64,7 +64,11 @@ describe("renders the whole app", () => {
       expect(screen.getByText(/email wasn't sent/i)).toBeInTheDocument(); // - Email not sent title
       expect(screen.getByText(/back up and running/i)).toBeInTheDocument(); // - Not working as expected message
 
-      completeAlertTimeoutDismiss();
+      // ?: Need `act()` since advancing the time will cause App's setTimeout to run a state update aka `setShowAlert`
+      await act(() => vi.advanceTimersByTime(5000));
+      expect(screen.queryByText("alert")).not.toBeInTheDocument();
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
     });
     test("showing a success alert if contact-me submit button fires when expected", async () => {
       const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); // ?: VERY IMPORTANT due to setTimeout being used internally!
@@ -83,7 +87,10 @@ describe("renders the whole app", () => {
       expect(screen.getByText(/email sent/i)).toBeInTheDocument(); // - Email sent successfully title!
       expect(screen.getByText(/successfully sent/i)).toBeInTheDocument(); // - Successfully sent message
 
-      completeAlertTimeoutDismiss();
+      await act(() => vi.advanceTimersByTime(5000));
+      expect(screen.queryByText("alert")).not.toBeInTheDocument();
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
     });
     test("controls if the footer's contact me button opens a 'Contact Me' modal or navigates to '/contact-me'", async () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
@@ -138,12 +145,4 @@ async function submitContactForm(user: UserEvent) { // - Provide a reusable way 
   const contactButtons = screen.getAllByRole("button", { name: /contact me/i }); // - Find the modal form's submit button
   const correctContactButton = (contactButtons[0].className === "submitButton btn btn-primary") ? contactButtons[0] : contactButtons[1];
   await user.click(correctContactButton); // - Click the actual submit button (not the button used to open the modal)
-}
-function completeAlertTimeoutDismiss() { //! This tests if alert disappears on a 5s timeout
-  //? Even if vi.useFakeTimers() was called here, line 59 "user.click" OR App's "setShowAlert" seemed to freeze the test, failing it
-  act(() => { vi.advanceTimersByTime(6000); }); //? Meaning waitForElementToBeRemoved() w/ a "{timeout:5000}" option would be the only solution
-  expect(screen.queryByRole("alert")).not.toBeInTheDocument(); //? Which is flakey & limiting especially w/ Vitest's default 5s per test time limit
-  //? Instead, the only quirk is using act() w/ timerAdvance since it lets setTimeout async run a state update (App.js line 28 "setShowAlert")
-  vi.runOnlyPendingTimers();
-  vi.useRealTimers();
 }
