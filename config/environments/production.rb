@@ -52,6 +52,9 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  # - Above is the default VS below is my own take
   #? Enforce SSL Redirect (http to HTTPS) for ALL endpoints paths except specifically "/health-check"
   config.ssl_options = { redirect: { exclude: ->(request) { %r{^/(health-check)$}.match?(request.path) } } }
   #? The above ONLY overwrites SSL Redirect's Exclude key. Other options of the Redirect hash stay their default values
@@ -77,11 +80,13 @@ Rails.application.configure do
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "resume_react_rails_production"
 
+  # Disable ActionMailer template caching even if ActionController cache is enabled
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     user_name: ENV['MAILTRAP_USERNAME'], password: ENV['MAILTRAP_PASSWORD'],
-    address: 'live.smtp.mailtrap.io', port: '2525', domain: 'live.smtp.mailtrap.io', authentication: :cram_md5
+    address: 'live.smtp.mailtrap.io', port: '2525',
+    domain: 'live.smtp.mailtrap.io', authentication: :cram_md5
   } #? Auth can be plain, cram_md5, or login
 
   # Ignore bad email addresses and do not raise email delivery errors.
