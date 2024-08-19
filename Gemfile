@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.3.1'
 
-gem 'rails', '~> 7.1.3'
+gem 'rails', '~> 7.2.0'
 
 gem 'bootsnap', '>= 1.4.4', require: false # Reduce boot times through caching; required in config/boot.rb
 gem 'dotenv', '~> 3.1' # Auto-loads Env vars when Rails starts + provides Rake tasks with a 'dotenv' task
