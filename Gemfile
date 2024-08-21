@@ -33,12 +33,11 @@ gem 'rack-attack', '>= 6.5', '< 6.8' # Adds throttling and blacklisting to Rack 
 group :development, :test do
   gem 'debug', ">= 1.0.0", platforms: %i[mri mingw x64_mingw]
   gem 'listen', '~> 3.0'
+  gem 'rubocop'
+  gem "rubocop-rails-omakase", require: false
 end
 
 group :development do
-  gem 'rubocop'
-  gem 'rubocop-rails', '~> 2.24'
-
   gem 'spring' # Speeds up dev by keeping app running in the background. For more info, see https://github.com/rails/spring
   gem 'spring-watcher-listen', '~> 2.1.0'
 end
