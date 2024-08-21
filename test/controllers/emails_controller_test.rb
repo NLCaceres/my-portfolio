@@ -20,7 +20,7 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
     ENV['TURNSTILE_SECRET_KEY'] = '2x0000000000000000000000000000000AA'
     post contact_email_url, headers: accept_header, params: default_params
     failed_email_response = @response.parsed_body
-    refute failed_email_response['success']
+    assert_not failed_email_response['success']
     assert_not_empty failed_email_response['error-codes']
     assert_equal 1, failed_email_response['error-codes'].size
     assert_equal 'invalid-input-response', failed_email_response['error-codes'][0]
@@ -29,7 +29,7 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
     ENV['TURNSTILE_SECRET_KEY'] = '3x0000000000000000000000000000000AA'
     post contact_email_url, headers: accept_header, params: default_params
     invalid_email_response = @response.parsed_body
-    refute invalid_email_response['success']
+    assert_not invalid_email_response['success']
     assert_not_empty invalid_email_response['error-codes']
     assert_equal 1, invalid_email_response['error-codes'].size
   end
