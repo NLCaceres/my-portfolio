@@ -35,6 +35,7 @@ group :development, :test do
   gem 'listen', '~> 3.0'
   gem 'rubocop'
   gem "rubocop-rails-omakase", require: false
+  gem "brakeman", require: false # Static analysis for security issues
 end
 
 group :development do
