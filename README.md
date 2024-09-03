@@ -27,11 +27,20 @@ improving it and adding to it each and every year!
   - Laravel + Vue Accounting On It
   - Classic GUIs, made with JavaFx
 - Consider Codecov or Coveralls for better, more visible coverage reports
+- Add E2E testing to ensure UI works as intended and is accessible
+  - `Capybara` is probably the best option, in particular with `Cuprite` (rather than the typical Selenium setup)
+- Migrate Dockerfile from `debian:bookworm` (aka `ruby-slim`) to `alpine` if possible
+  - Probably simplest to start with `fly-apps/dockerfile-rails` and its generator
 
 ## Recent Changes
-- Updated to Ruby on Rails 7.1
+- Updated to Ruby on Rails 7.2
+  - Provided `.devcontainer` local development option
+  - Added default Dockerfile without Node setup
+  - Added `brakeman` static security analyzer, runnable via `bin/brakeman`
+  - Added `rubocop-rails-omakase` to replace `rubocop-rails`, runnable via `bin/rubocop`
 - Updated Ruby from 3.1 to 3.3
-- Database 
+- Fixed Railway Health-Check
+- Database
   - Updated DB Seeder for better readability in Ruby 3.3 with Rubocop
   - Migration adding an "importance" and "start_date" column to Posts table for better sorting in the front-end
   - Add Script to `lib/tasks` that migrates images to AWS S3 for easy fetching from AWS Cloudfront

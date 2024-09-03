@@ -4,35 +4,29 @@
 - React 18 based changes
   - JSX Dot Notation to simplify imports + name clarity?
     - Ex: `<PostCard.Image> { children } </PostCard.Image>`
-  - Hook Updates
-    - UseAsync likely to get replaced with useSWR thanks to its caching, dedup'ing, pagination and more!
-    - As an alternative to useSWR, React-Router seems to provide similar pre-loading
-      - Additionally, React-Router now provides an option to render in a component while this loading occurs (like Suspense!)
-    - As an alternative to useSWR, TanStack offers its Query system AND a Router like NextJS
+  - Depending on the future of React-Router, which may include major breaking changes
+  as it merges with Remix, it might be worth fully migrating to TanStack and its Router + SWR alternatives
 - General Design
-  - Drop React-Bootstrap and use React Portals to provide modal + a fancier carousel?
-    - Why? Currently, only using a limited number of Bootstrap styled components PLUS gives the chance stand out by avoiding
-    the super common "Bootstrap look" as well as the more recent "TailwindUI look"
-    - Using the `<dialog>` element is also a great newer option in HTML since it provides accessibility by default! It just needs styling!
+  - Drop Bootstrap and React-Bootstrap
+    - Why? I'm not currently using a lot of Boostrap components, PLUS dropping the common "Bootstrap look" will help
+    the design stand out better
   - Timeline page - Scroll from project to project perfectly chronologically. Transitioning like a path
     - Instead of using card from react-bootstrap, create simple flex-div based container component for text half of Post.
       - Title can be laid out + styled as "h5.mx-2 + div.underline"
       - Material Design with flip animation to switch between smaller image container and flip out into text container on tap for mobile.
         - Condense/shrink, instead, on web to provide overall minimalist aesthetic (minor projects condensed by default, major open by default)
   - RPG-based Homepage to reduce wall of text feeling
-  - Add recent work section that makes requests to the Github API to track recent commits to projects
-  - Likely will update the last component, Modal, to Typescript via [a11y-dialog](https://a11y-dialog.netlify.app/), which has a React version already
 
 #### Changes Coming Soon
 - Improve Carousel UX by dropping Bootstrap and re-implementing with lazy-loading images
   - May alter the UX altogether with 1 of a few ideas (See AppCarousel for details)
+- Begin migrating to useSWR to access Github API and develop "Recent Works" components
+  - "Recent Works" components likely to use the minified Card component
 - React-Spring
   - React-Spring animations may be packable into hooks that can be reused
     - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
     - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
       - "position: absolute" likely should always be used in Transitions since they usually deal with lists
-- ESLint 9 works with every plugin EXCEPT the React plugin. Once that React plugin gets update for ESLint 9,
-then this project's migration should be complete
 
 ## Recent Changes
 - Upgraded to React 18!
@@ -40,9 +34,9 @@ then this project's migration should be complete
     - Testing hooks super simple now thanks to `renderHook()` from 'testing-library/react'
     - Reorganize folders to be oriented around individual components and their usage
     - useContext pattern packed into a useViewWidth hook allowing access to viewWidth across the App without prop drilling
+    - Using A11y-Dialog's accessibility hook with React Portals to create an accessible modal similar to the new `<dialog>` element
   - React Router 6 and 6.4 Data API added in
-  - Typescript Migration 99% complete
-    - Likely will update the last component, Modal, to Typescript via [a11y-dialog](https://a11y-dialog.netlify.app/), which has a React version already
+  - Typescript Migration Complete
   - Implement PostListView sort by "start_date" and new "importance" property. 
     - For Desktop users, project images are also sorted to better showcase the selected project in the AppModal
   - Embrace Vite as the new build tool for React as well as Vitest for React Testing
@@ -50,7 +44,7 @@ then this project's migration should be complete
     - Vitest added to match Vite, since it's a fairly simple and powerful drop-in replacement for Jest
   - Using Node 20, NPM 10 and, now, PNPM 8
 - Bootstrap 5 + React-Bootstrap 2 migration
-  - CSS Modules used whenever possible to reduce the # of times props.viewWidth is prop drilled
+  - CSS Modules + Media Queries used to reduce the usage of useViewWidth to get the window's width from the Context
     - Fixes NavBar being oversized on very small mobile devices!
     - Simplifies Zigzag pattern of PostCardList
   - BUT Bootstrap's helper classes used if they provide multiple CSS rules at once
@@ -67,13 +61,14 @@ then this project's migration should be complete
     - Exiting route fades and moves toward the left
     - Meanwhile entering route launches to the left and into frame, bouncing into place
   - Lazy load images on intersection via useInView hook
-    - Even Carousel lazy loads in mobile image section of Card 
+    - Even Carousel lazy loads in mobile image section of Card
     - Desktop modal does not lazy load BUT maybe it should given some projects have 8+ imgs that would load at once
-- Migrated to ESLint 9's flat config file with Typescript-ESLint being responsible for the merging process
+- Migrated to ESLint 9 with its new flat config file, letting Typescript-ESLint merge all configs
+  - Migrated away from deprecated ESLint and removed Typescript-ESLint style-focused rules and
+  now using the style rules packaged in ESLint Stylistic
+  - ESLint-Plugin-React now works with ESLint 9
   - Typescript-ESLint now prefers to use `typescript-eslint` to bundle its parser and plugin together
-  - ESLint split its own recommended config into the `@eslint/js` package
-    - Similarly, style based rules are now deprecated in ESLint and fall under [ESLint Stylistic](https://eslint.style/guide/getting-started)
-    split into 3 packages plus a supplementary package for extra styling rules. You can use `@stylistic/eslint-plugin` to get all 4 plugins.
+  - ESLint similarly restructured its packages, placing its own config into `@eslint/js`
 
 ## PNPM CLI Commands
 - `pnpm start` - Launches the Vite dev server
@@ -83,4 +78,5 @@ then this project's migration should be complete
     the coverage flag gathers info via V8
 - `pnpm build` - Type check and build app for production in /dist dir, minified and hashed filenames
 - `pnpm preview` - Launches a production build locally for preview purposes only
-- `pnpm lint` - Runs ESLint/Typescript-ESLint against all TS and TSX files
+- `pnpm lint` - Runs ESLint/Typescript-ESLint against all TS and TSX files but ignores warnings
+- `pnpm lint-strict` - Run ESLint/Typescript-ESLint against all TS and TSX files and checks warnings as well
