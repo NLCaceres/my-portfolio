@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 import IntersectLoadImage from "./IntersectLoadImage";
-// import * as ReactSpring from "@react-spring/core";
+// import * as ReactSpring from "@react-spring/web";
 
 describe("rendering a 'BackgroundLoadImage' component that only begins load on intersection", () => {
   test("injecting the src upon crossing a '0.6' threshold", async () => {
@@ -10,9 +10,10 @@ describe("rendering a 'BackgroundLoadImage' component that only begins load on i
     //? SO Cypress is probably the better testing method, similar to testing the hover indicators of the AppCarousel
     // const useInViewSpy = vi.spyOn(ReactSpring, "useInView").mockReturnValue([{ current: null }, false]);
     /* const { rerender } =  */render(<IntersectLoadImage src="foobar.jpeg" alt="foobar" />);
-    //? Important to pass in an `alt` prop, or else Testing-Lib will assign a "presentation" role to the <img> tag
+    //? `alt` prop NEEDED, else Testing-Lib assigns "presentation" role to the <img> tag
     const img = screen.getByRole("img");
-    expect(img).toHaveAttribute("src", ""); //* Bad src is injected so no loading occurs
+    //* Img not loaded since not intersected, which makes src attr == ""
+    expect(img).not.toHaveAttribute("src"); // and React 19 makes undefined
 
     // useInViewSpy.mockReturnValueOnce([{ current: null }, true]) //* Intersection occurred!
     // rerender(<IntersectLoadImage src="foobar.jpeg" />); //* So upon rerender
