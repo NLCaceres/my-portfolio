@@ -51,6 +51,7 @@ const BackgroundLoadImage = (
   };
 
   return (
+    // @ts-expect-error React-Spring needs to update to React 19 types
     <animated.div className={`${BackgroundLoadImageCss.container} ${className || ""}`} ref={parentRef} style={{ height, width }}>
       { (loading || !successfulLoad) && /*//* Cover img tag when loading and display as backup if load failed or threw errors */
         <PlaceholderImg loading={loading} className={`${BackgroundLoadImageCss.placeholder} ${placeholderClass || ""}`.trim()}
@@ -59,6 +60,7 @@ const BackgroundLoadImage = (
         </PlaceholderImg>
       }
       { (loading || successfulLoad) && /*//* Once loading is set true, let the image load! If the src url fails, then remove the img! */
+        // @ts-expect-error React-Spring needs to update to React 19 types
         <animated.img src={src} alt={alt} onClick={onImgClick} onLoad={loadFinished} onError={loadFailed}
                       className={`${BackgroundLoadImageCss.photo} ${imgClass || ""}`.trim()} style={fadeInSpring} />
       }

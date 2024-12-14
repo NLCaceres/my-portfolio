@@ -14,7 +14,7 @@ import CarouselCss from "./Carousel.module.css";
 //todo Bonus: Display alt_text or a new description property in the foreground of the jumbotron'd rep img
 
 type CarouselImage = { image_url: string, alt_text: string, caption?: string };
-type CarouselProps = { children?: ReactNode, images?: CarouselImage[], ItemComponent?: (itemProps: CarouselItem) => JSX.Element, className?: string };
+type CarouselProps = { children?: ReactNode, images?: CarouselImage[], ItemComponent?: (itemProps: CarouselItem) => React.JSX.Element, className?: string };
 
 //! Bootstrap Carousel with defaults set - no control arrows or interval
 const AppCarousel = ({ children, images, ItemComponent, className }: CarouselProps ) => {
