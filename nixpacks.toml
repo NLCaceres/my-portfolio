@@ -1,5 +1,5 @@
 [phases."node:setup"]
-nixPkgs = ['nodejs_22']
+nixPkgs = ['nodejs']
 
 [phases.install]
 cmds = ['bundle config set deployment true', 'bundle config set without development test', 'bundle install --jobs 1']
