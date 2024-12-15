@@ -7,6 +7,7 @@
     "npm": "^10.5.0",
     "pnpm": "^9.2.0"
   },
+  "packageManager": "pnpm@9.x",
   "scripts": {
     "railway-install": "pnpm -C react-client install --frozen-lockfile --prod",
     "railway-build": "pnpm -C react-client build",
