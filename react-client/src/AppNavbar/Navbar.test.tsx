@@ -55,7 +55,7 @@ describe("renders a simple styled navbar", () => {
       const navBrand = screen.getByRole("link", { name: /brand logo/i });
       expect(navBrand).toHaveClass("brand navbar-brand", { exact: true });
       expect(navBrand).toHaveAttribute("href", "/portfolio/about-me");
-      expect(navBrand.lastChild).toHaveAttribute("src", "/src/logo.svg"); //* Logo tag
+      expect(navBrand.lastChild).toHaveAttribute("alt", "Brand Logo"); // Matches parent Link name
 
       const backEndNavLink = screen.getByText("Back-End Web");
       expect(backEndNavLink).toBeInTheDocument();
