@@ -20,7 +20,7 @@
     "react-a11y-dialog": "^7.4.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^6.28.0",
+    "react-router-dom": "^6.30.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4"
