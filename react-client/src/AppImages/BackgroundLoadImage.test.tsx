@@ -1,4 +1,4 @@
-import React, { type RefObject } from "react";
+import React from "react";
 import { vi } from "vitest";
 import { fireEvent, render, screen, waitForElementToBeRemoved, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -116,7 +116,7 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(img).toHaveClass("photo fizz", { exact: true });
   });
   test("enabling ref forwarding via 'parentRef' prop", async () => {
-    const parentRef: RefObject<HTMLDivElement> = React.createRef();
+    const parentRef = React.createRef<HTMLDivElement>();
     const { rerender } = render(<BackgroundLoadImage src="" alt="" parentRef={parentRef} />);
     await waitFor(() => expect(parentRef.current).toHaveClass("container")); //* parentRef adds the containing div as its 'current' prop
 

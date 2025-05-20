@@ -5,8 +5,9 @@ import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
 import { type AnimatableStyle } from "../Utility/Typings/ReactSpringTypes";
 
 type BackgroundImageProps = {
-  src: string, alt: string, placeholderText?: ReactNode, onImgClick?: () => void, onLoad?: (didLoad: boolean) => void,
-  className?: string, placeholderClass?: string, placeholderTextStyle?: AnimatableStyle, imgClass?: string, parentRef?: RefObject<HTMLDivElement>
+  src: string, alt: string, placeholderText?: ReactNode, onImgClick?: () => void,
+  onLoad?: (didLoad: boolean) => void, className?: string, placeholderClass?: string,
+  placeholderTextStyle?: AnimatableStyle, imgClass?: string, parentRef?: RefObject<HTMLDivElement | null>
 };
 
 //* Creates a cover via PlaceholderImg, allowing image to load behind it, then remove the cover once the image's onLoad says it has completed
