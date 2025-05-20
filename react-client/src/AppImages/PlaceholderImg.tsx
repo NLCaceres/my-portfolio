@@ -13,10 +13,9 @@ type PlaceholderImgProps = { loading?: boolean, className?: string, style?: Anim
 //* Simple placeholder that displays text and spinner if used during a loading event
 const PlaceholderImg = ({ loading = false, children, className = "", style = undefined, textStyle = undefined }: PropsWithChildren<PlaceholderImgProps>) => {
   const childElem = (children === undefined || IsString(children)) //* If a string, use the default h2 tag
-    // @ts-expect-error React-Spring needs to update to React 19 types
     ? <animated.h2 className={`${PlaceholderImgCss.placeholderText}`} style={textStyle}>{ children || "Project" }</animated.h2>
     : children; //* Otherwise, it's expected to be a JSX element so insert it into the DOM
-  return ( // @ts-expect-error React-Spring needs to update to React 19 types
+  return (
     <animated.div className={`${PlaceholderImgCss.placeholderImg} ${className}`.trim()} style={{ ...style }}>
       { loading && <AppSpinner className="mb-2" color="secondary" /> }
       { childElem }

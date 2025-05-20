@@ -21,7 +21,6 @@ const AppRouting = ({ context }: AppRoutingProps) => {
   });
 
   return transitions(style => ( //* No container around the animated.div needed if only the exiting div is position: absolute (AKA out of the HTML doc's flow)
-    // @ts-expect-error React-Spring needs to update to React 19 types
     <animated.div className={AppRoutingCss.animator} style={style}>
       <Outlet context={context} />
     </animated.div>
