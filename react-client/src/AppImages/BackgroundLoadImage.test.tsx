@@ -5,14 +5,14 @@ import userEvent from "@testing-library/user-event";
 import { Globals } from "@react-spring/web";
 import BackgroundLoadImage from "./BackgroundLoadImage";
 
-beforeAll(() => { //? Run React-Spring animations BUT limit waitFor's waiting time
-  Globals.assign({ skipAnimation: true }); //? so tests run quick BUT aren't flaking due to animation timing
+beforeAll(() => { //? Run React-Spring animations BUT limit waitFor's waiting time so tests run
+  Globals.assign({ skipAnimation: true }); //? quickly BUT aren't flaking due to animation timing
 });
 
 describe("renders an image with option to display a placeholder while loading", () => {
   test("requiring a src and alt to be passed in", () => {
     const { rerender } = render(<BackgroundLoadImage src="foobar" alt="barfoo" />);
-    //? Important to pass in an `alt` prop, or else Testing-Lib will assign a "presentation" role to the <img> tag
+    //? MUST pass in alt prop, else Testing-Lib assigns a "presentation" role to img tags
     const img = screen.getByRole("img");
     expect(img).toHaveAttribute("src", "foobar");
     expect(img).toHaveAttribute("alt", "barfoo");
@@ -28,10 +28,11 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveStyle({ opacity: 0 });
 
-    const someDiv = <div>Foobar</div>;
+    //* React TS types might have a better type than ReactNode to help prevent passing in
+    const someDiv = <div>Foobar</div>; // components to the placeholderText prop
     rerender(<BackgroundLoadImage src="" alt="" placeholderText={someDiv} />);
     const nonHeaderPlaceholderText = screen.getByText("Foobar");
-    expect(nonHeaderPlaceholderText).toBeInTheDocument(); //* Typescript could probably fix this, preventing a component from being passed into prop
+    expect(nonHeaderPlaceholderText).toBeInTheDocument();
     expect(nonHeaderPlaceholderText).not.toHaveAttribute("style");
   });
   test("allowing an onclick callback to be put on the true img tag", async () => {
@@ -50,17 +51,17 @@ describe("renders an image with option to display a placeholder while loading", 
     test("to cover the image", async () => {
       const { unmount } = render(<BackgroundLoadImage src="" alt="Real img" />);
       const img = screen.getByRole("img"); //* Img in the doc
-      expect(img.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc;
-      fireEvent.load(img); //* Image successfully loaded
+      expect(img.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc
+      fireEvent.load(img); //* FORCE image to "successfully" load
       expect(img).toBeInTheDocument(); //* Img remains in doc
-      await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div disappears
+      await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div gone
 
       unmount();
 
       render(<BackgroundLoadImage src="" alt="Img will fail to load" />);
       const failImg = screen.getByRole("img"); //* This img will fail to load
-      const placeholder = screen.getByRole("heading", { level: 2 }); //* Placeholder present so its heading is visible
-      expect(placeholder.parentElement).toBeInTheDocument(); //* Placeholder itself is its container
+      const placeholder = screen.getByRole("heading", { level: 2 }); //* Grab placeholder heading
+      expect(placeholder.parentElement).toBeInTheDocument(); //* Parent = placeholder container
       fireEvent.error(failImg); //* Image fails to load
       expect(failImg).not.toBeInTheDocument(); //* Image now will disappear due to failed loading
       expect(placeholder).toBeInTheDocument(); //* Placeholder gets to stay
@@ -69,16 +70,17 @@ describe("renders an image with option to display a placeholder while loading", 
       const loadCallback = vi.fn();
       const { rerender, unmount } = render(<BackgroundLoadImage src="" alt="Img will load correctly" onLoad={loadCallback} />);
       const img = screen.getByRole("img"); //* Img begins loading in background
-      fireEvent.load(img); //* Image successfully loaded
-      expect(loadCallback).toBeCalledTimes(1); //* It succeeded, check if callback added and call it!
+      fireEvent.load(img); //* FORCE image to "successfully" load
+      expect(loadCallback).toBeCalledTimes(1); //* Succeeded, check if callback added and call it
 
       rerender(<BackgroundLoadImage src="" alt="Img will load correctly" />);
       expect(img).toBeInTheDocument(); //* Image still there
       fireEvent.load(img); //* Image successfully loaded again but no callback passed in
-      expect(loadCallback).toBeCalledTimes(1); //* No callback used so nothing to run upon loading success
+      expect(loadCallback).toBeCalledTimes(1); //* No callback so nothing to run on load success
       unmount();
 
-      render(<BackgroundLoadImage src="" alt="Img will load correctly" onLoad={loadCallback}/>); //* Re-add the callback
+      //* Re-add the callback
+      render(<BackgroundLoadImage src="" alt="Img will load correctly" onLoad={loadCallback}/>);
       const failImg = screen.getByRole("img"); //* Image will fail to load correctly
       fireEvent.error(failImg); //* Image fails to load
       expect(loadCallback).toBeCalledTimes(2); //* Still call parent's callback!
@@ -86,17 +88,17 @@ describe("renders an image with option to display a placeholder while loading", 
     test("that resets if the image src changes", async () => {
       const { rerender } = render(<BackgroundLoadImage src="foobar.jpeg" alt="Img will load" />);
       const img = screen.getByRole("img"); //* Img begins loading in background
-      expect(img.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc;
-      fireEvent.load(img); //* Image successfully loaded
+      expect(img.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc
+      fireEvent.load(img); //* FORCE image to successfully load
       expect(img).toBeInTheDocument(); //* Img remains in doc
-      await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div disappears
+      await waitForElementToBeRemoved(img.previousElementSibling); //* Placeholder div gone
 
       rerender(<BackgroundLoadImage src="barfoo.jpeg" alt="Img will load" />);
       const newImg = screen.getByRole("img"); //* Img starts to reload with new src
-      expect(newImg.previousElementSibling).toBeInTheDocument(); //* Placeholder exists in the doc again
+      expect(newImg.previousElementSibling).toBeInTheDocument(); //* Placeholder in doc again
       fireEvent.load(newImg);
       expect(newImg).toBeInTheDocument(); //* Img remains in doc
-      await waitForElementToBeRemoved(newImg.previousElementSibling); //* Placeholder div disappears
+      await waitForElementToBeRemoved(newImg.previousElementSibling); //* Placeholder div gone
     });
   });
   test("with custom css options for each of its 3 tags", () => {
@@ -105,8 +107,10 @@ describe("renders an image with option to display a placeholder while loading", 
     expect(img).toHaveClass("photo", { exact: true });
 
     expect(img.parentElement).toHaveClass("container ", { exact: true });
-    img.parentElement!.setAttribute("style", "height: 250px; width: 250px;"); //* Unclear if useResize is adjusting them at all
-    expect(img.parentElement).toHaveStyle({ height: "250px", width: "250px" }); //* BUT style does match its expected output
+    //* Unclear if useResize is adjusting height/width at all
+    img.parentElement!.setAttribute("style", "height: 250px; width: 250px;");
+    //* BUT the style does get match expected updated output
+    expect(img.parentElement).toHaveStyle({ height: "250px", width: "250px" });
 
     expect(img.previousElementSibling).toHaveClass("placeholderImg placeholder", { exact: true });
 
@@ -118,9 +122,10 @@ describe("renders an image with option to display a placeholder while loading", 
   test("enabling ref forwarding via 'parentRef' prop", async () => {
     const parentRef = React.createRef<HTMLDivElement>();
     const { rerender } = render(<BackgroundLoadImage src="" alt="" parentRef={parentRef} />);
-    await waitFor(() => expect(parentRef.current).toHaveClass("container")); //* parentRef adds the containing div as its 'current' prop
+    //* parentRef adds the containing div as its 'current' prop
+    await waitFor(() => expect(parentRef.current).toHaveClass("container"));
 
     rerender(<BackgroundLoadImage src="" alt="" />);
-    expect(parentRef.current).toBe(null); //* And once removed from the prop, the ref's current tag becomes null
+    expect(parentRef.current).toBe(null); //* Dropping parentRef prop sets `current` to null
   });
 });
