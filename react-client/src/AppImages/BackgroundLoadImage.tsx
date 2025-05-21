@@ -10,16 +10,14 @@ type BackgroundImageProps = {
   placeholderTextStyle?: AnimatableStyle, imgClass?: string, parentRef?: RefObject<HTMLDivElement | null>
 };
 
-//* Creates a cover via PlaceholderImg, allowing image to load behind it, then remove the cover once the image's onLoad says it has completed
-//* Therefore many of these params are needed to make the unveiling feel natural
-//@params "Src" + "alt" are common to all images. W/out them, there's no image nor description to load!
-//@params onLoad fires a parent assigned callback in both successful and failed image loads
-//@params The "placeholder" & "img" are fairly identical in terms of height & width CSS to ensure they cover each other
-//@params backgroundImg container CSS below uses position: relative and flex ensuring BOTH the absolute div placeholder AND the img fill it
-//@params So the "placeholder" & "img" CSS use min-height:100% and min-width:100% to stretch to the container's size
-//@params Currently the container css should limit the placeholder & img to around 400 wide by 250 tall
-//@params Meanwhile parent elements can pass a class that sets a max-width and max-height to maintain aspect-ratio.
-//@params If a container "className" prop is used then larger images can be displayed by setting new 'max-width/height !important'
+/** Creates a PlaceholderImg, covering a loading <img>, uncovering it on success and removing it on fail
+ * @param {BackgroundImageProps} props BackgroundLoadImage properties to craft a natural UX:
+ * "src" + "alt" are common to <img>. Similarly, onLoad fires on img load, successfully or not
+ * onImgClick fires on user click of the <img>
+ * placeHolderText accepts a wide variety of types to use as a temporary descriptive text of the img
+ * className, placeholderClass, and imgClass define the CSS for their respective HTML tags
+ * They should avoid altering height, width, and position, uncovering the img
+ * parentRef should be used to target and manipulate the component container */
 const BackgroundLoadImage = (
   { src, alt, placeholderText = "", onImgClick, onLoad, className, placeholderClass, placeholderTextStyle, imgClass, parentRef }: BackgroundImageProps) => {
   //! Animation Setup
