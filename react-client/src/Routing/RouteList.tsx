@@ -55,7 +55,28 @@ const Router = createBrowserRouter(RouteList);
 export default Router;
 
 //! TanStack Implementation
+const rootRoute = createRootRoute({
+	component: App, notFoundComponent: NotFoundPage
+});
+const indexRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "/",
+	component: PostListView // Needs `<Navigate>` to redirect to "portfolio/about-me"
+});
+const contactMeRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "contact-me", // Leading and trailing slashes ignored
+	component: ContactPage
+});
+const notFoundRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "not-found",
+	component: NotFoundPage
+});
+const routeTree = rootRoute.addChildren([indexRoute, contactMeRoute, notFoundRoute]);
+
 export const TanStackRouter = createRouter({
+	routeTree,
 	scrollRestoration: true
 });
 
