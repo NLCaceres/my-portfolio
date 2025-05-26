@@ -63,6 +63,35 @@ const indexRoute = createRoute({
 	path: "/",
 	component: PostListView // Needs `<Navigate>` to redirect to "portfolio/about-me"
 });
+const portfolioRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: "portfolio"
+});
+const aboutMeRoute = createRoute({
+	getParentRoute: () => portfolioRoute,
+	path: "about-me",
+	component: PostListView
+});
+const androidRoute = createRoute({
+	getParentRoute: () => portfolioRoute,
+	path: "android",
+	component: PostListView
+});
+const iOSRoute = createRoute({
+	getParentRoute: () => portfolioRoute,
+	path: "iOS",
+	component: PostListView
+});
+const backEndRoute = createRoute({
+	getParentRoute: () => portfolioRoute,
+	path: "back-end",
+	component: PostListView
+});
+const frontEndRoute = createRoute({
+	getParentRoute: () => portfolioRoute,
+	path: "front-end",
+	component: PostListView
+});
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "contact-me", // Leading and trailing slashes ignored
@@ -73,7 +102,10 @@ const notFoundRoute = createRoute({
 	path: "not-found",
 	component: NotFoundPage
 });
-const routeTree = rootRoute.addChildren([indexRoute, contactMeRoute, notFoundRoute]);
+const routeTree = rootRoute.addChildren([
+	indexRoute, contactMeRoute, notFoundRoute,
+	portfolioRoute.addChildren([aboutMeRoute, androidRoute, iOSRoute, backEndRoute, frontEndRoute])
+]);
 
 export const TanStackRouter = createRouter({
 	routeTree,
