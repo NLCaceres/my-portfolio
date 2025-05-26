@@ -3,6 +3,7 @@ import App from "../App/App";
 import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
+import { createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
 
 //? Useful for testing and to allow modification before creating a router
 export const RouteList = [{
@@ -52,3 +53,14 @@ export const RouteList = [{
 const Router = createBrowserRouter(RouteList);
 
 export default Router;
+
+//! TanStack Implementation
+export const TanStackRouter = createRouter({
+	scrollRestoration: true
+});
+
+declare module "@tanstack/react-router" {
+  interface Register { // eslint-disable-line
+    router: typeof TanStackRouter
+  }
+}
