@@ -3,7 +3,8 @@ import App from "../App/App";
 import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, createRouter } from "@tanstack/react-router";
+import { AlertHandler } from "../AppAlert/AppAlert";
 
 //? Useful for testing and to allow modification before creating a router
 export const RouteList = [{
@@ -55,7 +56,11 @@ const Router = createBrowserRouter(RouteList);
 export default Router;
 
 //! TanStack Implementation
-const rootRoute = createRootRoute({
+
+type AppRouterContext = {
+	showAlert: AlertHandler
+};
+const rootRoute = createRootRouteWithContext<AppRouterContext>()({
 	component: App, notFoundComponent: NotFoundPage
 });
 const indexRoute = createRoute({
@@ -109,7 +114,8 @@ const routeTree = rootRoute.addChildren([
 
 export const TanStackRouter = createRouter({
 	routeTree,
-	scrollRestoration: true
+	scrollRestoration: true,
+	context: { showAlert: () => {} }
 });
 
 declare module "@tanstack/react-router" {
