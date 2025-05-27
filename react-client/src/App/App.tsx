@@ -8,10 +8,12 @@ import Footer from "../Footer/Footer";
 import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 import useDialog, { DialogProvider } from "../ContextProviders/DialogProvider";
+import { useRouter } from "@tanstack/react-router";
 //import * as serviceWorker from "./serviceWorker";
 
 
 const Layout = () => {
+	const router = useRouter();
   const width = useViewWidth();
   const [alertState, setShowAlert] = useState<AlertState>({ title: "", message: "", color: "" });
 
@@ -20,6 +22,7 @@ const Layout = () => {
     const alertTimeout = setTimeout(() => setShowAlert({ title: "", message: "", color: "" }), 5000); //* Auto-dismiss after 5 seconds
     setShowAlert({ ...newState, timeoutID: alertTimeout }); //* Set timeout so it can be cleared in case the user dismisses alert early
   };
+	router.update({ context: { showAlert: showAlertBriefly } });
   const closeAlert = () => {
     clearTimeout(alertState.timeoutID);
     //* AppAlert already hid itself BUT line 34 setShowAlert update causes 1 final (but mostly skipped) rerender,
