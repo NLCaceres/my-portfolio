@@ -3,7 +3,8 @@ import App from "../App/App";
 import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { createRootRouteWithContext, createRoute, createRouter } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, createRouter, Navigate, Outlet } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { AlertHandler } from "../AppAlert/AppAlert";
 
 //? Useful for testing and to allow modification before creating a router
@@ -61,12 +62,13 @@ type AppRouterContext = {
 	showAlert: AlertHandler
 };
 const rootRoute = createRootRouteWithContext<AppRouterContext>()({
-	component: App, notFoundComponent: NotFoundPage
+	component: () => <><Outlet /><TanStackRouterDevtools /></>,
+	notFoundComponent: () => <Navigate to="/not-found" replace={true} />,
 });
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/",
-	component: PostListView // Needs `<Navigate>` to redirect to "portfolio/about-me"
+	component: () => <Navigate to="/portfolio/about-me" replace={true} />
 });
 const portfolioRoute = createRoute({
 	getParentRoute: () => rootRoute,
@@ -75,27 +77,27 @@ const portfolioRoute = createRoute({
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "about-me",
-	component: PostListView
+	component: () => <h1>About Me</h1>
 });
 const androidRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "android",
-	component: PostListView
+	component: () => <h1>Android</h1>
 });
 const iOSRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "iOS",
-	component: PostListView
+	component: () => <h1>iOS</h1>
 });
 const backEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "back-end",
-	component: PostListView
+	component: () => <h1>Back end</h1>
 });
 const frontEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "front-end",
-	component: PostListView
+	component: () => <h1>Front End</h1>
 });
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
