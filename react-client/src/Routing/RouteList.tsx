@@ -63,7 +63,6 @@ type AppRouterContext = {
 };
 const rootRoute = createRootRouteWithContext<AppRouterContext>()({
 	component: () => <><Outlet /><TanStackRouterDevtools /></>,
-	notFoundComponent: () => <Navigate to="/not-found" replace={true} />,
 });
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
@@ -117,6 +116,7 @@ const routeTree = rootRoute.addChildren([
 export const TanStackRouter = createRouter({
 	routeTree,
 	scrollRestoration: true,
+	defaultNotFoundComponent: () => <Navigate to="/not-found" replace={true} />,
 	context: { showAlert: () => {} }
 });
 
