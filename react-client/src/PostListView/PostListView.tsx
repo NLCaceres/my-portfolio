@@ -18,7 +18,7 @@ type ProjectTitleAndImage = Pick<Project, "title" | "post_images">;
 const PostListView = () => {
   //! React-Router hooks + its computed props
   const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
-  if (location.pathname === "/") { window.history.replaceState(null, "", "/portfolio/about-me"); }
+  //if (location.pathname === "/") { window.history.replaceState(null, "", "/portfolio/about-me"); }
   const path = (location.pathname === "/") ? "/portfolio/about-me" : //* Handle coming from "/" route. Else handle trailing "/portfolio/foo/"
     (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname; //* Else all other "/portfolio/foo" routes
   const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
