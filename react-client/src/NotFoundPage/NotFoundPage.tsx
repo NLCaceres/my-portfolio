@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+//import { useLocation } from "react-router-dom";
 import { useSpring } from "@react-spring/web";
 import NotFoundCss from "./NotFoundPage.module.css";
 import BackgroundLoadImage from "../AppImages/BackgroundLoadImage";
@@ -10,8 +10,8 @@ const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no
   const [placeholderText, setPlaceholderText] = useState("One Cute Puppy Incoming!");
   const [containerCSS, setContainerCSS] = useState(`${NotFoundCss.container} will-change-contents`);
 
-  const location = useLocation(); //? Following simulates a redirect, w/out redirecting or causing a rerender
-  if (location.pathname !== "/not-found") { window.history.replaceState(null, "", "/not-found"); }
+  //const location = useLocation(); //? Following simulates a redirect, w/out redirecting or causing a rerender
+  //if (location.pathname !== "/not-found") { window.history.replaceState(null, "", "/not-found"); }
 
   //! PuppyLoaded is called regardless if image successfully loads or fails
   const [flingSpring, flingAPI] = useSpring(() => ({ from: { x: "0%", transform: "rotate(0deg)" }}));
