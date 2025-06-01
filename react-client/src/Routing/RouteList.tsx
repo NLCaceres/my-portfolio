@@ -73,6 +73,11 @@ const portfolioRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "portfolio"
 });
+const portfolioIndexRoute = createRoute({
+	getParentRoute: () => portfolioRoute,
+	path: "/",
+	component: () => <Navigate to="/portfolio/about-me" replace={true} />
+});
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "about-me",
@@ -110,7 +115,9 @@ const notFoundRoute = createRoute({
 });
 const routeTree = rootRoute.addChildren([
 	indexRoute, contactMeRoute, notFoundRoute,
-	portfolioRoute.addChildren([aboutMeRoute, androidRoute, iOSRoute, backEndRoute, frontEndRoute])
+	portfolioRoute.addChildren([
+		portfolioIndexRoute, aboutMeRoute, androidRoute, iOSRoute, backEndRoute, frontEndRoute
+	])
 ]);
 
 export const TanStackRouter = createRouter({
