@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import useViewWidth, { ViewWidthProvider } from "../ContextProviders/ViewWidthProvider";
 import AppAlert, { AlertState } from "../AppAlert/AppAlert";
 import AppNavbar from "../AppNavbar/AppNavbar";
@@ -8,7 +8,7 @@ import Footer from "../Footer/Footer";
 //import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 import useDialog, { DialogProvider } from "../ContextProviders/DialogProvider";
-import { Outlet, useRouter } from "@tanstack/react-router";
+import { Outlet, useNavigate, useRouter } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 //import { TanStackRouter } from "../Routing/RouteList";
 //import * as serviceWorker from "./serviceWorker";
@@ -41,7 +41,8 @@ const Layout = () => {
     }
     else {
       SmoothScroll();
-      navigate("contact-me");
+      //navigate("contact-me");
+			navigate({ to: "/contact-me" });
     }
   };
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />
