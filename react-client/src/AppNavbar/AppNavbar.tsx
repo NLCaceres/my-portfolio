@@ -5,7 +5,8 @@ import { SmoothScroll } from "../Utility/Functions/Browser";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import { Link, NavLink } from "react-router-dom";
+//import { Link, NavLink } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 /* //? Repackaging of React-bootstrap navbar into something a bit more convenient */
 const AppNavbar = () => {
@@ -52,15 +53,17 @@ const NavButtons = () => {
     "front-end": "Front-End Web", "back-end": "Back-End Web" };
 
   //? Must pass this func to React-Router-Dom's NavLink so it can apply certain classes when it's the active/matching route
-  const isActiveClasses = ({ isActive }: { isActive: boolean }) => //? Must include 'nav-link' class to adopt Bootstrap styles
-    `nav-link ${NavbarCss.navButton} ${(isActive) ? NavbarCss.activeNavButton : ""}`.trim();
+  //const isActiveClasses = ({ isActive }: { isActive: boolean }) => //? Must include 'nav-link' class to adopt Bootstrap styles
+    //`nav-link ${NavbarCss.navButton} ${(isActive) ? NavbarCss.activeNavButton : ""}`.trim();
 
   return (Object.keys(tabProperNames) as Array<keyof typeof tabProperNames>).map(keyName => {
     return (
       <Nav.Item key={ tabProperNames[keyName] } className={`border border-dark rounded ${NavbarCss.navItem}`}>
-        <NavLink to={`portfolio/${keyName}`} className={isActiveClasses} onClick={ SmoothScroll }>
+        <Link to={`/portfolio/${keyName}`} onClick={SmoothScroll}
+              className={`nav-link ${NavbarCss.navButton}`}
+              activeProps={{ className: `${NavbarCss.activeNavButton}` }}>
           { tabProperNames[keyName] }
-        </NavLink>
+        </Link>
       </Nav.Item>
     );
   });
