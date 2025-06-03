@@ -3,8 +3,7 @@ import App from "../App/App";
 import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { createRootRouteWithContext, createRoute, createRouter, Navigate, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { createRootRouteWithContext, createRoute, createRouter, Navigate } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
 
 //? Useful for testing and to allow modification before creating a router
@@ -62,7 +61,7 @@ type AppRouterContext = {
 	showAlert: AlertHandler
 };
 const rootRoute = createRootRouteWithContext<AppRouterContext>()({
-	component: () => <><Outlet /><TanStackRouterDevtools /></>,
+	component: () => <App />
 });
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,

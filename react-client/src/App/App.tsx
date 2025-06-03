@@ -5,11 +5,12 @@ import AppAlert, { AlertState } from "../AppAlert/AppAlert";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import ContactPageForm from "../ContactMePage/ContactPageForm";
 import Footer from "../Footer/Footer";
-import AppRouting from "../Routing/AppRouting";
+//import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 import useDialog, { DialogProvider } from "../ContextProviders/DialogProvider";
-import { RouterProvider, useRouter } from "@tanstack/react-router";
-import { TanStackRouter } from "../Routing/RouteList";
+import { Outlet, useRouter } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+//import { TanStackRouter } from "../Routing/RouteList";
 //import * as serviceWorker from "./serviceWorker";
 
 
@@ -61,8 +62,10 @@ const Layout = () => {
     <>
       <AppNavbar />
 
-      <AppRouting context={{ showAlert: showAlertBriefly }} />
-      <RouterProvider router={TanStackRouter} />
+      {/*<AppRouting context={{ showAlert: showAlertBriefly }} />
+      <RouterProvider router={TanStackRouter} /> */}
+      <Outlet />
+      <TanStackRouterDevtools />
 
       <AppAlert title={ alertState.title } message={ alertState.message } color={ alertState.color } onClose={ closeAlert } />
 
