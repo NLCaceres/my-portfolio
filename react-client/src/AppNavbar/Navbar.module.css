@@ -81,11 +81,11 @@
   text-decoration: none;
 }
 
-.navItem > .activeNavButton {
+.navButton[data-status="active"] {
   background-color: black !important;
   color: white !important;
 }
 
-.navItem > .activeNavButton:hover {
+.navButton[data-status="active"]:hover {
   color: lime !important;
 }

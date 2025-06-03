@@ -60,8 +60,7 @@ const NavButtons = () => {
     return (
       <Nav.Item key={ tabProperNames[keyName] } className={`border border-dark rounded ${NavbarCss.navItem}`}>
         <Link to={`/portfolio/${keyName}`} onClick={SmoothScroll}
-              className={`nav-link ${NavbarCss.navButton}`}
-              activeProps={{ className: `${NavbarCss.activeNavButton}` }}>
+              className={`nav-link ${NavbarCss.navButton}`}>
           { tabProperNames[keyName] }
         </Link>
       </Nav.Item>
