@@ -1,4 +1,5 @@
-import { useLocation, Outlet, useOutletContext } from "react-router-dom";
+import { /* useLocation, Outlet, */ useOutletContext } from "react-router-dom";
+import { useLocation, Outlet } from "@tanstack/react-router";
 import { animated, useTransition } from "@react-spring/web";
 import AppRoutingCss from "./AppRouting.module.css";
 import { type AlertHandler } from "../AppAlert/AppAlert";
@@ -7,10 +8,10 @@ type RoutingOutletContext = {
   showAlert: AlertHandler,
 };
 
-type AppRoutingProps = {
-  context: RoutingOutletContext
-};
-const AppRouting = ({ context }: AppRoutingProps) => {
+//type AppRoutingProps = {
+//  context: RoutingOutletContext
+//};
+const AppRouting = () => {
   //! Animations
   const location = useLocation();
   const transitions = useTransition(location, {
@@ -22,7 +23,7 @@ const AppRouting = ({ context }: AppRoutingProps) => {
 
   return transitions(style => ( //* No container around the animated.div needed if only the exiting div is position: absolute (AKA out of the HTML doc's flow)
     <animated.div className={AppRoutingCss.animator} style={style}>
-      <Outlet context={context} />
+      <Outlet />
     </animated.div>
   ));
 };
