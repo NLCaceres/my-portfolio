@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 //import { useNavigate } from "react-router-dom";
 import useViewWidth, { ViewWidthProvider } from "../ContextProviders/ViewWidthProvider";
 import AppAlert, { AlertState } from "../AppAlert/AppAlert";
@@ -25,7 +25,10 @@ const Layout = () => {
     const alertTimeout = setTimeout(() => setShowAlert({ title: "", message: "", color: "" }), 5000); //* Auto-dismiss after 5 seconds
     setShowAlert({ ...newState, timeoutID: alertTimeout }); //* Set timeout so it can be cleared in case the user dismisses alert early
   };
-  router.update({ context: { showAlert: showAlertBriefly } });
+	useEffect(() => {
+		router.update({ context: { showAlert: showAlertBriefly } });
+		router.invalidate(); // Required to guarantee updates especially on 1st page load
+	}, []); // Prevent too many router updates & invalidations
   const closeAlert = () => {
     clearTimeout(alertState.timeoutID);
     //* AppAlert already hid itself BUT line 34 setShowAlert update causes 1 final (but mostly skipped) rerender,
