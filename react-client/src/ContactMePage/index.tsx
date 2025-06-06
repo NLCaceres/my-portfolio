@@ -1,12 +1,14 @@
 import ContactPageForm from "./ContactPageForm";
 import IndexCss from "./index.module.css";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
-import { useRoutingContext } from "../Routing/AppRouting";
+//import { useRoutingContext } from "../Routing/AppRouting";
+import { rootRouteId, useRouteContext } from "@tanstack/react-router";
 
 //* Page with contact me form
 const ContactPage = () => {
   //todo Is submitForm() needed? Or does it provide better UX by showing the Alert?
-  const { showAlert } = useRoutingContext();
+  //const { showAlert } = useRoutingContext();
+	const { showAlert } = useRouteContext({ from: rootRouteId });
   const submitContactForm = (successful: boolean) => {
     if (successful) {
       showAlert({ color: "success", title: "Email sent!", message: "Successfully sent your message! I should get back to you soon!" });
