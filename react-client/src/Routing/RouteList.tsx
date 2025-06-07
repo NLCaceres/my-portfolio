@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App/App";
-import ContactPage from "../ContactMePage";
+//import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 //import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import { createRootRouteWithContext, createRoute, createRouter, Navigate } from "@tanstack/react-router";
@@ -15,10 +15,10 @@ export const RouteList = [{
       index: true, //? Render this child at the parent's route i.e. "/" in this case
       Component: PostListView
     },
-    { //? This might be the one route that needs a more dynamic approach
-      path: "contact-me",
-      Component: ContactPage
-    },
+    //{ //? This might be the one route that needs a more dynamic approach
+    //  path: "contact-me",
+    //  Component: ContactPage
+    //},
     { //? Might be useful to pre-fetch before rendering, show loadVersion while doing so, and use a NotFoundPage as a fallback
       path: "portfolio/iOS",
       Component: PostListView
@@ -105,8 +105,7 @@ const frontEndRoute = createRoute({
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "contact-me", // Leading and trailing slashes ignored
-	component: ContactPage
-});
+}).lazy(() => import("../ContactMePage").then((f) => f.lazyContactMeRoute));
 const notFoundRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "not-found"

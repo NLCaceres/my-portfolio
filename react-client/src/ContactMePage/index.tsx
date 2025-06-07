@@ -2,7 +2,7 @@ import ContactPageForm from "./ContactPageForm";
 import IndexCss from "./index.module.css";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 //import { useRoutingContext } from "../Routing/AppRouting";
-import { rootRouteId, useRouteContext } from "@tanstack/react-router";
+import { createLazyRoute, rootRouteId, useRouteContext } from "@tanstack/react-router";
 
 //* Page with contact me form
 const ContactPage = () => {
@@ -32,3 +32,5 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
+export const lazyContactMeRoute = createLazyRoute("/contact-me")({ component: ContactPage });
