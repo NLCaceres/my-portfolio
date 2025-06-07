@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App/App";
 import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
-import NotFoundPage from "../NotFoundPage/NotFoundPage";
+//import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import { createRootRouteWithContext, createRoute, createRouter, Navigate } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
 
@@ -39,14 +39,14 @@ export const RouteList = [{
       path: "portfolio/about-me",
       Component: PostListView
     },
-    {
-      path: "not-found",
-      Component: NotFoundPage
-    },
-    {
-      path: "*",
-      Component: NotFoundPage
-    }
+    //{
+    //  path: "not-found",
+    //  Component: NotFoundPage
+    //},
+    //{
+    //  path: "*",
+    //  Component: NotFoundPage
+    //}
   ]
 }];
 
@@ -109,9 +109,8 @@ const contactMeRoute = createRoute({
 });
 const notFoundRoute = createRoute({
 	getParentRoute: () => rootRoute,
-	path: "not-found",
-	component: NotFoundPage
-});
+	path: "not-found"
+}).lazy(() => import("../NotFoundPage/NotFoundPage").then((f) => f.lazyNotFoundRoute));
 const routeTree = rootRoute.addChildren([
 	indexRoute, contactMeRoute, notFoundRoute,
 	portfolioRoute.addChildren([
