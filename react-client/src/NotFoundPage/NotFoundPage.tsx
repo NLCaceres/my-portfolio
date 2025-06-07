@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSpring } from "@react-spring/web";
 import NotFoundCss from "./NotFoundPage.module.css";
 import BackgroundLoadImage from "../AppImages/BackgroundLoadImage";
+import { createLazyRoute } from "@tanstack/react-router";
 
 //* NotFoundPage that renders a fun image on redirect/fallback from an unknown URL
 const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no need for useLocation
@@ -57,3 +58,5 @@ const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no
 };
 
 export default NotFoundPage;
+
+export const lazyNotFoundRoute = createLazyRoute("/not-found")({ component: NotFoundPage });
