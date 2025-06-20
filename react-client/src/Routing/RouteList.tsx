@@ -3,8 +3,9 @@ import App from "../App/App";
 //import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 //import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { createRootRouteWithContext, createRoute, createRouter, Navigate } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
+import GetPostList from "../Data/Api/ProjectAPI";
 
 //? Useful for testing and to allow modification before creating a router
 export const RouteList = [{
@@ -79,27 +80,45 @@ const portfolioIndexRoute = createRoute({
 });
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "about-me",
-	component: () => <h1>About Me</h1>
+	path: "about-me", async loader(ctx) {
+	  console.log(ctx); return await GetPostList("null");
+	},
+	component: () => {
+    const data = getRouteApi("/portfolio/about-me").useLoaderData();
+    return (
+      <div>
+        <h1>About Me</h1>
+        <h3 style={{color: "white"}}>{data.majorProjects[0].title}</h3>
+      </div>
+    );
+  }
 });
 const androidRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "android",
+	path: "android", async loader(ctx) {
+	  console.log(ctx); return await GetPostList("android");
+	},
 	component: () => <h1>Android</h1>
 });
 const iOSRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "iOS",
+	path: "iOS", async loader(ctx) {
+	  console.log(ctx); return await GetPostList("iOS");
+	},
 	component: () => <h1>iOS</h1>
 });
 const backEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "back-end",
+	path: "back-end", async loader(ctx) {
+	  console.log(ctx); return await GetPostList("back_end");
+	},
 	component: () => <h1>Back end</h1>
 });
 const frontEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "front-end",
+	path: "front-end", async loader(ctx) {
+	  console.log(ctx); return await GetPostList("front_end");
+	},
 	component: () => <h1>Front End</h1>
 });
 const contactMeRoute = createRoute({
