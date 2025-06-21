@@ -93,7 +93,8 @@ const portfolioComponent = (path: portfolioChildPath) => {
 const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "about-me", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
+	path: "about-me", // Loader SHOULD include `async` & `await` despite no need since it speeds up
+  loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)), // TS type inference
 	component: () => portfolioComponent("about-me")
 });
 const androidRoute = createRoute({
