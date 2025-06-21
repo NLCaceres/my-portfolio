@@ -90,39 +90,30 @@ const portfolioComponent = (path: portfolioChildPath) => {
     </div>
   );
 };
+const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "about-me", async loader(ctx) {
-	  console.log(ctx); return await GetPostList("null");
-	},
+	path: "about-me", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
 	component: () => portfolioComponent("about-me")
 });
 const androidRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "android", async loader(ctx) {
-	  console.log(ctx); return await GetPostList("android");
-	},
+	path: "android", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
 	component: () => portfolioComponent("android")
 });
 const iOSRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "iOS", async loader(ctx) {
-	  console.log(ctx); return await GetPostList("iOS");
-	},
+	path: "iOS", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
 	component: () => portfolioComponent("iOS")
 });
 const backEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "back-end", async loader(ctx) {
-	  console.log(ctx); return await GetPostList("back_end");
-	},
+	path: "back-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
 	component: () => portfolioComponent("back-end")
 });
 const frontEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
-	path: "front-end", async loader(ctx) {
-	  console.log(ctx); return await GetPostList("front_end");
-	},
+	path: "front-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
 	component: () => portfolioComponent("front-end")
 });
 const contactMeRoute = createRoute({
