@@ -6,6 +6,7 @@ import PostListView from "../PostListView/PostListView";
 import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
 import GetPostList from "../Data/Api/ProjectAPI";
+import { KebabCaseToTitleCase } from "../Utility/Functions/ComputedProps";
 
 //? Useful for testing and to allow modification before creating a router
 export const RouteList = [{
@@ -78,48 +79,51 @@ const portfolioIndexRoute = createRoute({
 	path: "/",
 	component: () => <Navigate to="/portfolio/about-me" replace={true} />
 });
+type portfolioChildPath = "about-me" | "android" | "iOS" | "front-end" | "back-end";
+const portfolioComponent = (path: portfolioChildPath) => {
+  const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
+  const data = getRouteApi(fullPath).useLoaderData();
+  return (
+    <div>
+      <h1>{KebabCaseToTitleCase(path)}</h1>
+      <h3 style={{color: "white"}}>{data?.majorProjects[0].title ?? ""}</h3>
+    </div>
+  );
+};
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "about-me", async loader(ctx) {
 	  console.log(ctx); return await GetPostList("null");
 	},
-	component: () => {
-    const data = getRouteApi("/portfolio/about-me").useLoaderData();
-    return (
-      <div>
-        <h1>About Me</h1>
-        <h3 style={{color: "white"}}>{data.majorProjects[0].title}</h3>
-      </div>
-    );
-  }
+	component: () => portfolioComponent("about-me")
 });
 const androidRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "android", async loader(ctx) {
 	  console.log(ctx); return await GetPostList("android");
 	},
-	component: () => <h1>Android</h1>
+	component: () => portfolioComponent("android")
 });
 const iOSRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "iOS", async loader(ctx) {
 	  console.log(ctx); return await GetPostList("iOS");
 	},
-	component: () => <h1>iOS</h1>
+	component: () => portfolioComponent("iOS")
 });
 const backEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "back-end", async loader(ctx) {
 	  console.log(ctx); return await GetPostList("back_end");
 	},
-	component: () => <h1>Back end</h1>
+	component: () => portfolioComponent("back-end")
 });
 const frontEndRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "front-end", async loader(ctx) {
 	  console.log(ctx); return await GetPostList("front_end");
 	},
-	component: () => <h1>Front End</h1>
+	component: () => portfolioComponent("front-end")
 });
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
