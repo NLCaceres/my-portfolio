@@ -79,7 +79,8 @@ const portfolioIndexRoute = createRoute({
 	path: "/",
 	component: () => <Navigate to="/portfolio/about-me" replace={true} />
 });
-type portfolioChildPath = "about-me" | "android" | "iOS" | "front-end" | "back-end";
+const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-end"] as const;
+type portfolioChildPath = typeof portfolioChildPaths[number];
 const portfolioComponent = (path: portfolioChildPath) => {
   const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
   const data = getRouteApi(fullPath).useLoaderData();
