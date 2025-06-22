@@ -3,7 +3,7 @@ import App from "../App/App";
 //import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 //import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, notFound } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, /*notFound,*/ useParams } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
 import GetPostList from "../Data/Api/ProjectAPI";
 import { KebabCaseToTitleCase } from "../Utility/Functions/ComputedProps";
@@ -98,12 +98,16 @@ const portfolioChildRoute = createRoute({
     if (portfolioChildPaths.find(path => path === ctx.params.postId)) {
       console.log(`Valid match = ${ctx.params.postId}`);
     } else {
-      console.log(`Invalid match = ${ctx.params.postId}`); throw notFound();
+      console.log(`Invalid match = ${ctx.params.postId}`); //throw notFound();
     }
   },
   component: () => {
+    const { postId } = useParams({ strict: false });
     return (
-      <div><h1>Portfolio Child Route</h1><h3>Post ID = </h3></div>
+      <div>
+        <h1>Portfolio Child Route</h1>
+        <h3 style={{color: "white"}}>Post ID = { postId ?? "" }</h3>
+      </div>
     );
   }
 });
