@@ -80,18 +80,7 @@ const portfolioIndexRoute = createRoute({
 	component: () => <Navigate to="/portfolio/about-me" replace={true} />
 });
 const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-end"] as const;
-type portfolioChildPath = typeof portfolioChildPaths[number];
-const portfolioComponent = (path: portfolioChildPath) => {
-  const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
-  const data = getRouteApi(fullPath).useLoaderData();
-  return (
-    <div>
-      <h1>{KebabCaseToTitleCase(path)}</h1>
-      <h3 style={{color: "white"}}>{data?.majorProjects[0].title ?? ""}</h3>
-    </div>
-  );
-};
-const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
+const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
 const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute,
   path: "$postId", beforeLoad: (ctx) => {
@@ -102,7 +91,7 @@ const portfolioChildRoute = createRoute({
     }
   },
   component: () => {
-    const { postId } = useParams({ strict: false });
+    const { postId } = portfolioRoutesAPI.useParams();
     return (
       <div>
         <h1>Portfolio Child Route</h1>
@@ -111,6 +100,18 @@ const portfolioChildRoute = createRoute({
     );
   }
 });
+type portfolioChildPath = typeof portfolioChildPaths[number];
+const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
+const portfolioComponent = (path: portfolioChildPath) => {
+  const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
+  const data = getRouteApi(fullPath).useLoaderData();
+  return (
+    <div>
+      <h1>{KebabCaseToTitleCase(path)}</h1>
+      <h3 style={{color: "white"}}>{data?.majorProjects[0].title ?? ""}</h3>
+    </div>
+  );
+};
 const aboutMeRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "about-me", // Loader SHOULD include `async` & `await` despite no need since it speeds up
