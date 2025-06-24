@@ -3,10 +3,10 @@ import App from "../App/App";
 //import ContactPage from "../ContactMePage";
 import PostListView from "../PostListView/PostListView";
 //import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, /*notFound,*/ useParams } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, notFound, /*useParams*/ } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
-import GetPostList from "../Data/Api/ProjectAPI";
-import { KebabCaseToTitleCase } from "../Utility/Functions/ComputedProps";
+//import GetPostList from "../Data/Api/ProjectAPI";
+//import { KebabCaseToTitleCase } from "../Utility/Functions/ComputedProps";
 
 //? Useful for testing and to allow modification before creating a router
 export const RouteList = [{
@@ -84,60 +84,53 @@ const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
 const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute,
   path: "$postId", beforeLoad: (ctx) => {
-    if (portfolioChildPaths.find(path => path === ctx.params.postId)) {
-      console.log(`Valid match = ${ctx.params.postId}`);
-    } else {
-      console.log(`Invalid match = ${ctx.params.postId}`); //throw notFound();
+    if (!portfolioChildPaths.find(path => path === ctx.params.postId)) {
+      console.log(`Invalid match = ${ctx.params.postId}`); throw notFound();
     }
   },
   component: () => {
     const { postId } = portfolioRoutesAPI.useParams();
-    return (
-      <div>
-        <h1>Portfolio Child Route</h1>
-        <h3 style={{color: "white"}}>Post ID = { postId ?? "" }</h3>
-      </div>
-    );
+    return <PostListView projectType={postId} />;
   }
 });
-type portfolioChildPath = typeof portfolioChildPaths[number];
-const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
-const portfolioComponent = (path: portfolioChildPath) => {
-  const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
-  const data = getRouteApi(fullPath).useLoaderData();
-  return (
-    <div>
-      <h1>{KebabCaseToTitleCase(path)}</h1>
-      <h3 style={{color: "white"}}>{data?.majorProjects[0].title ?? ""}</h3>
-    </div>
-  );
-};
-const aboutMeRoute = createRoute({
-	getParentRoute: () => portfolioRoute,
-	path: "about-me", // Loader SHOULD include `async` & `await` despite no need since it speeds up
-  loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)), // TS type inference
-	component: () => portfolioComponent("about-me")
-});
-const androidRoute = createRoute({
-	getParentRoute: () => portfolioRoute,
-	path: "android", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
-	component: () => portfolioComponent("android")
-});
-const iOSRoute = createRoute({
-	getParentRoute: () => portfolioRoute,
-	path: "iOS", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
-	component: () => portfolioComponent("iOS")
-});
-const backEndRoute = createRoute({
-	getParentRoute: () => portfolioRoute,
-	path: "back-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
-	component: () => portfolioComponent("back-end")
-});
-const frontEndRoute = createRoute({
-	getParentRoute: () => portfolioRoute,
-	path: "front-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
-	component: () => portfolioComponent("front-end")
-});
+//type portfolioChildPath = typeof portfolioChildPaths[number];
+//const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
+//const portfolioComponent = (path: portfolioChildPath) => {
+//  const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
+//  const data = getRouteApi(fullPath).useLoaderData();
+//  return (
+//    <div>
+//      <h1>{KebabCaseToTitleCase(path)}</h1>
+//      <h3 style={{color: "white"}}>{data?.majorProjects[0].title ?? ""}</h3>
+//    </div>
+//  );
+//};
+//const aboutMeRoute = createRoute({
+//	getParentRoute: () => portfolioRoute,
+//	path: "about-me", // Loader SHOULD include `async` & `await` despite no need since it speeds up
+//  loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)), // TS type inference
+//	component: () => portfolioComponent("about-me")
+//});
+//const androidRoute = createRoute({
+//	getParentRoute: () => portfolioRoute,
+//	path: "android", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
+//	component: () => portfolioComponent("android")
+//});
+//const iOSRoute = createRoute({
+//	getParentRoute: () => portfolioRoute,
+//	path: "iOS", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
+//	component: () => portfolioComponent("iOS")
+//});
+//const backEndRoute = createRoute({
+//	getParentRoute: () => portfolioRoute,
+//	path: "back-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
+//	component: () => portfolioComponent("back-end")
+//});
+//const frontEndRoute = createRoute({
+//	getParentRoute: () => portfolioRoute,
+//	path: "front-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
+//	component: () => portfolioComponent("front-end")
+//});
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "contact-me", // Leading and trailing slashes ignored
@@ -149,7 +142,7 @@ const notFoundRoute = createRoute({
 const routeTree = rootRoute.addChildren([
 	indexRoute, contactMeRoute, notFoundRoute,
 	portfolioRoute.addChildren([portfolioChildRoute,
-		portfolioIndexRoute, aboutMeRoute, androidRoute, iOSRoute, backEndRoute, frontEndRoute
+		portfolioIndexRoute,// aboutMeRoute, androidRoute, iOSRoute, backEndRoute, frontEndRoute
 	])
 ]);
 
