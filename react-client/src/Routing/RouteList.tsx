@@ -68,7 +68,8 @@ const rootRoute = createRootRouteWithContext<AppRouterContext>()({
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/",
-	component: () => <Navigate to="/portfolio/about-me" replace={true} />
+	component: () =>
+  <Navigate to="/portfolio/$postId" params={{ postId: "about-me" }} replace={true} />
 });
 const portfolioRoute = createRoute({
 	getParentRoute: () => rootRoute,
@@ -77,7 +78,8 @@ const portfolioRoute = createRoute({
 const portfolioIndexRoute = createRoute({
 	getParentRoute: () => portfolioRoute,
 	path: "/",
-	component: () => <Navigate to="/portfolio/about-me" replace={true} />
+	component: () =>
+  <Navigate to="/portfolio/$postId" params={{ postId: "about-me" }} replace={true} />
 });
 const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-end"] as const;
 const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
