@@ -86,7 +86,7 @@ const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
 const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute,
   path: "$postId", beforeLoad: (ctx) => {
-    if (!portfolioChildPaths.find(path => path === ctx.params.postId)) {
+    if (!portfolioChildPaths.find(path => path.toLowerCase() === ctx.params.postId.toLowerCase())) {
       console.log(`Invalid match = ${ctx.params.postId}`); throw notFound();
     }
   },
