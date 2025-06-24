@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useLocation } from "react-router-dom";
+//import { useLocation } from "react-router-dom";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import PostCard from "./PostCard";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
@@ -15,14 +15,14 @@ type SplitProjectList = { majorProjects: Project[], minorProjects: Project[] };
 type ProjectTitleAndImage = Pick<Project, "title" | "post_images">;
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
-const PostListView = () => {
+const PostListView = ({ projectType }: { projectType: string }) => {
   //! React-Router hooks + its computed props
-  const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
+  //const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
   //if (location.pathname === "/") { window.history.replaceState(null, "", "/portfolio/about-me"); }
-  const path = (location.pathname === "/") ? "/portfolio/about-me" : //* Handle coming from "/" route. Else handle trailing "/portfolio/foo/"
-    (location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname; //* Else all other "/portfolio/foo" routes
-  const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
-  const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
+  //const path = (location.pathname === "/") ? "/portfolio/about-me" : //* Handle coming from "/" route. Else handle trailing "/portfolio/foo/"
+    //(location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname; //* Else all other "/portfolio/foo" routes
+  //const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
+  //const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
   const title = (projectType === "front-end" || projectType === "back-end")
     ? KebabCaseToKebabTitleCase(projectType) : KebabCaseToTitleCase(projectType);
 
