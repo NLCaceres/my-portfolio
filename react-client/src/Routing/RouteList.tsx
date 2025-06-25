@@ -5,7 +5,7 @@ import PostListView from "../PostListView/PostListView";
 //import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, notFound, /*useParams*/ } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
-//import GetPostList from "../Data/Api/ProjectAPI";
+import GetPostList from "../Data/Api/ProjectAPI";
 //import { KebabCaseToTitleCase } from "../Utility/Functions/ComputedProps";
 
 //? Useful for testing and to allow modification before creating a router
@@ -82,6 +82,7 @@ const portfolioIndexRoute = createRoute({
   <Navigate to="/portfolio/$postId" params={{ postId: "about-me" }} replace={true} />
 });
 const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-end"] as const;
+const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
 const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
 const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute,
@@ -89,14 +90,13 @@ const portfolioChildRoute = createRoute({
     if (!portfolioChildPaths.find(path => path.toLowerCase() === ctx.params.postId.toLowerCase())) {
       console.log(`Invalid match = ${ctx.params.postId}`); throw notFound();
     }
-  },
+  }, loader: async ({ params }) => await GetPostList(postListParam(params.postId)),
   component: () => {
     const { postId } = portfolioRoutesAPI.useParams();
     return <PostListView projectType={postId} />;
   }
 });
 //type portfolioChildPath = typeof portfolioChildPaths[number];
-//const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
 //const portfolioComponent = (path: portfolioChildPath) => {
 //  const fullPath = `/portfolio/${path}` as const; // Treats a simple string as a template literal
 //  const data = getRouteApi(fullPath).useLoaderData();
