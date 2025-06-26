@@ -85,17 +85,14 @@ const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-en
 const validPortfolioPath = (actualPath: string) =>
   portfolioChildPaths.find(path => path.toLowerCase() === actualPath.toLowerCase());
 const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
-const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
+export const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
 const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute, path: "$postId",
   beforeLoad: ({ params }) => {
     if (!validPortfolioPath(params.postId)) throw notFound();
   },
   loader: async ({ params }) => await GetPostList(postListParam(params.postId)),
-  component: () => {
-    const { postId } = portfolioRoutesAPI.useParams();
-    return <PostListView projectType={postId} />;
-  }
+  component: PostListView
 });
 //type portfolioChildPath = typeof portfolioChildPaths[number];
 //const portfolioComponent = (path: portfolioChildPath) => {

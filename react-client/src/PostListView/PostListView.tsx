@@ -9,13 +9,14 @@ import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase }
 import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
+import { portfolioRoutesAPI } from "../Routing/RouteList";
 
 //! Helpful types for PostListView useState
 type SplitProjectList = { majorProjects: Project[], minorProjects: Project[] };
 type ProjectTitleAndImage = Pick<Project, "title" | "post_images">;
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
-const PostListView = ({ projectType }: { projectType: string }) => {
+const PostListView = () => {
   //! React-Router hooks + its computed props
   //const location = useLocation(); //? Grab pathname & slice() off trailing slashes or just grab the whole path ("/foo/bar/" vs "/foo/bar")
   //if (location.pathname === "/") { window.history.replaceState(null, "", "/portfolio/about-me"); }
@@ -23,6 +24,7 @@ const PostListView = ({ projectType }: { projectType: string }) => {
     //(location.pathname.slice(-1) === "/") ? location.pathname.slice(0, -1) : location.pathname; //* Else all other "/portfolio/foo" routes
   //const splitUrlPath = path.split("/") ?? [""]; //* Should split into 3 ["", "portfolio", "tab-name"]
   //const projectType = splitUrlPath[splitUrlPath.length - 1]; //* Split on "/" from url to get last section, i.e. "iOS", "front-end", etc.
+  const { postId: projectType } = portfolioRoutesAPI.useParams();
   const title = (projectType === "front-end" || projectType === "back-end")
     ? KebabCaseToKebabTitleCase(projectType) : KebabCaseToTitleCase(projectType);
 
