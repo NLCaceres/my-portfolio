@@ -6,6 +6,7 @@ import PostListView from "../PostListView/PostListView";
 import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, notFound, /*useParams*/ } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
 import GetPostList from "../Data/Api/ProjectAPI";
+import { SortProjects } from "../Data/Models/Project";
 //import { KebabCaseToTitleCase } from "../Utility/Functions/ComputedProps";
 
 //? Useful for testing and to allow modification before creating a router
@@ -91,7 +92,12 @@ const portfolioChildRoute = createRoute({
   beforeLoad: ({ params }) => {
     if (!validPortfolioPath(params.postId)) throw notFound();
   },
-  loader: async ({ params }) => await GetPostList(postListParam(params.postId)),
+  loader: async ({ params }) => {
+    const projects = await GetPostList(postListParam(params.postId));
+    SortProjects(projects.majorProjects);
+    SortProjects(projects.minorProjects);
+    return projects;
+  },
   component: PostListView
 });
 //type portfolioChildPath = typeof portfolioChildPaths[number];

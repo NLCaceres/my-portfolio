@@ -1,4 +1,4 @@
-import { useCallback, /*useState*/ } from "react";
+//import { useCallback, useEffect, /*useState*/ } from "react";
 //import { useLocation } from "react-router-dom";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import PostCard from "./PostCard";
@@ -6,7 +6,7 @@ import PostCardPlaceholderList from "./PostCardPlaceholder";
 //import UseNullableAsync from "../Hooks/UseAsync";
 //import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
-import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
+import Project/*, { SortProjectImagesByImportance, SortProjects }*/ from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
@@ -43,22 +43,21 @@ const PostListView = () => {
   const viewWidth = useViewWidth();
   //const [projectList, setProjectList] = useState<SplitProjectList>({ majorProjects: [], minorProjects: [] });
   const projects = portfolioRoutesAPI.useLoaderData();
-  const sortingCallback = useCallback((projectList?: SplitProjectList) => {
-    const sortedMajorProjects = SortProjects(projectList?.majorProjects ?? []).map(project => {
-      project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
-      return project;
-    });
-    const sortedSmallProjects = SortProjects(projectList?.minorProjects ?? []).map(project => {
-      project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
-      return project;
-    });
-    //setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
-    if (projectList) {
-      projectList.majorProjects = sortedMajorProjects;
-      projectList.minorProjects = sortedSmallProjects;
-    }
-  }, []); //* Empty ensures the sort is ONLY called once
-  sortingCallback(projects);
+  //const sortingCallback = useCallback((projectList?: SplitProjectList) => {
+  //  const sortedMajorProjects = SortProjects(projectList?.majorProjects ?? []).map(project => {
+  //    project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
+  //    return project;
+  //  });
+  //  const sortedSmallProjects = SortProjects(projectList?.minorProjects ?? []).map(project => {
+  //    project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
+  //    return project;
+  //  });
+  //  //setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
+  //  if (projectList) {
+  //    projectList.majorProjects = sortedMajorProjects;
+  //    projectList.minorProjects = sortedSmallProjects;
+  //  }
+  //}, []); //* Empty ensures the sort is ONLY called once
 
   //UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate "const" var like openModal
   //  const qParams = (projectType === "about-me") ? "null" : projectType.replace("-", "_");
