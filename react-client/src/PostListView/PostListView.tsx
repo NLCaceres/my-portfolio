@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, /*useState*/ } from "react";
 //import { useLocation } from "react-router-dom";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import PostCard from "./PostCard";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
-import UseNullableAsync from "../Hooks/UseAsync";
-import GetPostList from "../Data/Api/ProjectAPI";
+//import UseNullableAsync from "../Hooks/UseAsync";
+//import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
 import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
@@ -41,8 +41,8 @@ const PostListView = () => {
   };
 
   const viewWidth = useViewWidth();
-
-  const [projectList, setProjectList] = useState<SplitProjectList>({ majorProjects: [], minorProjects: [] });
+  //const [projectList, setProjectList] = useState<SplitProjectList>({ majorProjects: [], minorProjects: [] });
+  const projects = portfolioRoutesAPI.useLoaderData();
   const sortingCallback = useCallback((projectList?: SplitProjectList) => {
     const sortedMajorProjects = SortProjects(projectList?.majorProjects ?? []).map(project => {
       project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
@@ -52,20 +52,24 @@ const PostListView = () => {
       project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
       return project;
     });
-    setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
+    //setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
+    if (projectList) {
+      projectList.majorProjects = sortedMajorProjects;
+      projectList.minorProjects = sortedSmallProjects;
+    }
   }, []); //* Empty ensures the sort is ONLY called once
+  sortingCallback(projects);
 
-  UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate "const" var like openModal
-    const qParams = (projectType === "about-me") ? "null" : projectType.replace("-", "_");
-    return GetPostList(qParams);
-  }, [projectType]), sortingCallback);
-
+  //UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate "const" var like openModal
+  //  const qParams = (projectType === "about-me") ? "null" : projectType.replace("-", "_");
+  //  return GetPostList(qParams);
+  //}, [projectType]), sortingCallback);
   return (
-    (projectList?.majorProjects?.length > 0 || projectList?.minorProjects?.length > 0) ?
+    (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0) ?
       (
         <div>
           { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ title }</h1> }
-          <ProjectList projectList={ projectList } projectType={ projectType } viewWidth={ viewWidth } modalControl={ openModal } />
+          <ProjectList projectList={ projects } projectType={ projectType } viewWidth={ viewWidth } modalControl={ openModal } />
         </div>
       )
       : <PostCardPlaceholderList />
