@@ -40,7 +40,8 @@ const FullNav = () => {
         </Nav>
       </Navbar.Collapse>
       {/*//? Imitate Bootstrap Navbar Brand BUT navigate via React-Router, not via the browser */}
-      <Link className={`${NavbarCss.brand} navbar-brand`} to="/portfolio/about-me" onClick={ SmoothScroll }>
+      <Link className={`${NavbarCss.brand} navbar-brand`}
+            to="/portfolio/$postId" params={{ postId: "about-me" }} onClick={ SmoothScroll }>
         Nick Caceres
         <img src={Logo} className="ms-2" width="45" height="45" alt="Brand Logo"></img>
       </Link>
@@ -59,8 +60,8 @@ const NavButtons = () => {
   return (Object.keys(tabProperNames) as Array<keyof typeof tabProperNames>).map(keyName => {
     return (
       <Nav.Item key={ tabProperNames[keyName] } className={`border border-dark rounded ${NavbarCss.navItem}`}>
-        <Link to={`/portfolio/${keyName}`} onClick={SmoothScroll}
-              className={`nav-link ${NavbarCss.navButton}`}>
+        <Link className={`nav-link ${NavbarCss.navButton}`} onClick={SmoothScroll}
+              to="/portfolio/$postId" params={{ postId: keyName }}>
           { tabProperNames[keyName] }
         </Link>
       </Nav.Item>
