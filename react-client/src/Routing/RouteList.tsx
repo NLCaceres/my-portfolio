@@ -66,6 +66,7 @@ type AppRouterContext = {
 const rootRoute = createRootRouteWithContext<AppRouterContext>()({
 	component: () => <App />
 });
+export const rootRouteAPI = getRouteApi("/");
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/",
