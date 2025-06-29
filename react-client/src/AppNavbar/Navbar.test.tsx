@@ -1,24 +1,30 @@
-import { MemoryRouter } from "react-router-dom";
+//import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AppNavbar from "./AppNavbar";
 import * as Scroll from "../Utility/Functions/Browser";
+import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 
+const testRouter = () => {
+  const rootRoute = createRootRoute({ component: AppNavbar });
+  const router = createRouter({ routeTree: rootRoute });
+  router.navigate({ to: "/" });
+  return router;
+};
 describe("renders a simple styled navbar", () => {
-  test("that reorders itself on smaller screens via css modules", () => {
-    render(<AppNavbar />, { wrapper: MemoryRouter });
-    const collapseView = screen.getByTestId("nav-collapse");
+  test("that reorders itself on smaller screens via css modules", async () => {
+    render(<RouterProvider router={testRouter()} />);
+    const collapseView = await screen.findByTestId("nav-collapse");
     expect(collapseView).toHaveClass("nav-collapse");
 
     const navItemContainer = collapseView.firstChild;
     expect(navItemContainer).toHaveClass("nav-container");
   });
   describe("setting up a navBrand + 4 specific navLinks", () => {
-    test("via a mapping function", () => {
-      render(<AppNavbar />, { wrapper: MemoryRouter });
-
-      const navBrand = screen.getByRole("link", { name: /brand logo/i });
+    test("via a mapping function", async () => {
+      render(<RouterProvider router={testRouter()} />);
+      const navBrand = await screen.findByRole("link", { name: /brand logo/i });
       expect(navBrand).toBeInTheDocument();
 
       const iOSNavLink = screen.getByText("iOS");
@@ -40,9 +46,9 @@ describe("renders a simple styled navbar", () => {
     test("with a scroll up on click of a link", async () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
       const user = userEvent.setup();
-      render(<AppNavbar />, { wrapper: MemoryRouter });
+      render(<RouterProvider router={testRouter()} />);
 
-      await user.click(screen.getByText("Back-End Web"));
+      await user.click(await screen.findByText("Back-End Web"));
       expect(scrollSpy).toHaveBeenCalled();
 
       scrollSpy.mockRestore();
@@ -50,9 +56,9 @@ describe("renders a simple styled navbar", () => {
     test("with specific CSS attributes", async () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1); //* Prevents "scrollTo not implemented" error
       const user = userEvent.setup();
-      render(<AppNavbar />, { wrapper: MemoryRouter });
+      render(<RouterProvider router={testRouter()} />);
 
-      const navBrand = screen.getByRole("link", { name: /brand logo/i });
+      const navBrand = await screen.findByRole("link", { name: /brand logo/i });
       expect(navBrand).toHaveClass("brand navbar-brand", { exact: true });
       expect(navBrand).toHaveAttribute("href", "/portfolio/about-me");
       expect(navBrand.lastChild).toHaveAttribute("alt", "Brand Logo"); // Matches parent Link name
@@ -65,7 +71,7 @@ describe("renders a simple styled navbar", () => {
 
       const backEndNavItem = backEndNavLink.parentElement;
       expect(backEndNavItem).toHaveClass("border border-dark rounded navItem");
-      expect(backEndNavLink).toHaveClass("nav-link navButton activeNavButton"); //* Now the activeRoute
+      expect(backEndNavLink).toHaveClass("nav-link navButton active"); //* Now the activeRoute
 
       scrollSpy.mockRestore();
     });
