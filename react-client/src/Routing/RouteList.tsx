@@ -66,7 +66,6 @@ type AppRouterContext = {
 const rootRoute = createRootRouteWithContext<AppRouterContext>()({
 	component: () => <App />
 });
-export const rootRouteAPI = getRouteApi("/");
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "/",
@@ -138,6 +137,7 @@ const portfolioChildRoute = createRoute({
 //	path: "front-end", loader: async (ctx) => await GetPostList(postListParam(ctx.route.path)),
 //	component: () => portfolioComponent("front-end")
 //});
+export const contactMeRouteAPI = getRouteApi("/contact-me");
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "contact-me", // Leading and trailing slashes ignored
