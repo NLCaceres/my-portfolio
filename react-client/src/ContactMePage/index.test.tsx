@@ -22,9 +22,9 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
 const testRouter = (showAlert: () => boolean ) => {
   type MockContext = { showAlert: () => boolean };
   const rootRoute = createRootRouteWithContext<MockContext>()({ component: Outlet });
-  const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: "/", component: ContactPage });
+  const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: "/contact-me", component: ContactPage });
   const router = createRouter({ routeTree: rootRoute.addChildren([indexRoute]), context: { showAlert } });
-  router.navigate({ to: "/" });
+  router.navigate({ to: "/contact-me" });
   return router;
 };
 describe("renders a simple contact page with a form component", () => {
