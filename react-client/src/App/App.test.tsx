@@ -9,7 +9,7 @@ import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constant
 import { TanStackRouter } from "../Routing/RouteList";
 import { RouterProvider } from "@tanstack/react-router";
 import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
-import { type UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
+import { type UserEvent } from "@testing-library/user-event";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import * as GetPostList from "../Data/Api/ProjectAPI";
 import * as CommonAPI from "../Data/Api/Common";
