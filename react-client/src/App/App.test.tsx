@@ -1,11 +1,13 @@
 import { vi, type MockInstance } from "vitest";
-import { RouterProvider, createMemoryRouter } from "react-router-dom";
+//import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
 import { screen, render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
-import { RouteList } from "../Routing/RouteList";
+//import { RouteList } from "../Routing/RouteList";
+import { TanStackRouter } from "../Routing/RouteList";
+import { RouterProvider } from "@tanstack/react-router";
 import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 import { type UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
@@ -53,8 +55,8 @@ describe("renders the whole app", () => {
       const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); // ?: VERY IMPORTANT due to setTimeout being used internally!
       vi.useFakeTimers(); // ?: OTHERWISE Vitest's fakeTimers will freeze userEvents entirely (like in line 58)
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
-      const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
-      render(<RouterProvider router={router} />);
+      render(<RouterProvider router={TanStackRouter} />);
+      expect(await screen.findByText("iOS")).toBeInTheDocument();
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
@@ -76,8 +78,8 @@ describe("renders the whole app", () => {
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue( // - Must return a valid response for Turnstile to provide a success response
         { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       );
-      const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
-      render(<RouterProvider router={router} />);
+      render(<RouterProvider router={TanStackRouter} />);
+      expect(await screen.findByText("iOS")).toBeInTheDocument();
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
@@ -96,10 +98,11 @@ describe("renders the whole app", () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
       const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
-      const router = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
-      const { unmount } = render(<RouterProvider router={router} />);
+      await TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
+      const { unmount } = render(<RouterProvider router={TanStackRouter} />);
+      expect(await screen.findByText("iOS")).toBeInTheDocument();
       // - This expect() checks the API responded & inserted stubbed PostCards into the DOM at "/portfolio/about-me"
-      expect(ApiMock).toHaveBeenCalledTimes(1);
+      expect(ApiMock).toHaveBeenCalledTimes(2);
 
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
       await user.click(contactMeButton); // - Should work as a button opening a modal
@@ -114,12 +117,14 @@ describe("renders the whole app", () => {
       unmount();
 
       useViewWidthSpy.mockReturnValue(mobileHighEndWidth); // - Rerender as mobile version
-      render(<RouterProvider router={router} />);
+      await TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
+      render(<RouterProvider router={TanStackRouter} />);
       const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
       await user.click(contactMeButtonLink); // - Now at large mobile width, so should work as a link, navigating to "/contact-me"
       // ?: W/out location prop on <Routes>, <Routes> updates B4 leaving MEANWHILE a duplicate is entering so have to wait for original to leave
       await waitFor(() => { expect(screen.getAllByRole("heading", { name: /contact me!/i, level: 1 })).toHaveLength(1); });
-      expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 })).toBeInTheDocument(); // ?: Now only have one "Contact Me!"
+      expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 }))
+        .toBeInTheDocument(); // ?: Now only have one "Contact Me!"
       expect(scrollSpy).toHaveBeenCalledTimes(1); // - Smooth scroll occurs on route transition, NOT modal opening
     });
   });
