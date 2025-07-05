@@ -1,92 +1,98 @@
 import { vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { RouterProvider, createMemoryRouter } from "react-router-dom";
+import { render, screen, waitFor } from "@testing-library/react";
+//import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
-import { RouteList } from "./RouteList";
+import { TanStackRouter } from "./RouteList";
+import { RouterProvider } from "@tanstack/react-router";
 import * as GetPostList from "../Data/Api/ProjectAPI";
 
 //* No click needed on this mock Widget, so keep it simple
 vi.mock("../ThirdParty/TurnstileWidget", () => {
-  return {
-    default: () => (<div>Turnstile Verification Button</div>)
-  };
+  return { default: () => <div>Turnstile Verification Button</div> };
 });
 
-beforeAll(() => { //? Skip animating styles from Route Transitions, immediately finish their interpolation
-  Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props are updated as expected!
+beforeAll(() => { //? Skip Route Transition style animations, instant finish, no interpolating
+  Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props updated as expected!
 });
 
 describe("renders react-router-dom routes", () => {
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
-    vi.spyOn(GetPostList, "default").mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
+    vi.spyOn(GetPostList, "default")
+      .mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
   });
   afterEach(() => { vi.restoreAllMocks(); });
 
   test("mapping a home page to '/' and '/portfolio/about-me'", async () => {
-    //? Redirects seem to cause trouble when paired with React-Spring's useTransitions BUT by using my own key selection func +
-    //? not passing <Routes /> a location prop, I can avoid headaches in tests AND production (See AppRouting.js line 13 & 23)
-    const baseRouter = createMemoryRouter(RouteList, { initialEntries: ["/"] });
-    const { unmount } = render(<RouterProvider router={baseRouter} />);
-    await screen.findByText(/about me/i); //* Allow placeholders to fade out and major/minor projects to render in
-    unmount(); //* Must unmount to induce history changes in MemoryRouter during testing
+    //const baseRouter = createMemoryRouter(RouteList, { initialEntries: ["/"] });
+    render(<RouterProvider router={TanStackRouter} />);
+    await screen.findByText(/about me/i); //* Await placeholders fading for major/minor projects to render in
 
-    const portfolioAboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/about-me"] });
-    const { unmount: unmountAboutMe } = render(<RouterProvider router={portfolioAboutMeRouter} />);
+    await waitFor(() => TanStackRouter.navigate({
+      to: "/portfolio/$postId", params: { postId: "about-me" }
+    }));
     await screen.findByText(/about me/i); //* Should directly route to about me page
-    unmountAboutMe();
 
-    const aboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/about-me"] });
-    render(<RouterProvider router={aboutMeRouter} />);
-    await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Will get redirect instead
+    await waitFor(() => TanStackRouter.navigate({ to: "/" }));
+    await screen.findByText(/about me/i); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Will get redirect instead
+
+    await waitFor(() => TanStackRouter.navigate({ to: "/portfolio" }));
+    await screen.findByText(/about me/i);
+
+    await waitFor(() => TanStackRouter.navigate({ href: "/about-me" }));
+    await screen.findByText(/Sorry/);
   });
 
   test("mapping out four main portfolio routes", async () => { //! iOS, Android, Front-End, Back-End
-    const portfolioAboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/android"] });
-    const { unmount: unmountAndroid } = render(<RouterProvider router={portfolioAboutMeRouter} />);
-    await screen.findByText(/Android/); //* Should display Android in title header
-    unmountAndroid();
+    //const portfolioAboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/android"] });
+    await waitFor(() => TanStackRouter.navigate({
+      to: "/portfolio/$postId", params: { postId: "android" }
+    }));
+    render(<RouterProvider router={TanStackRouter} />);
+    await screen.findByRole("heading", { name: /Android/, level: 1 }); //* Should display Android in title header
 
-    const portfolioFrontendRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/front-end"] });
-    const { unmount: unmountFrontend } = render(<RouterProvider router={portfolioFrontendRouter} />);
-    await screen.findByText(/Front-End/); //* Should display Front-End in title header
-    unmountFrontend();
+    await waitFor(() => TanStackRouter.navigate({
+      to: "/portfolio/$postId", params: { postId: "front-end" }
+    }));
+    await screen.findByRole("heading", { name: /Front-End/, level: 1 }); //* Should display Front-End in title header
 
-    const portfolioBackendRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/back-end"] });
-    const { unmount: unmountBackend } = render(<RouterProvider router={portfolioBackendRouter} />);
-    await screen.findByText(/Back-End/); //* Should display Back-End in title header
-    unmountBackend();
+    await waitFor(() => TanStackRouter.navigate({
+      to: "/portfolio/$postId", params: { postId: "back-end" }
+    }));
+    await screen.findByRole("heading", { name: /Back-End/, level: 1 }); //* Should display Back-End in title header
 
-    const portfolioiOSRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/iOS"] });
-    const { unmount: unmountIOS } = render(<RouterProvider router={portfolioiOSRouter} />);
-    await screen.findByText(/iOS/); //* Should display iOS in title header
-    unmountIOS();
+    await waitFor(() => TanStackRouter.navigate({
+      to: "/portfolio/$postId", params: { postId: "iOS" }
+    }));
+    await screen.findByRole("heading", { name: /iOS/, level: 1 }); //* Should display iOS in title header
 
-    const iOSRouter = createMemoryRouter(RouteList, { initialEntries: ["/iOS"] });
-    render(<RouterProvider router={iOSRouter} />);
+    await waitFor(() => TanStackRouter.navigate({
+      to: "/portfolio/$postId", params: { postId: "ANDROID" }
+    }));
+    await screen.findByRole("heading", { name: /ANDROID/, level: 1 }); //* Should display Android in title header
+
+    await waitFor(() => TanStackRouter.navigate({ href: "/iOS" }));
     await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Just get redirect
   });
 
   test("mapping a contact me page", async () => {
-    const contactMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/contact-me"] });
-    const { unmount: unmountContactMe } = render(<RouterProvider router={contactMeRouter} />);
-    await screen.findByText(/Contact Me!/); //* Actual contact me page, not just the modal
-    unmountContactMe();
+    //const contactMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/contact-me"] });
+    await waitFor(() => TanStackRouter.navigate({ to: "/contact-me" }));
+    render(<RouterProvider router={TanStackRouter} />);
+    await screen.findByText(/Contact Me!/);
 
-    const portfolioContactMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/contact-me"] });
-    render(<RouterProvider router={portfolioContactMeRouter} />);
+    await waitFor(() => TanStackRouter.navigate({ href: "/portfolio/contact-me" }));
     await screen.findByText(/Sorry/); //* Portfolio prefix not needed. Will redirect to not found page
   });
 
   test("mapping a fallback route to a not found page", async () => {
-    const fallbackRouter = createMemoryRouter(RouteList, { initialEntries: ["/foobar"] });
-    const { unmount: unmountRedirect } = render(<RouterProvider router={fallbackRouter} />);
+    //const fallbackRouter = createMemoryRouter(RouteList, { initialEntries: ["/foobar"] });
+    await waitFor(() => TanStackRouter.navigate({ href: "/foobar" }));
+    render(<RouterProvider router={TanStackRouter} />);
     await screen.findByText(/Sorry/); //* Should redirect to not found page
-    unmountRedirect();
 
-    const notFoundRouter = createMemoryRouter(RouteList, { initialEntries: ["/not-found"] });
-    render(<RouterProvider router={notFoundRouter} />);
+    await waitFor(() => TanStackRouter.navigate({ to: "/not-found" }));
     await screen.findByText(/Sorry/); //* Goes straight to not found page
   });
 });
