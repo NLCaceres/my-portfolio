@@ -29,7 +29,7 @@ type Project = {
 };
 
 //! Most recent projects come first BUT if something has high importance (0 == highest value) then make it come first despite recency
-export function SortProjects(projects: Project[]) {
+export function SortProjects(projects: Project[] = []) {
   const dateSortedProjects = projects.sort((a,b) => {
     const dateB = Date.parse(b.start_date ?? ""); //* If date is not valid or in a parsable format for the browser, NaN is returned
     const dateA = Date.parse(a.start_date ?? ""); //* "YYYY-MM-DDTHH:mm:ss.sssZ" is the ONLY guaranteed format across browsers
