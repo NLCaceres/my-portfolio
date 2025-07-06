@@ -6,12 +6,9 @@ import AppNavbar from "./AppNavbar";
 import * as Scroll from "../Utility/Functions/Browser";
 import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 
-const testRouter = () => {
-  const rootRoute = createRootRoute({ component: AppNavbar });
-  const router = createRouter({ routeTree: rootRoute });
-  router.navigate({ to: "/" });
-  return router;
-};
+const testRouter = () =>
+  createRouter({ routeTree: createRootRoute({ component: AppNavbar }) });
+
 describe("renders a simple styled navbar", () => {
   test("that reorders itself on smaller screens via css modules", async () => {
     render(<RouterProvider router={testRouter()} />);
