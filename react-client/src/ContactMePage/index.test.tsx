@@ -20,10 +20,15 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
 });
 
 const testRouter = (showAlert: () => boolean ) => {
-  type MockContext = { showAlert: () => boolean };
-  const rootRoute = createRootRouteWithContext<MockContext>()({ component: Outlet });
-  const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: "/contact-me", component: ContactPage });
-  const router = createRouter({ routeTree: rootRoute.addChildren([indexRoute]), context: { showAlert } });
+  const rootRoute = createRootRouteWithContext<{ showAlert: () => boolean }>()({
+    component: Outlet
+  });
+  const indexRoute = createRoute({ //? Need this route since ContactPage uses `contactMeRouteAPI`
+    getParentRoute: () => rootRoute, path: "/contact-me", component: ContactPage
+  });
+  const router = createRouter({
+    context: { showAlert }, routeTree: rootRoute.addChildren([indexRoute])
+  });
   router.navigate({ to: "/contact-me" });
   return router;
 };
@@ -51,18 +56,25 @@ describe("renders a simple contact page with a form component", () => {
     const showAlertMock = vi.fn();
     let isSuccessful = true;
     vi.spyOn(ContactPageForm, "default")
-      .mockImplementation(({ onSubmitForm }: { onSubmitForm?: (successful: boolean) => void, darkMode?: boolean }) => {
-      return <button onClick={() => { onSubmitForm && onSubmitForm(isSuccessful); }}>Foobar</button>;
-    });
+      .mockImplementation((
+        { onSubmitForm }: { onSubmitForm?: (successful: boolean) => void, darkMode?: boolean }
+      ) =>
+        <button onClick={() => { onSubmitForm && onSubmitForm(isSuccessful); }}>Foobar</button>
+      );
     render(<RouterProvider router={testRouter(showAlertMock)} />);
     expect(showAlertMock).not.toHaveBeenCalled();
+
     await user.click(await screen.findByText("Foobar"));
     expect(showAlertMock).toHaveBeenCalledOnce();
-    expect(showAlertMock).toHaveBeenLastCalledWith({ color: "success", title: "Email sent!", message: "Successfully sent your message! I should get back to you soon!" });
+    expect(showAlertMock).toHaveBeenLastCalledWith({
+      color: "success", title: "Email sent!",
+      message: "Successfully sent your message! I should get back to you soon!"
+    });
 
     isSuccessful = false;
     await user.click(screen.getByText("Foobar"));
-    expect(showAlertMock).toHaveBeenLastCalledWith({ color: "danger", title: "Sorry! Your email wasn't sent!",
+    expect(showAlertMock).toHaveBeenLastCalledWith({
+      color: "danger", title: "Sorry! Your email wasn't sent!",
       message: "Hopefully I'll have everything back up and running soon! In the mean time, enjoy the rest of my portfolio. Thanks!"
     });
   });
@@ -82,18 +94,20 @@ describe("renders a simple contact page with a form component", () => {
     const showAlertMock = vi.fn();
     const showDialogMock = vi.fn();
     vi.spyOn(Validator, "default").mockReturnValue({ email: [], message: [] });
-    vi.spyOn(CommonAPI, "SendEmail").mockImplementation(() => Promise.resolve("123")); //? Mocked to avoid network request
-    vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse") //? Mocked just to save time (since no network request is run here)
+    //? Mock the `SendEmail` to avoid network request. Mock `Turnstile` just to save time
+    vi.spyOn(CommonAPI, "SendEmail").mockImplementation(() => Promise.resolve("123"));
+    vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse")
       .mockImplementation(() => Promise.resolve(true));
 
     const { rerender } = render(<RouterProvider router={testRouter(showAlertMock)} />);
     fireEvent.submit(await screen.findByTestId("form-container"));
-    //* WHEN the form submits, THEN it will run the RoutingContext provided func, showAlert, via ContactPage's submitContactForm method
-    await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1)); //* ONLY showAlert is used
-    expect(showDialogMock).toHaveBeenCalledTimes(0); //* NOT the showModal RoutingContext provides
+    //* WHEN form submits, THEN run `RouteContext.showAlert` in `submitContactForm`
+    await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1));
+    expect(showDialogMock).toHaveBeenCalledTimes(0); //* ONLY the alert appears, not the modal
 
     rerender(<RouterProvider router={testRouter(showAlertMock)} />);
     fireEvent.submit(await screen.findByTestId("form-container"));
-    await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1)); //* Form doesn't re-submit so mock not called again
+    //* WHEN the form tries to re-submit, THEN the mock ISN'T called again
+    await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1));
   });
 });
