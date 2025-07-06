@@ -41,12 +41,14 @@ const Layout = () => {
   const { showDialog } = useDialog();
   const contactButtonClicked = () => {
     if (width >= 576 && showDialog) {
-      showDialog({ title: "Send Me a Message!", children: <ContactPageForm onSubmitForm={submitContactForm} /> });
+      showDialog({
+        title: "Send Me a Message!",
+        children: <ContactPageForm onSubmitForm={submitContactForm} />
+      });
     }
     else {
       SmoothScroll();
-      //navigate("contact-me");
-			navigate({ to: "/contact-me" });
+      navigate({ to: "/contact-me" });
     }
   };
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />

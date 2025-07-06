@@ -1,7 +1,7 @@
 import { vi, type MockInstance } from "vitest";
 //import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
-import { screen, render, act, waitFor } from "@testing-library/react";
+import { screen, render, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
@@ -96,36 +96,36 @@ describe("renders the whole app", () => {
     });
     test("controls if the footer's contact me button opens a 'Contact Me' modal or navigates to '/contact-me'", async () => {
       const scrollSpy = vi.spyOn(Scroll, "SmoothScroll").mockImplementation(() => 1);
-      const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
+      const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default")
+        .mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
-      await TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       const { unmount } = render(<RouterProvider router={TanStackRouter} />);
-      expect(await screen.findByText("iOS")).toBeInTheDocument();
-      // - This expect() checks the API responded & inserted stubbed PostCards into the DOM at "/portfolio/about-me"
-      expect(ApiMock).toHaveBeenCalledTimes(2);
-
+      //? Running the `findBy` query first ensures the App is finished rendering
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
-      await user.click(contactMeButton); // - Should work as a button opening a modal
+      expect(ApiMock).toHaveBeenCalledTimes(1); //? SINCE the API loader has fully returned
+
+      // WHEN at Desktop widths, THEN the "Contact" button should open a modal
+      await user.click(contactMeButton);
       const modal = screen.getByRole("dialog");
       expect(modal).toBeInTheDocument();
       expect(scrollSpy).not.toHaveBeenCalled(); // - No scroll needed, just open the modal
 
       const modalCloser = screen.getByLabelText(/close/i); // - Close the modal now
       await user.click(modalCloser);
-      expect(modal).toHaveAttribute("aria-hidden", "true"); // - Invisible to screen readers via "aria-hidden"
+      expect(modal).toHaveAttribute("aria-hidden", "true"); //? Invisible to screen-readers
       expect(modal).toBeInTheDocument(); // - BUT it is still in the document body
       unmount();
 
       useViewWidthSpy.mockReturnValue(mobileHighEndWidth); // - Rerender as mobile version
-      await TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       render(<RouterProvider router={TanStackRouter} />);
+      // WHEN at mobile widths, even bigger mobile widths
       const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
-      await user.click(contactMeButtonLink); // - Now at large mobile width, so should work as a link, navigating to "/contact-me"
-      // ?: W/out location prop on <Routes>, <Routes> updates B4 leaving MEANWHILE a duplicate is entering so have to wait for original to leave
-      await waitFor(() => { expect(screen.getAllByRole("heading", { name: /contact me!/i, level: 1 })).toHaveLength(1); });
-      expect(screen.getByRole("heading", { name: /contact me!/i, level: 1 }))
-        .toBeInTheDocument(); // ?: Now only have one "Contact Me!"
-      expect(scrollSpy).toHaveBeenCalledTimes(1); // - Smooth scroll occurs on route transition, NOT modal opening
+      // THEN clicking the "Contact" button should work as a link to navigate to "/contact-me"
+      await user.click(contactMeButtonLink);
+      expect(await screen.findByRole("heading", { name: /contact me!/i, level: 1 }))
+        .toBeInTheDocument();
+      // AND smooth scrolling happens on route transition, NOT if the modal is opening
+      expect(scrollSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
