@@ -57,9 +57,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     //unmount();
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
-    await waitFor(() =>
-      TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "android" } })
-    );
+    await waitFor(() => TanStackRouter.invalidate());
     //expect(await screen.findByText("iOS")).toBeInTheDocument();
     //const { unmount: secondUnmount } = render(<RouterProvider router={TanStackRouter} />);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
@@ -70,9 +68,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
 
     //* Following set fails because ln81 (not using key to set title, using index from Object.values()!)
     ApiMock.mockResolvedValue({ minorProjects: [minProject] });
-    await waitFor(() =>
-      TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "android" } })
-    );
+    await waitFor(() => TanStackRouter.invalidate());
     //const { unmount: thirdUnmount } = render(<RouterProvider router={TanStackRouter} />);
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
@@ -82,9 +78,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     //thirdUnmount();
 
     ApiMock.mockResolvedValue({ majorProjects: [], minorProjects: [] });
-    await waitFor(() =>
-      TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "android" } })
-    );
+    await waitFor(() => TanStackRouter.invalidate());
     //const { unmount: fourthUnmount } = render(<RouterProvider router={TanStackRouter} />);
     const placeholders = await screen.findAllByRole("heading"); //* Need to await placeholder heading elems or the ln43 render sets off act() warning
     expect(placeholders.length).toBe(6); //* 6 headers are found -> 2 titles + 4 titles in individual placeholder cards
@@ -98,9 +92,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     //secondUnmount();
 
     ApiMock.mockImplementation(() => ({}));
-    await waitFor(() =>
-      TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "android" } })
-    );
+    await waitFor(() => TanStackRouter.invalidate());
     //* Same as with empty arrays. Just get placeholders
     expect((await screen.findAllByRole("heading")).length).toBe(6); //* Still expect 6 titles heading elems
     const morePlaceholderImgs = await screen.findAllByRole("heading", { name: /project/i }); //* 4 with class "placeholderText"
@@ -133,9 +125,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false as the param value indicating no dialog opening needed
 
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
-      await waitFor(() =>
-        router.navigate({ to: "/portfolio/$postId", params: { postId: "iOS" } })
-      );
+      await waitFor(() => router.invalidate());
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text }));
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* No modal renders since viewWidth < 768
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text }));
@@ -160,9 +150,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       }
 
       ViewWidthMock.mockReturnValue(averageTabletLowEndWidth);
-      await waitFor(() =>
-        router.navigate({ to: "/portfolio/$postId", params: { postId: "foobar-title" } })
-      );
+      await waitFor(() => router.invalidate());
       expect(mainTitle).toHaveClass("display-3"); //* Above 768 - slightly decrease font sizes
       for (const projectSectionType of projectSectionTitle) {
         expect(projectSectionType).toHaveClass("display-3");
