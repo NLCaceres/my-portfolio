@@ -24,7 +24,6 @@ const testRouter = (apiMock: MockInstance) => {
     }
   });
   const router = createRouter({ routeTree: rootRoute.addChildren([portfolioRoute]) });
-  router.navigate({ to: "/portfolio/$postId", params: { postId: "iOS" } });
   return router;
 };
 beforeAll(() => { Globals.assign({ skipAnimation: true }); });
@@ -114,6 +113,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       const user = userEvent.setup();
       //expect(ImgSortingMock).toHaveBeenCalledTimes(0); //! Sanity check, ImgSortMock not polluting other tests. Restore() called
       const router = testRouter(ApiMock);
+      await router.navigate({ to: "/portfolio/$postId", params: { postId: "iOS" } });
       render(<RouterProvider router={router} />);
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text })); //* Use click to make modal appear
       //expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Called by each of the 3 Postcards Projects
