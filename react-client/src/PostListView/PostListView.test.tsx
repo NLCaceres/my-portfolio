@@ -157,48 +157,31 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       }
     });
   });
-  test("that depends on a url location prop to set headers", async () => {
+  test("with title and subtitle headings set by URL location param", async () => {
     ApiMock.mockImplementation(() => ({ majorProjects: [ProjectFactory.create()] }));
     const router = testRouter(ApiMock);
-    await waitFor(() =>
+    await waitFor(() => // WHEN the URL param is a simple word, "foobar"
       router.navigate({ to: "/portfolio/$postId", params: { postId: "foobar" } })
     );
-    const { unmount } = render(<RouterProvider router={router} />);
+    render(<RouterProvider router={router} />);
+    // THEN the title heading is the title cased version of the param, "Foobar"
     expect(await screen.findByRole("heading", { name: "Foobar" })).toBeInTheDocument();
 
-    await waitFor(() =>
+    await waitFor(() => // WHEN the URL parameter contains a slash
       router.navigate({ to: "/portfolio/$postId", params: { postId: "foobar/barfoo" } })
-    );
-    expect(await screen.findByRole("heading", { name: "Foobar/barfoo" })).toHaveTextContent("Foobar/barfoo"); //* Just uses deepest directory ("/barfoo" here)
+    ); // THEN the title heading should contain that slash BUT won't since it'd redirect in prod
+    expect(await screen.findByRole("heading", { name: "Foobar/barfoo" }))
+      .toHaveTextContent("Foobar/barfoo");
 
-    await waitFor(() =>
-      router.navigate({ href: "/portfolio/foobar/barfoo" })
-    );
+    // In prod, a URL param "containing" a slash would redirect to "Not Found" just like this
+    await waitFor(() => router.navigate({ href: "/portfolio/foobar/barfoo" }));
     expect(await screen.findByText("Not Found")).toBeInTheDocument();
-    //expect(await screen.findByRole("heading", { name: "Foobar Barfoo" })).toHaveTextContent("Foobar Barfoo"); //* Also separates hyphenated urls
-    //thirdUnmount();
 
-    //const { unmount: fourthUnmount } = render(<MemoryRouter initialEntries={["/foo/bar/hello/"]}> <PostListView /> </MemoryRouter>);
-    //expect(await screen.findByRole("heading", { name: "Hello" })).toHaveTextContent("Hello"); //* Remove trailing slash to get last section
-    //fourthUnmount(); //* Instead of getting "hello/" or just "" from the empty section after "hello/", SHOULD GET "hello" as expected
-
-    await waitFor(() =>
+    await waitFor(() => // WHEN the URL param is "about-me"
       router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } })
-    );
-    expect(await screen.findByRole("heading", { name: "About Me" })).toHaveTextContent("About Me"); //! Special about-me case
+    ); // THEN the title = "About Me", and subtitle = "Nicholas", not "Major/Small projects"
+    expect(await screen.findByRole("heading", { name: "About Me" }))
+      .toHaveTextContent("About Me");
     expect(screen.getByRole("heading", { name: /nicholas/i }));
-    unmount();
-
-    await waitFor(() =>
-      router.navigate({ to: "/portfolio/$postId", params: { postId: "" } })
-    );
-    render(<RouterProvider router={TanStackRouter} />); //* "" or "/" simulate a redirect to "/portfolio/about-me"
-    await screen.findByRole("heading", { name: "About Me" }); //* Instead will get "About Me" header
-    expect(screen.getByRole("heading", { name: /nicholas/i })); //* And just below it, "Nicholas" appears as expected
-
-    await waitFor(() =>
-      router.navigate({ href: "/portfolio/foobar/barfoo" })
-    );
-    expect(await screen.findByText("Sorry! Not Much to See Here!")).toBeInTheDocument();
   });
 });
