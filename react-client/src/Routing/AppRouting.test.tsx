@@ -74,6 +74,18 @@ describe("renders react-router-dom routes", () => {
 
     await waitFor(() => TanStackRouter.navigate({ href: "/iOS" }));
     await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Just get redirect
+
+    vi.spyOn(GetPostList, "default") // Empty minor projects needed or finds multiple "Nicholas"
+      .mockResolvedValue({ majorProjects: [ProjectFactory.create()], minorProjects: [] });
+    await waitFor(() => // WHEN the URL param is empty, i.e. "/portfolio/"
+      TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "" } })
+    );
+    // THEN redirect to "About Me"
+    await screen.findByRole("heading", { name: "About Me" });
+    expect(screen.getByRole("heading", { name: /nicholas/i }));
+
+    await waitFor(() => TanStackRouter.navigate({ href: "/portfolio/foobar/barfoo" }));
+    expect(await screen.findByText("Sorry! Not Much to See Here!")).toBeInTheDocument();
   });
 
   test("mapping a contact me page", async () => {
