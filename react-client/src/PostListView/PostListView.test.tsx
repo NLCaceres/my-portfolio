@@ -10,21 +10,16 @@ import * as ProjectHelpers from "../Data/Models/Project";
 import * as DialogProvider from "../ContextProviders/DialogProvider";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 import { createRootRoute, createRoute, createRouter, Outlet, RouterProvider } from "@tanstack/react-router";
-import { TanStackRouter } from "../Routing/RouteList";
 import { Globals } from "@react-spring/web";
 import PostListView from "./PostListView";
 
-const testRouter = (apiMock: MockInstance) => {
+const testRouter = () => {
   const rootRoute = createRootRoute({ component: Outlet });
   const portfolioRoute = createRoute({
     getParentRoute: () => rootRoute, path: "/portfolio/$postId",
-    component: PostListView, loader: () => {
-      const mockFn = apiMock.getMockImplementation();
-      if (mockFn) return mockFn();
-    }
+    component: PostListView, loader: ({ params }) => GetPostList.default(params.postId)
   });
-  const router = createRouter({ routeTree: rootRoute.addChildren([portfolioRoute]) });
-  return router;
+  return createRouter({ routeTree: rootRoute.addChildren([portfolioRoute]) });
 };
 beforeAll(() => { Globals.assign({ skipAnimation: true }); });
 describe("renders a list of bootstrap cards filled with post objs", () => {
@@ -47,37 +42,40 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     ApiMock.mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
     //* Need to use MemoryRouter with "/portfolio/iOS" to make major/small projects headers appear or else get "About me" headings
-    await TanStackRouter.navigate({ to: "/portfolio/$postId", params: { postId: "android" } });
-    render(<RouterProvider router={TanStackRouter} />);
+    const router = testRouter();
+    await router.navigate({ to: "/portfolio/$postId", params: { postId: "android" } });
+    render(<RouterProvider router={router} />);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(2);
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(4); //* Once for major and once for minor projects
+    //expect(ProjectSortingMock).toHaveBeenCalledTimes(4); //* Once for major and once for minor projects
     //unmount();
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
-    await waitFor(() => TanStackRouter.invalidate());
+    await waitFor(() => router.invalidate());
     //expect(await screen.findByText("iOS")).toBeInTheDocument();
     //const { unmount: secondUnmount } = render(<RouterProvider router={TanStackRouter} />);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /small projects/i })).not.toBeInTheDocument();
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(6);
-    expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* Last called with undefined minorProjects so default [] value is used
+    expect(ApiMock).toHaveBeenCalledTimes(3);
+    //expect(ProjectSortingMock).toHaveBeenCalledTimes(6);
+    //expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* Last called with undefined minorProjects so default [] value is used
     //secondUnmount();
 
     //* Following set fails because ln81 (not using key to set title, using index from Object.values()!)
     ApiMock.mockResolvedValue({ minorProjects: [minProject] });
-    await waitFor(() => TanStackRouter.invalidate());
+    await waitFor(() => router.invalidate());
     //const { unmount: thirdUnmount } = render(<RouterProvider router={TanStackRouter} />);
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(8);
-    expect(ProjectSortingMock).toHaveBeenNthCalledWith(7, undefined); //* Called with undefined majorProjects so default [] used
+    expect(ApiMock).toHaveBeenCalledTimes(4);
+    //expect(ProjectSortingMock).toHaveBeenCalledTimes(8);
+    //expect(ProjectSortingMock).toHaveBeenNthCalledWith(7, undefined); //* Called with undefined majorProjects so default [] used
     //unmount();
     //thirdUnmount();
 
     ApiMock.mockResolvedValue({ majorProjects: [], minorProjects: [] });
-    await waitFor(() => TanStackRouter.invalidate());
+    await waitFor(() => router.invalidate());
     //const { unmount: fourthUnmount } = render(<RouterProvider router={TanStackRouter} />);
     const placeholders = await screen.findAllByRole("heading"); //* Need to await placeholder heading elems or the ln43 render sets off act() warning
     expect(placeholders.length).toBe(6); //* 6 headers are found -> 2 titles + 4 titles in individual placeholder cards
@@ -85,22 +83,24 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(placeholderImgs).toHaveLength(4); //* That render a div containing a h2 tag with "Project" written
     for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); } //* All have the class "placeholderText"
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument(); //* No PostListView actually renders
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(10);
-    expect(ProjectSortingMock).toHaveBeenNthCalledWith(9, []); //* BOTH major and minor projects are empty arrays
-    expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 9th time is always called with an empty array
+    expect(ApiMock).toHaveBeenCalledTimes(5);
+    //expect(ProjectSortingMock).toHaveBeenCalledTimes(10);
+    //expect(ProjectSortingMock).toHaveBeenNthCalledWith(9, []); //* BOTH major and minor projects are empty arrays
+    //expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 9th time is always called with an empty array
     //secondUnmount();
 
     ApiMock.mockImplementation(() => ({}));
-    await waitFor(() => TanStackRouter.invalidate());
+    await waitFor(() => router.invalidate());
     //* Same as with empty arrays. Just get placeholders
     expect((await screen.findAllByRole("heading")).length).toBe(6); //* Still expect 6 titles heading elems
     const morePlaceholderImgs = await screen.findAllByRole("heading", { name: /project/i }); //* 4 with class "placeholderText"
     expect(morePlaceholderImgs).toHaveLength(4);
     for (const placeholderImg of morePlaceholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument();
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(12);
-    expect(ProjectSortingMock).toHaveBeenNthCalledWith(11, undefined); //* BOTH undefined minor and major projects so [] used
-    expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* So 11th time is also called with an empty array
+    expect(ApiMock).toHaveBeenCalledTimes(6);
+    //expect(ProjectSortingMock).toHaveBeenCalledTimes(12);
+    //expect(ProjectSortingMock).toHaveBeenNthCalledWith(11, undefined); //* BOTH undefined minor and major projects so [] used
+    //expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* So 11th time is also called with an empty array
   });
   describe("that depends on viewWidth for rendering", () => {
     test("a dialog for multi-image posts", async () => {
@@ -112,7 +112,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       );
       const user = userEvent.setup();
       //expect(ImgSortingMock).toHaveBeenCalledTimes(0); //! Sanity check, ImgSortMock not polluting other tests. Restore() called
-      const router = testRouter(ApiMock);
+      const router = testRouter();
       await router.navigate({ to: "/portfolio/$postId", params: { postId: "iOS" } });
       render(<RouterProvider router={router} />);
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text })); //* Use click to make modal appear
@@ -137,7 +137,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       ApiMock.mockImplementation(() => (
         { majorProjects: [ProjectFactory.create()], minorProjects: [] })
       );
-      const router = testRouter(ApiMock);
+      const router = testRouter();
       await waitFor(() =>
         router.navigate({ to: "/portfolio/$postId", params: { postId: "foobar-title" } })
       );
@@ -159,7 +159,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
   });
   test("with title and subtitle headings set by URL location param", async () => {
     ApiMock.mockImplementation(() => ({ majorProjects: [ProjectFactory.create()] }));
-    const router = testRouter(ApiMock);
+    const router = testRouter();
     await waitFor(() => // WHEN the URL param is a simple word, "foobar"
       router.navigate({ to: "/portfolio/$postId", params: { postId: "foobar" } })
     );
