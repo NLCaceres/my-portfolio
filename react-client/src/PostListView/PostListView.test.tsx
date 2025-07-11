@@ -48,7 +48,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(2);
-    //expect(ProjectSortingMock).toHaveBeenCalledTimes(4); //* Once for major and once for minor projects
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(2); //* Once for major and once for minor projects
     //unmount();
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
@@ -58,8 +58,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /small projects/i })).not.toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(3);
-    //expect(ProjectSortingMock).toHaveBeenCalledTimes(6);
-    //expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* Last called with undefined minorProjects so default [] value is used
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(3);
+    expect(ProjectSortingMock).toHaveBeenLastCalledWith([majProject]); //* Last called with undefined minorProjects so default [] value is used
     //secondUnmount();
 
     //* Following set fails because ln81 (not using key to set title, using index from Object.values()!)
@@ -69,8 +69,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(4);
-    //expect(ProjectSortingMock).toHaveBeenCalledTimes(8);
-    //expect(ProjectSortingMock).toHaveBeenNthCalledWith(7, undefined); //* Called with undefined majorProjects so default [] used
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
+    expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]); //* Called with undefined majorProjects so default [] used
     //unmount();
     //thirdUnmount();
 
@@ -84,7 +84,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); } //* All have the class "placeholderText"
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument(); //* No PostListView actually renders
     expect(ApiMock).toHaveBeenCalledTimes(5);
-    //expect(ProjectSortingMock).toHaveBeenCalledTimes(10);
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
+    expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
     //expect(ProjectSortingMock).toHaveBeenNthCalledWith(9, []); //* BOTH major and minor projects are empty arrays
     //expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 9th time is always called with an empty array
     //secondUnmount();
@@ -98,7 +99,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     for (const placeholderImg of morePlaceholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(6);
-    //expect(ProjectSortingMock).toHaveBeenCalledTimes(12);
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
+    expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
     //expect(ProjectSortingMock).toHaveBeenNthCalledWith(11, undefined); //* BOTH undefined minor and major projects so [] used
     //expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* So 11th time is also called with an empty array
   });
