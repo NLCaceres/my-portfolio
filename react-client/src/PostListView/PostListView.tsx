@@ -10,7 +10,6 @@ import Project, { SortProjects } from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
-import { useMemo } from "react";
 
 //! Helpful types for PostListView useState
 type SplitProjectList = { majorProjects: Project[], minorProjects: Project[] };
@@ -102,13 +101,11 @@ type ProjectSectionProps = {
   projects: Project[], postCardClasses?: string, modalControl: (project: Project) => void
 };
 const ProjectSection = ({ projects, postCardClasses, modalControl }: ProjectSectionProps) => {
-  if (!Array.isArray(projects) || projects?.length === 0) { return; }
-  const sortedProjects = useMemo(() => SortProjects(projects), [projects]);
-  return sortedProjects.map((project) => {
-      return <PostCard key={ project.title } className={ postCardClasses }
-                       project={ project } onImgClick={ () => { modalControl(project); } } />;
-    }
-    );
+  return (Array.isArray(projects) && projects?.length > 0) ?
+    SortProjects(projects).map((project) =>
+      <PostCard key={ project.title } className={ postCardClasses }
+                project={ project } onImgClick={ () => { modalControl(project); } } />
+    ) : undefined;
 };
 
 export default PostListView;
