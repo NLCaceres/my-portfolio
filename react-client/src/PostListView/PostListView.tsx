@@ -6,10 +6,11 @@ import PostCardPlaceholderList from "./PostCardPlaceholder";
 //import UseNullableAsync from "../Hooks/UseAsync";
 //import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
-import Project/*, { SortProjectImagesByImportance, SortProjects }*/ from "../Data/Models/Project";
+import Project, { SortProjects } from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
+import { useMemo } from "react";
 
 //! Helpful types for PostListView useState
 type SplitProjectList = { majorProjects: Project[], minorProjects: Project[] };
@@ -97,10 +98,13 @@ const ProjectList = ({ projectList, projectType, viewWidth, modalControl }: Proj
 //* Project Section returns the list of either major or small projects
 //* On small screens the cards are always setup left to right. On big screens, they zig-zag (left to right / right to left)
 //* If no posts are returned from the server, a fallback Not Found Component will render
-type ProjectSectionProps = { projects: Project[], postCardClasses?: string, modalControl: (project: Project) => void };
+type ProjectSectionProps = {
+  projects: Project[], postCardClasses?: string, modalControl: (project: Project) => void
+};
 const ProjectSection = ({ projects, postCardClasses, modalControl }: ProjectSectionProps) => {
-  return (Array.isArray(projects) && projects?.length > 0) && //* Rails will ALWAYS return array (even if only 1 post returned)
-    projects.map((project) => {
+  if (!Array.isArray(projects) || projects?.length === 0) { return; }
+  const sortedProjects = useMemo(() => SortProjects(projects), [projects]);
+  return sortedProjects.map((project) => {
       return <PostCard key={ project.title } className={ postCardClasses }
                        project={ project } onImgClick={ () => { modalControl(project); } } />;
     }

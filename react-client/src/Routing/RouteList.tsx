@@ -94,8 +94,8 @@ const portfolioChildRoute = createRoute({
   },
   loader: async ({ params }) => {
     const projects = await GetPostList(postListParam(params.postId));
-    SortProjects(projects.majorProjects);
-    SortProjects(projects.minorProjects);
+    //SortProjects(projects.majorProjects);
+    //SortProjects(projects.minorProjects);
     return projects;
   },
   component: PostListView
