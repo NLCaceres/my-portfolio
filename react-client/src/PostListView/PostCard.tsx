@@ -8,6 +8,7 @@ import AppCarousel from "../AppCarousel/AppCarousel";
 import IntersectLoadImage from "../AppImages/IntersectLoadImage";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import type Project from "../Data/Models/Project";
+import { SortProjectImagesByImportance } from "../Data/Models/Project";
 
 //? Type Intersection is a nice alternative to typical interface based inheritance/extension
 type BasePostCardProps = {
@@ -59,10 +60,11 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
   if (viewWidth < 768 && postImages.length > 1) { //* If received multiple images + small screen, then just render a carousel
     return (
       <AppCarousel className={ PostCardCss.imgTopMargin }>
-        { postImages.map(image => {
+        { SortProjectImagesByImportance(postImages).map(image => {
           return (
             <div className="carousel-item" key={ image.image_url }>
-              <IntersectLoadImage src={ image.image_url } alt={ image.alt_text } placeholderText={ placeholderText }
+              <IntersectLoadImage src={ image.image_url } alt={ image.alt_text }
+                                  placeholderText={ placeholderText }
                                   className={`${PostCardCss.cardImgContainer} mx-auto`} />
             </div>
           );
@@ -73,9 +75,11 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
 
   let classString = `${PostCardCss.cardImgContainer} ${PostCardCss.imgTopMargin}`; //* Base classList
   if (viewWidth >= 992 && postImages.length > 1) { classString += ` ${PostCardCss.clickable}`; } //* Add in CSS at specific viewport width
+  const importantImg = (postImages.length == 1) ? postImages[0] : SortProjectImagesByImportance(postImages)[0];
   return ( //* At desktop sizes, render a single image that can open a modal if the project has multiple imgs
-    <IntersectLoadImage src={ postImages[0].image_url } alt={ postImages[0].alt_text }
-                        placeholderText={ placeholderText } onImgClick={ onImgClick } className={ classString } />
+    <IntersectLoadImage src={ importantImg.image_url } alt={ importantImg.alt_text }
+                        placeholderText={ placeholderText } onImgClick={ onImgClick }
+                        className={ classString } />
   );
 };
 
