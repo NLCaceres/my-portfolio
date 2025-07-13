@@ -60,8 +60,8 @@
 .cardText {
   white-space: pre-wrap; /* Preserves whitespace, allow line breaks at newline, br tag, and at line end */
 }
-img:hover.clickable { /* Exported CssClass = .clickable */
-  filter: brightness(50%);
+.clickable>img:hover {
+  filter: brightness(75%);
 }
 
 .githubLink {
