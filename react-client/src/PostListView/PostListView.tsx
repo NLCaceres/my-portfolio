@@ -6,7 +6,7 @@ import PostCardPlaceholderList from "./PostCardPlaceholder";
 //import UseNullableAsync from "../Hooks/UseAsync";
 //import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
-import Project, { SortProjects } from "../Data/Models/Project";
+import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
@@ -36,7 +36,9 @@ const PostListView = () => {
       return;
     } //* No modal rendered for mobile so end func here
     showDialog && showDialog({
-      title: newProject?.title, children: <AppCarousel key={newProject.title} images={newProject.post_images ?? []} className="px-4 mt-3" />
+      title: newProject?.title,
+      children: <AppCarousel key={newProject.title} className="px-4 mt-3"
+                             images={SortProjectImagesByImportance(newProject.post_images)} />
     });
   };
 

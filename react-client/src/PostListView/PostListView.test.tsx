@@ -28,13 +28,11 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
   beforeEach(() => {
     ApiMock = vi.spyOn(GetPostList, "default");
     ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
-    //ImgSortingMock = vi.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
     ProjectSortingMock = vi.spyOn(ProjectHelpers, "SortProjects");
   });
   afterEach(() => {
     ApiMock.mockRestore();
     ViewWidthMock.mockRestore();
-    //ImgSortingMock.mockRestore();
     ProjectSortingMock.mockRestore();
   });
 
@@ -108,23 +106,28 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     test("a dialog for multi-image posts", async () => {
       const showDialogMock = vi.fn();
       vi.spyOn(DialogProvider, "default").mockReturnValue({ showDialog: showDialogMock });
+      const imgSortSpy = vi.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
       const twoImgProj = ProjectFactory.create(2); const oneImgProj = ProjectFactory.create(1);
       ApiMock.mockImplementation(() => (
         { majorProjects: [twoImgProj, ProjectFactory.create()], minorProjects: [oneImgProj] })
       );
       const user = userEvent.setup();
-      //expect(ImgSortingMock).toHaveBeenCalledTimes(0); //! Sanity check, ImgSortMock not polluting other tests. Restore() called
+      expect(imgSortSpy).not.toHaveBeenCalled(); // No other tests called the img sort
       const router = testRouter();
       await router.navigate({ to: "/portfolio/$postId", params: { postId: "iOS" } });
       render(<RouterProvider router={router} />);
+      expect(imgSortSpy).toHaveBeenCalledTimes(1); // `<PostCard>` calls it to set `<CardImage>`
       await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text })); //* Use click to make modal appear
-      //expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Called by each of the 3 Postcards Projects
       expect(showDialogMock).toHaveBeenCalledOnce(); //* Dialog opener ONLY ever called if viewWidth > 768 AND project has > 1 image
+      // `showDialog` called with a title and `<AppCarousel>` that uses the img sort
+      expect(imgSortSpy).toHaveBeenNthCalledWith(2, twoImgProj.post_images);
 
       //* Only have 1 img so a condition in ProjectSection says don't render a modal, just render an img
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text })); //* Only 1 image in [] so click doesn't work
       expect(showDialogMock).toHaveBeenCalledTimes(2); //* Dialog opener called again
       expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false as the param value indicating no dialog opening needed
+      // `showDialog` called with false, so no img sort run by `<AppCarousel>`
+      expect(imgSortSpy).toHaveBeenNthCalledWith(2, twoImgProj.post_images);
 
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       await waitFor(() => router.invalidate());
@@ -133,7 +136,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text }));
       expect(showDialogMock).toHaveBeenCalledTimes(3); //* Still called
       expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false again, so no Dialog needed to be opened
-      //expect(ImgSortingMock).toHaveBeenCalledTimes(3); //* Not called anymore
+      // `showDialog` called with false, so no img sort run by `<AppCarousel>`
+      expect(imgSortSpy).toHaveBeenNthCalledWith(2, twoImgProj.post_images);
     });
     test("a different size title", async () => {
       ApiMock.mockImplementation(() => (
