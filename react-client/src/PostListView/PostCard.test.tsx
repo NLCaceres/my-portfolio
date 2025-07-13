@@ -4,14 +4,20 @@ import userEvent from "@testing-library/user-event";
 import PostCard from "./PostCard";
 import ProjectFactory, { ProjectImageFactory } from "../Utility/TestHelpers/ProjectFactory";
 import { smallDesktopLowEndWidth, smallTabletHighEndWidth, averageTabletViewWidth } from "../Utility/Constants/Viewports";
+import * as ProjectHelpers from "../Data/Models/Project";
 import * as ViewWidthContext from "../ContextProviders/ViewWidthProvider";
 
 describe("render a single PostCard", () => {
-  let ViewWidthMock: MockInstance;
+  let ViewWidthMock: MockInstance; let ImgSortSpy: MockInstance;
   beforeEach(() => {
-    ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(smallDesktopLowEndWidth);
+    ViewWidthMock = vi.spyOn(ViewWidthContext, "default")
+      .mockReturnValue(smallDesktopLowEndWidth);
+    ImgSortSpy = vi.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
   });
-  afterEach(() => { ViewWidthMock.mockRestore(); });
+  afterEach(() => {
+    ViewWidthMock.mockRestore();
+    ImgSortSpy.mockRestore();
+  });
 
   const dumbImgClickFunc = () => "void";
   //* Main PostCard Func Component
@@ -46,23 +52,27 @@ describe("render a single PostCard", () => {
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(placeHolderImg).not.toBeInTheDocument(); //* Placeholder fades away
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* Only one img displayed + no modal open on click
+      expect(ImgSortSpy).not.toHaveBeenCalled();
 
       testProject.post_images = [...testProject.post_images, ProjectImageFactory.create()]; //* Add an img so 2 imgs total
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(screen.queryByTestId("app-carousel")).not.toBeInTheDocument(); //* At desktop, never render a carousel as the rep img
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* One now clickable rep img displayed
+      expect(ImgSortSpy).toHaveBeenCalledExactlyOnceWith(testProject.post_images);
 
       //! 2 imgs at 768px tablet size. Low end before use a carousel instead of a single clickable modal-opening img
       ViewWidthMock.mockReturnValue(averageTabletViewWidth);
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(screen.queryByTestId("app-carousel")).not.toBeInTheDocument(); //* NO carousel still
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* Still 1 clickable img
+      expect(ImgSortSpy).toHaveBeenNthCalledWith(2, testProject.post_images);
 
       //! Carousel appears at 767px tablet (and lower) w/ multiple images
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(await screen.findByTestId("app-carousel")).toBeInTheDocument();
       expect(screen.getAllByRole("img", { name: /barfooalt/i })).toHaveLength(2); //* Imgs technically still there! but in carousel!
+      expect(ImgSortSpy).toHaveBeenNthCalledWith(3, testProject.post_images);
     });
     test("that hints + allows clicks at specific viewWidths", async () => {
       const testProject = ProjectFactory.create(); const mockImgClickFunc = vi.fn();
