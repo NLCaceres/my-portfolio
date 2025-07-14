@@ -28,7 +28,9 @@ describe("renders a div that looks like a placeholder img", () => {
     expect(screen.getByRole("heading", { level: 3 })); //* Instead of a h2 tag, replace it and find a h3 tag
   });
   test("with an option to add style attributes to the heading and container 'div'", () => {
-    const { rerender } = render(<PlaceholderImg style={{ opacity: 0 }} textStyle={{ opacity: 1 }}/>);
+    const { rerender } = render(
+      <PlaceholderImg style={{ opacity: 0 }} textStyle={{ opacity: 1 }}/>
+    );
     const headerTag = screen.getByRole("heading", { name: "Project" });
     expect(headerTag).toHaveStyle({ opacity: 1 });
 
@@ -36,7 +38,8 @@ describe("renders a div that looks like a placeholder img", () => {
     expect(containerDiv).toHaveStyle({ opacity: 0 });
 
     rerender(<PlaceholderImg style={{ height: 200 }} textStyle={{ color: "red" }} />);
-    expect(headerTag).toHaveStyle({ color: "rgb(255, 0, 0)" }); //* Testing-Lib seems to be convert "color: red" to "color: rgb()"
+    //* Testing-lib seems to convert the "red" color to its rgb equivalent
+    expect(headerTag).toHaveStyle({ color: "rgb(255, 0, 0)" });
     expect(containerDiv).toHaveStyle({ height: "200px" });
 
     rerender(<PlaceholderImg />);
