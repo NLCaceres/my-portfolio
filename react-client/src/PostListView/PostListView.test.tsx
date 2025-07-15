@@ -108,36 +108,55 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
       vi.spyOn(DialogProvider, "default").mockReturnValue({ showDialog: showDialogMock });
       const imgSortSpy = vi.spyOn(ProjectHelpers, "SortProjectImagesByImportance");
       const twoImgProj = ProjectFactory.create(2); const oneImgProj = ProjectFactory.create(1);
+      const twoImgAltText = twoImgProj.post_images![0].alt_text;
+      const oneImgAltText = oneImgProj.post_images![0].alt_text;
       ApiMock.mockImplementation(() => (
         { majorProjects: [twoImgProj, ProjectFactory.create()], minorProjects: [oneImgProj] })
       );
       const user = userEvent.setup();
-      expect(imgSortSpy).not.toHaveBeenCalled(); // No other tests called the img sort
+      expect(imgSortSpy).not.toHaveBeenCalled(); // Double check image sort not somehow called
       const router = testRouter();
       await router.navigate({ to: "/portfolio/$postId", params: { postId: "iOS" } });
       render(<RouterProvider router={router} />);
-      expect(imgSortSpy).toHaveBeenCalledTimes(1); // `<PostCard>` calls it to set `<CardImage>`
-      await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text })); //* Use click to make modal appear
-      expect(showDialogMock).toHaveBeenCalledOnce(); //* Dialog opener ONLY ever called if viewWidth > 768 AND project has > 1 image
-      // `showDialog` called with a title and `<AppCarousel>` that uses the img sort
+      // WHEN multi-image project image clicked at widths >= 768
+      await user.click(await screen.findByRole("img", { name: twoImgAltText }));
+      //  THEN `showDialog` run, opening the modal
+      expect(showDialogMock).toHaveBeenCalledOnce();
+      // AND `<AppCarousel>` renders with title and sorted images
+      expect(imgSortSpy).toHaveBeenCalledExactlyOnceWith(twoImgProj.post_images);
+      // WHENEVER the multi-image project `<CardImage>` clicked
+      await user.click(await screen.findByRole("img", { name: twoImgAltText }));
+      // THEN `showDialog` run, rendering `<AppCarousel` with re-sorted images
+      expect(showDialogMock).toHaveBeenCalledTimes(2);
       expect(imgSortSpy).toHaveBeenNthCalledWith(2, twoImgProj.post_images);
+      expect(imgSortSpy).toHaveBeenCalledTimes(2);
 
-      //* Only have 1 img so a condition in ProjectSection says don't render a modal, just render an img
-      await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text })); //* Only 1 image in [] so click doesn't work
-      expect(showDialogMock).toHaveBeenCalledTimes(2); //* Dialog opener called again
-      expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false as the param value indicating no dialog opening needed
-      // `showDialog` called with false, so no img sort run by `<AppCarousel>`
+      // WHEN single img project clicked at width >= 768
+      await user.click(await screen.findByRole("img", { name: oneImgAltText }));
+      // THEN `showDialog(false)` run, NOT opening the modal dialog
+      expect(showDialogMock).toHaveBeenCalledTimes(3);
+      expect(showDialogMock).toHaveBeenLastCalledWith(false);
+      // AND so no image sort needed by `<AppCarousel>`
       expect(imgSortSpy).toHaveBeenNthCalledWith(2, twoImgProj.post_images);
+      expect(imgSortSpy).toHaveBeenCalledTimes(2);
 
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       await waitFor(() => router.invalidate());
-      await user.click(await screen.findByRole("img", { name: twoImgProj.post_images![0].alt_text }));
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(); //* No modal renders since viewWidth < 768
-      await user.click(await screen.findByRole("img", { name: oneImgProj.post_images![0].alt_text }));
-      expect(showDialogMock).toHaveBeenCalledTimes(3); //* Still called
-      expect(showDialogMock).toHaveBeenLastCalledWith(false); //* BUT with false again, so no Dialog needed to be opened
-      // `showDialog` called with false, so no img sort run by `<AppCarousel>`
-      expect(imgSortSpy).toHaveBeenNthCalledWith(2, twoImgProj.post_images);
+      // WHEN a multi-image project clicked at widths < 768 (mobile/tablet)
+      await user.click(await screen.findByRole("img", { name: twoImgAltText }));
+      // THEN no modal is rendered after click, even though it's multi-image
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      // SINCE multi-image projects renders `<AppCarousel>` at smaller widths & without `onClick`
+      expect(showDialogMock).toHaveBeenCalledTimes(3);
+      expect(showDialogMock).toHaveBeenLastCalledWith(false);
+      // AND since `<AppCarousel>` rendered at smaller widths, the image sort is run
+      expect(imgSortSpy).toHaveBeenNthCalledWith(3, twoImgProj.post_images);
+      expect(imgSortSpy).toHaveBeenCalledTimes(3);
+      // WHEN a single-image project clicked at widths < 768 (mobile/tablet)
+      await user.click(await screen.findByRole("img", { name: oneImgAltText }));
+      // THEN `showDialog(false)` run again
+      expect(showDialogMock).toHaveBeenCalledTimes(4);
+      expect(showDialogMock).toHaveBeenLastCalledWith(false);
     });
     test("a different size title", async () => {
       ApiMock.mockImplementation(() => (
