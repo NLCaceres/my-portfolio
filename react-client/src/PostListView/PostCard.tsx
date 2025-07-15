@@ -75,7 +75,9 @@ const CardImage = ({ project, onImgClick }: PostCardWithImgProps) => { //* Save 
 
   let classString = `${PostCardCss.cardImgContainer} ${PostCardCss.imgTopMargin}`; //* Base classList
   if (viewWidth >= 992 && postImages.length > 1) { classString += ` ${PostCardCss.clickable}`; } //* Add in CSS at specific viewport width
-  const importantImg = (postImages.length == 1) ? postImages[0] : SortProjectImagesByImportance(postImages)[0];
+  const importantImg = (postImages.length == 1) ? postImages[0] :
+    postImages.reduce((prev, current) => (prev && prev.importance < current.importance) ?
+      prev : current);
   return ( //* At desktop sizes, render a single image that can open a modal if the project has multiple imgs
     <IntersectLoadImage src={ importantImg.image_url } alt={ importantImg.alt_text }
                         placeholderText={ placeholderText } onImgClick={ onImgClick }

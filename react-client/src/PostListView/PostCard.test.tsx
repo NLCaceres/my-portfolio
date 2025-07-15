@@ -58,21 +58,21 @@ describe("render a single PostCard", () => {
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(screen.queryByTestId("app-carousel")).not.toBeInTheDocument(); //* At desktop, never render a carousel as the rep img
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* One now clickable rep img displayed
-      expect(ImgSortSpy).toHaveBeenCalledExactlyOnceWith(testProject.post_images);
+      expect(ImgSortSpy).not.toHaveBeenCalled();
 
       //! 2 imgs at 768px tablet size. Low end before use a carousel instead of a single clickable modal-opening img
       ViewWidthMock.mockReturnValue(averageTabletViewWidth);
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(screen.queryByTestId("app-carousel")).not.toBeInTheDocument(); //* NO carousel still
       expect(screen.getByRole("img", { name: /barfooalt/i })).toBeInTheDocument(); //* Still 1 clickable img
-      expect(ImgSortSpy).toHaveBeenNthCalledWith(2, testProject.post_images);
+      expect(ImgSortSpy).not.toHaveBeenCalled();
 
       //! Carousel appears at 767px tablet (and lower) w/ multiple images
       ViewWidthMock.mockReturnValue(smallTabletHighEndWidth);
       rerender(<PostCard project={testProject} onImgClick={dumbImgClickFunc} />);
       expect(await screen.findByTestId("app-carousel")).toBeInTheDocument();
       expect(screen.getAllByRole("img", { name: /barfooalt/i })).toHaveLength(2); //* Imgs technically still there! but in carousel!
-      expect(ImgSortSpy).toHaveBeenNthCalledWith(3, testProject.post_images);
+      expect(ImgSortSpy).toHaveBeenCalledExactlyOnceWith(testProject.post_images);
     });
     test("that hints + allows clicks at specific viewWidths", async () => {
       const testProject = ProjectFactory.create(); const mockImgClickFunc = vi.fn();
