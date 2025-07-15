@@ -1,19 +1,17 @@
-import { createContext, useCallback, useContext, useMemo, useState, type MutableRefObject, type PropsWithChildren } from "react";
+import {
+  createContext, useCallback, useContext, useMemo, useRef, useState, type PropsWithChildren
+} from "react";
 import { type A11yDialogInstance } from "react-a11y-dialog";
 import AppDialog from "../Modals/AppDialog";
-
-
-type A11yDialogRef = MutableRefObject<A11yDialogInstance | undefined>;
-//? Easier to use the above type to create a mutableRef since createRef() returns a readonly ref object
-//? Why not create the ref in the Provider via useRef? Because whenever useDialog() is called, that ref may get reset
-const dialogRef: A11yDialogRef = { current: undefined };
 
 type DialogState = PropsWithChildren<{ title: string, hideTitle?: boolean }>;
 type DialogProviderContext = { showDialog?: (dialogState: DialogState | false) => void };
 const DialogContext = createContext<DialogProviderContext>({ });
 
 export const DialogProvider = ({ children }: PropsWithChildren ) => {
-  const [{ title, hideTitle, children: dialogChildren }, setDialogState] = useState<DialogState>({ title: "", hideTitle: false });
+  const dialogRef = useRef<A11yDialogInstance>(null);
+  const [{ title, hideTitle, children: dialogChildren }, setDialogState] =
+    useState<DialogState>({ title: "", hideTitle: false });
   const showDialog = useCallback((newDialogState: DialogState | false) => {
     if (newDialogState) {
       setDialogState(newDialogState);
