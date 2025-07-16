@@ -13,14 +13,14 @@ const AppDialog = ({ title, hideTitle = false, dialogRef, children }: PropsWithC
   const [instance, attr] = useA11yDialog({ id: dialogID + "-dialog" });
   dialogRef.current = instance;
 
-  const headerCSS = hideTitle ? `${AppDialogCss.header} ${AppDialogCss.hidden}` : AppDialogCss.header;
+  const headerCSS = `${AppDialogCss.header}`;
   const titleCSS = hideTitle ? "sr-only" : AppDialogCss.title;
 
   return createPortal(
     <div {...attr.container} className={AppDialogCss.container}>
       <div {...attr.overlay} className={AppDialogCss.overlay} />
       <div {...attr.dialog} className={AppDialogCss.dialog}>
-        <div className={headerCSS}>
+        <div className={hideTitle ? `${headerCSS} ${AppDialogCss.hidden}` : headerCSS}>
           <h1 id={attr.title.id} className={titleCSS}>{title}</h1>
           <button {...attr.closeButton} className={AppDialogCss.closeButton} aria-label="Close this dialog window" />
         </div>
