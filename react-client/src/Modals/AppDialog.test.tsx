@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import AppDialog from "./AppDialog";
-import { MutableRefObject } from "react";
+import { type RefObject } from "react";
 import { A11yDialogInstance } from "react-a11y-dialog";
 
 describe("renders an accessible dialog view over the window", () => {
   test("expecting a title for easier accessibility regardless if the title is visible", () => {
-    const mockRef: MutableRefObject<A11yDialogInstance | undefined> = { current: undefined };
+    const mockRef: RefObject<A11yDialogInstance | null> = { current: null };
     const { rerender } = render(<AppDialog dialogRef={mockRef} title="Welcome Dialog">Hello World!</AppDialog>);
     //* WHEN the dialog is hidden
     const hiddenDialog = screen.getByRole("dialog", { hidden: true });
@@ -65,7 +65,7 @@ describe("renders an accessible dialog view over the window", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Visible Dialog" })).toBeInTheDocument();
   });
   test("uses `A11y-Dialog`'s hook and the useId hook to setup the dialog functionality and accessibility", () => {
-    const mockRef: MutableRefObject<A11yDialogInstance | undefined> = { current: undefined };
+    const mockRef: RefObject<A11yDialogInstance | null> = { current: null };
     render(<AppDialog dialogRef={mockRef} title="Welcome Dialog">Hello World!</AppDialog>);
     mockRef.current!.show();
     //* WHEN the dialog is rendered, THEN its ID ends with a "-dialog" suffix, has an aria-modal attribute

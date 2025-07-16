@@ -1,18 +1,17 @@
-import { type PropsWithChildren, type MutableRefObject, useId } from "react";
+import { useId, type PropsWithChildren, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { type A11yDialogInstance, useA11yDialog } from "react-a11y-dialog";
 import AppDialogCss from "./AppDialog.module.css";
 
 type DialogProps = {
   title: string //? Required to help assistive tech identify the dialog to users
-  hideTitle?: boolean,
-  dialogRef: MutableRefObject<A11yDialogInstance | undefined>
+  hideTitle?: boolean, dialogRef: RefObject<A11yDialogInstance | null>
 };
 
 const AppDialog = ({ title, hideTitle = false, dialogRef, children }: PropsWithChildren<DialogProps>) => {
   const dialogID = useId();
   const [instance, attr] = useA11yDialog({ id: dialogID + "-dialog" });
-  dialogRef.current = instance ?? undefined;
+  dialogRef.current = instance;
 
   const headerCSS = hideTitle ? `${AppDialogCss.header} ${AppDialogCss.hidden}` : AppDialogCss.header;
   const titleCSS = hideTitle ? "sr-only" : AppDialogCss.title;
