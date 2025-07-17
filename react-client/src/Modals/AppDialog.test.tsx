@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import AppDialog from "./AppDialog";
 import { type RefObject } from "react";
 import { A11yDialogInstance } from "react-a11y-dialog";
+import userEvent from "@testing-library/user-event";
 
 describe("renders an accessible dialog view over the window", () => {
   test("expecting a title for easier accessibility regardless if the title is visible", () => {
@@ -66,11 +67,15 @@ describe("renders an accessible dialog view over the window", () => {
     expect(screen.getByRole("heading", { level: 1, name: "visible-title" })).toBeInTheDocument();
     expect(screen.getByText("visible-title")).toBeInTheDocument();
   });
-  test("uses `A11y-Dialog` + useId hook to init the dialog functionality & accessibility", () => {
+  test("uses `A11y-Dialog` + useId hooks to init the dialog functionality & accessibility", async () => {
+    const user = userEvent.setup();
     const mockRef: RefObject<A11yDialogInstance | null> = { current: null };
     render(<AppDialog dialogRef={mockRef} title="foobar-title">Foobar</AppDialog>);
+    //* On initial render, in tests, the focused element is the document's <body>
+    expect(document.activeElement).not.toBeNull();
+    expect(document.activeElement).toBe(document.body);
+    //* WHEN rendered and the dialog appears
     mockRef.current!.show();
-    //* WHEN rendered
     const dialog = screen.getByRole("dialog");
     //* THEN its ID uses a "-dialog" suffix
     expect(dialog).toHaveAttribute("id", expect.stringContaining("-dialog"));
@@ -81,5 +86,38 @@ describe("renders an accessible dialog view over the window", () => {
     //* AND the title gets a related ID with additional "-dialog-title" suffix
     expect(screen.getByText("foobar-title"))
       .toHaveAttribute("id", expect.stringContaining("-dialog-title"));
+    //* AND the dialog becomes the focused element
+    expect(document.activeElement).not.toBeNull();
+    expect(document.activeElement).toBe(dialog);
+
+    //* WHEN the close button is clicked
+    await user.click(screen.getByRole("button"));
+    //* THEN the dialog is hidden again
+    expect(dialog).toHaveAttribute("aria-hidden", "true");
+    //* AND the focus element becomes the document <body> again
+    expect(document.activeElement).not.toBeNull();
+    expect(document.activeElement).toBe(document.body);
+
+    //* WHEN the dialog appears
+    mockRef.current!.show();
+    //* THEN the "aria-hidden" attribute is removed
+    expect(dialog).not.toHaveAttribute("aria-hidden");
+    //* WHEN the dialog overlay is clicked
+    expect(dialog.firstElementChild).toHaveClass("overlay");
+    await user.click(dialog.firstElementChild!);
+    //* THEN "aria-hidden = true" is set again
+    expect(dialog).toHaveAttribute("aria-hidden", "true");
+    //* AND the document body is the focused element again
+    expect(document.activeElement).not.toBeNull();
+    expect(document.activeElement).toBe(document.body);
+
+    mockRef.current!.show();
+    expect(document.activeElement).not.toBeNull();
+    expect(document.activeElement).toBe(dialog);
+    //* WHEN the dialog is directly hidden (the original `onClose` handler)
+    mockRef.current!.hide();
+    //* THEN the dialog mistakenly retains focus
+    expect(document.activeElement).not.toBeNull();
+    expect(document.activeElement).toBe(dialog);
   });
 });
