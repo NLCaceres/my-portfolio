@@ -1,4 +1,4 @@
-import { useEffect, useId, type PropsWithChildren, type RefObject } from "react";
+import { useCallback, useEffect, useId, type PropsWithChildren, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { type A11yDialogInstance, useA11yDialog } from "react-a11y-dialog";
 import AppDialogCss from "./AppDialog.module.css";
@@ -12,17 +12,21 @@ const AppDialog = ({ title, hideTitle = false, dialogRef, children }: PropsWithC
   const dialogID = useId();
   const [instance, attr] = useA11yDialog({ id: dialogID + "-dialog" });
   useEffect(() => { dialogRef.current = instance; }, [dialogRef, instance]);
-
+  const closeDialog = useCallback(() => {
+    document.activeElement instanceof HTMLElement && document.activeElement.blur();
+    instance?.hide();
+  }, [instance]);
   const headerCSS = `${AppDialogCss.header}`;
   const titleCSS = hideTitle ? "sr-only" : AppDialogCss.title;
 
   return createPortal(
     <div {...attr.container} className={AppDialogCss.container}>
-      <div {...attr.overlay} className={AppDialogCss.overlay} />
+      <div onClick={closeDialog} className={AppDialogCss.overlay} />
       <div {...attr.dialog} className={AppDialogCss.dialog}>
         <div className={hideTitle ? `${headerCSS} ${AppDialogCss.hidden}` : headerCSS}>
           <h1 id={attr.title.id} className={titleCSS}>{title}</h1>
-          <button {...attr.closeButton} className={AppDialogCss.closeButton} aria-label="Close this dialog window" />
+          <button type="button" className={AppDialogCss.closeButton}
+                  onClick={closeDialog} aria-label="Close this dialog window" />
         </div>
 
         <div className={AppDialogCss.content}>
