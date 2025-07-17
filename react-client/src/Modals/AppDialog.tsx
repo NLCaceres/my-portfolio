@@ -1,4 +1,4 @@
-import { useId, type PropsWithChildren, type RefObject } from "react";
+import { useEffect, useId, type PropsWithChildren, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { type A11yDialogInstance, useA11yDialog } from "react-a11y-dialog";
 import AppDialogCss from "./AppDialog.module.css";
@@ -11,7 +11,7 @@ type DialogProps = {
 const AppDialog = ({ title, hideTitle = false, dialogRef, children }: PropsWithChildren<DialogProps>) => {
   const dialogID = useId();
   const [instance, attr] = useA11yDialog({ id: dialogID + "-dialog" });
-  dialogRef.current = instance;
+  useEffect(() => { dialogRef.current = instance; }, [dialogRef, instance]);
 
   const headerCSS = `${AppDialogCss.header}`;
   const titleCSS = hideTitle ? "sr-only" : AppDialogCss.title;
