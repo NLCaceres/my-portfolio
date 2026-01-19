@@ -1,9 +1,9 @@
 # My Portfolio! Data Brought To You By Rails
 
 Originally written using Rails 5, my React-based portfolio would fetch data from
-a fully-fledged Rails app, perfectly capable of serving up its own HTML. Around the
-same time that I started building out the two apps, front-end and back-end, Rails
-6 was released. Looking further into the documentation, I found a great solution
+a fully-fledged Rails app, perfectly capable of serving up its own HTML. Around
+the same time that I started building out the two apps, front-end and back-end,
+Rails 6 was released. Looking further into the documentation, I found a great solution
 to get things up and running faster, the API mode! A Rails app can easily be created
 using the CLI, and with the addition of the '--api' flag, it'll drop any unnecessary
 middleware, leaving behind a powerful but lightweight Rails API. Though I've had
@@ -88,8 +88,8 @@ to it each and every year!
     - The 'local' flag isn't actually needed since it is used by default, as opposed
     to 'global', BUT using 'local' is a good reminder of what you're configuring
   - Using the config file is best practice for Bundler 2+ due to uncoming changes
-    - Bundler 1 & 2 can unexpectedly set a config file just by running commands with
-    flags, accidentally making flags stateful
+    - Bundler 1 & 2 can unexpectedly set a config file just by running commands
+    with flags, accidentally making flags stateful
     - Bundler 3 will create consistent command behavior by defaulting to the config
     file, letting flags alter command behavior ONLY when used
 
@@ -163,8 +163,8 @@ has issues with MacOS
   Railway. The frozen lockfile will not be updated if PNPM notices the dependencies
   can be upgraded, therefore we get the exact same build later.
   - The `railway-build` command in the Rails root `package.json` is used to switch
-  the current working directory to the `react-client` directory, and uses `pnpm build`
-  to make the production build in the `react-client/dist` dir for Rails to serve
+  the current working dir to the `react-client` dir, and uses `pnpm build` to
+  make the production build in the `react-client/dist` dir for Rails to serve
   - The `railway-copy` command in the rails root `package.json` copies the production
   `react-client/dist` dir contents into the Rails `public` folder to serve up!
     - ZSH/Bash Note: The copy command's '-R' flag usually grabs BOTH the directory
