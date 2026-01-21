@@ -172,6 +172,7 @@ describe("renders the form for the contact page", () => {
 
     await user.click(contactSubmitButton);
     expect(onSubmitFunc).toHaveBeenCalledTimes(3);
+    vi.restoreAllMocks();
   });
   test("with validation error messages after invalid data submitted", async () => {
     import.meta.env.VITE_CONTACTABLE = "true";
@@ -210,6 +211,7 @@ describe("renders the form for the contact page", () => {
     expect(validationMock).toHaveBeenCalledTimes(5);
     //* WHEN the validator returns multiple errors, THEN BOTH are rendered as is (just like the "email" field before)
     expect(screen.getAllByText(/message invalid error/i).length).toBe(2);
+    vi.restoreAllMocks();
   });
   test("using viewWidth to control the Turnstile Widget's size", async () => {
     import.meta.env.VITE_CONTACTABLE = "true";
