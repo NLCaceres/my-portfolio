@@ -1,7 +1,7 @@
 import { vi, type MockInstance } from "vitest";
 //import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
-import { screen, render, act } from "@testing-library/react";
+import { screen, render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
@@ -19,6 +19,13 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
   return {
     default: ({ successCB }: TurnstileWidgetProps) => {
       return (<div><button type="button" onClick={() => { successCB("123"); }}>Turnstile Verification Button</button></div>);
+    }
+  };
+});
+vi.mock("../AppImages/PlaceholderImg", () => {
+  return {
+    default: () => {
+      return (<div className="placeholderImg"><h2>Project Photo</h2></div>);
     }
   };
 });
@@ -56,7 +63,10 @@ describe("renders the whole app", () => {
       vi.useFakeTimers(); // ?: OTHERWISE Vitest's fakeTimers will freeze userEvents entirely (like in line 58)
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
       render(<RouterProvider router={TanStackRouter} />);
-      expect(await screen.findByText("iOS")).toBeInTheDocument();
+      await waitFor(() => TanStackRouter.navigate({
+        to: "/portfolio/$postId", params: { postId: "about-me" }
+      }));
+      expect(await screen.findByText("About Me")).toBeInTheDocument();
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
@@ -79,7 +89,10 @@ describe("renders the whole app", () => {
         { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       );
       render(<RouterProvider router={TanStackRouter} />);
-      expect(await screen.findByText("iOS")).toBeInTheDocument();
+      await waitFor(() => TanStackRouter.navigate({
+        to: "/portfolio/$postId", params: { postId: "about-me" }
+      }));
+      expect(await screen.findByText("About Me")).toBeInTheDocument();
       expect(ApiMock).toHaveBeenCalledTimes(1);
 
       await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
