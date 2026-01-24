@@ -21,16 +21,16 @@ type BackgroundImageProps = {
 const BackgroundLoadImage = (
   { src, alt, placeholderText = "", onImgClick, onLoad, className, placeholderClass, placeholderTextStyle, imgClass, parentRef }: BackgroundImageProps) => {
   //! Animation Setup
-	//? useResize height/width fits to window size even if user alters the size, e.g. phone tilting
-  const { height, width } = useResize({ config: config.molasses }); //? Use a default tension/friction setting to control animation speed
-  const [fadeOutSpring, fadeOutAPI] = useSpring(() => ({ from: { opacity: 1 } })); //* Setup the spring to use later
-  const [fadeInSpring, fadeInAPI] = useSpring(() => ({ from: { opacity: 0 } })); //? Always use the start state BUT no 'to' key yet!
-  const resizeAnimations = () => { height.start(500); width.start(500); }; //* Start on container
-  const successAnimations = () => {
+  const [sizeSpring, sizeSpringAPI] = //? Generally adapts to user size changes
+    useSpring(() => ({ from: { height: 0, width: 0 }, config: config.molasses }));
+  //! NEED the `from` key to make springs work as of v10
+  const [fadeOutSpring, fadeOutAPI] = useSpring(() => ({ from: { opacity: 1 } }));
+  const [fadeInSpring, fadeInAPI] = useSpring(() => ({ from: { opacity: 0 } }));
+  const resizeAnimations = () => { sizeSpringAPI.start({ to: { height: 500, width: 500 } }); };
+  const successAnimations = () => { // Fade in img, fade out placeholder, & unmount it
     resizeAnimations();
     const slowestSpring = { tension: 260 , friction: 260 };
     fadeInAPI.start({ from: { opacity: 0 }, to: { opacity: 1 }, config: slowestSpring });
-    //* ALSO fade out the placeholder THEN once faded out, unmount it by setLoading(false)
     fadeOutAPI.start({ from: { opacity: 1 }, to: { opacity: 0 }, config: slowestSpring, onRest: () => setLoading(false) });
   };
   //! Actual state
@@ -51,7 +51,7 @@ const BackgroundLoadImage = (
 
   return (
     <animated.div className={`${BackgroundLoadImageCss.container} ${className || ""}`}
-                  ref={parentRef} style={{ height, width }}>
+                  ref={parentRef} style={{ height: sizeSpring.height, width: sizeSpring.width }}>
       { (loading || !successfulLoad) && /* If loading, cover <img> or use as backup on fail */
         <PlaceholderImg loading={loading} className={`${BackgroundLoadImageCss.placeholder} ${placeholderClass || ""}`.trim()}
                         style={fadeOutSpring} textStyle={placeholderTextStyle}>
