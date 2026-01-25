@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-//import { useNavigate } from "react-router-dom";
 import useViewWidth, { ViewWidthProvider } from "../ContextProviders/ViewWidthProvider";
 import AppAlert, { AlertState } from "../AppAlert/AppAlert";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import ContactPageForm from "../ContactMePage/ContactPageForm";
 import Footer from "../Footer/Footer";
-//import AppRouting from "../Routing/AppRouting";
 import { SmoothScroll } from "../Utility/Functions/Browser";
 import useDialog, { DialogProvider } from "../ContextProviders/DialogProvider";
 import { useNavigate, useRouter } from "@tanstack/react-router";

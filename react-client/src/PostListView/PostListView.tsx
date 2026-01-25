@@ -1,5 +1,4 @@
 //import { useCallback, useEffect, /*useState*/ } from "react";
-//import { useLocation } from "react-router-dom";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import PostCard from "./PostCard";
 import PostCardPlaceholderList from "./PostCardPlaceholder";

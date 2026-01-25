@@ -1,6 +1,5 @@
 import { vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-//import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Globals } from "@react-spring/web";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { TanStackRouter } from "./RouteList";
@@ -16,7 +15,7 @@ beforeAll(() => { //? Skip Route Transition style animations, instant finish, no
   Globals.assign({ skipAnimation: true }); //? So tests run quick BUT props updated as expected!
 });
 
-describe("renders react-router-dom routes", () => {
+describe("renders Tanstack Routes", () => {
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     vi.spyOn(GetPostList, "default")
@@ -25,7 +24,6 @@ describe("renders react-router-dom routes", () => {
   afterEach(() => { vi.restoreAllMocks(); });
 
   test("mapping a home page to '/' and '/portfolio/about-me'", async () => {
-    //const baseRouter = createMemoryRouter(RouteList, { initialEntries: ["/"] });
     render(<RouterProvider router={TanStackRouter} />);
     await screen.findByText(/about me/i); //* Await placeholders fading for major/minor projects to render in
 
@@ -45,7 +43,6 @@ describe("renders react-router-dom routes", () => {
   });
 
   test("mapping out four main portfolio routes", async () => { //! iOS, Android, Front-End, Back-End
-    //const portfolioAboutMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/portfolio/android"] });
     await waitFor(() => TanStackRouter.navigate({
       to: "/portfolio/$postId", params: { postId: "android" }
     }));
@@ -89,7 +86,6 @@ describe("renders react-router-dom routes", () => {
   });
 
   test("mapping a contact me page", async () => {
-    //const contactMeRouter = createMemoryRouter(RouteList, { initialEntries: ["/contact-me"] });
     await waitFor(() => TanStackRouter.navigate({ to: "/contact-me" }));
     render(<RouterProvider router={TanStackRouter} />);
     await screen.findByText(/Contact Me!/);
@@ -99,7 +95,6 @@ describe("renders react-router-dom routes", () => {
   });
 
   test("mapping a fallback route to a not found page", async () => {
-    //const fallbackRouter = createMemoryRouter(RouteList, { initialEntries: ["/foobar"] });
     await waitFor(() => TanStackRouter.navigate({ href: "/foobar" }));
     render(<RouterProvider router={TanStackRouter} />);
     await screen.findByText(/Sorry/); //* Should redirect to not found page

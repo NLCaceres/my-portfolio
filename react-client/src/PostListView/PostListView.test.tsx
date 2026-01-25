@@ -1,8 +1,6 @@
-//import { MemoryRouter } from "react-router-dom";
 import { vi, type MockInstance } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-//import PostListView from "./PostListView";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { averageTabletLowEndWidth, averageTabletViewWidth, smallTabletHighEndWidth } from "../Utility/Constants/Viewports";
 import * as GetPostList from "../Data/Api/ProjectAPI";
@@ -39,7 +37,6 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
   test("only if the list has a set of major or minor projects", async () => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     ApiMock.mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
-    //* Need to use MemoryRouter with "/portfolio/iOS" to make major/small projects headers appear or else get "About me" headings
     const router = testRouter();
     await router.navigate({ to: "/portfolio/$postId", params: { postId: "android" } });
     render(<RouterProvider router={router} />);
