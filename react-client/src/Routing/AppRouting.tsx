@@ -1,18 +1,8 @@
-import { /* useLocation, Outlet, */ useOutletContext } from "react-router-dom";
 import { useLocation, Outlet } from "@tanstack/react-router";
 import { animated, useTransition } from "@react-spring/web";
 import AppRoutingCss from "./AppRouting.module.css";
-import { type AlertHandler } from "../AppAlert/AppAlert";
 
-type RoutingOutletContext = {
-  showAlert: AlertHandler,
-};
-
-//type AppRoutingProps = {
-//  context: RoutingOutletContext
-//};
 const AppRouting = () => {
-  //! Animations
   const location = useLocation();
   const transitions = useTransition(location, {
     config: { tension: 200, friction: 15 },
@@ -27,11 +17,5 @@ const AppRouting = () => {
     </animated.div>
   ));
 };
-
-//? Thanks to React-Router's Outlet component any components rendered via the router
-//? gets access to the Routing Context and all objects/funcs it provides
-export function useRoutingContext() {
-  return useOutletContext<RoutingOutletContext>();
-}
 
 export default AppRouting;
