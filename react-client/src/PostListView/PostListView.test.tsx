@@ -43,53 +43,45 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(2);
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(2); //* Once for major and once for minor projects
-    //unmount();
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(2); //* 1 for major, 1 for minor
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
     await waitFor(() => router.invalidate());
-    //expect(await screen.findByText("iOS")).toBeInTheDocument();
-    //const { unmount: secondUnmount } = render(<RouterProvider router={TanStackRouter} />);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /small projects/i })).not.toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(3);
     expect(ProjectSortingMock).toHaveBeenCalledTimes(3);
-    expect(ProjectSortingMock).toHaveBeenLastCalledWith([majProject]); //* Last called with undefined minorProjects so default [] value is used
-    //secondUnmount();
+    expect(ProjectSortingMock).toHaveBeenLastCalledWith([majProject]);
 
-    //* Following set fails because ln81 (not using key to set title, using index from Object.values()!)
     ApiMock.mockResolvedValue({ minorProjects: [minProject] });
     await waitFor(() => router.invalidate());
-    //const { unmount: thirdUnmount } = render(<RouterProvider router={TanStackRouter} />);
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
     expect(ApiMock).toHaveBeenCalledTimes(4);
     expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
-    expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]); //* Called with undefined majorProjects so default [] used
-    //unmount();
-    //thirdUnmount();
+    expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
 
     ApiMock.mockResolvedValue({ majorProjects: [], minorProjects: [] });
     await waitFor(() => router.invalidate());
-    //const { unmount: fourthUnmount } = render(<RouterProvider router={TanStackRouter} />);
-    const placeholders = await screen.findAllByRole("heading"); //* Need to await placeholder heading elems or the ln43 render sets off act() warning
-    expect(placeholders.length).toBe(6); //* 6 headers are found -> 2 titles + 4 titles in individual placeholder cards
-    const placeholderImgs = screen.getAllByRole("heading", { name: /project/i }); //* Find 4 PlaceholderImg components
-    expect(placeholderImgs).toHaveLength(4); //* That render a div containing a h2 tag with "Project" written
-    for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); } //* All have the class "placeholderText"
+    const placeholders = await screen.findAllByRole("heading"); // Must await to avoid `act` warning
+    expect(placeholders.length).toBe(6); //* 6 placeholder headers in <PostCardPlaceholderList>
+    // ALSO find 4 `<PlaceholderImg>` with "Project" text + `placeholderText` CSS
+    const placeholderImgs = screen.getAllByRole("heading", { name: /project/i });
+    expect(placeholderImgs).toHaveLength(4);
+    for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
+    // BUT that means no `<ProjectList>` rendered, so no "Major" or "Small Project" title
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument(); //* No PostListView actually renders
     expect(ApiMock).toHaveBeenCalledTimes(5);
     expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
     //expect(ProjectSortingMock).toHaveBeenNthCalledWith(9, []); //* BOTH major and minor projects are empty arrays
     //expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 9th time is always called with an empty array
-    //secondUnmount();
 
     ApiMock.mockImplementation(() => ({}));
     await waitFor(() => router.invalidate());
-    //* Same as with empty arrays. Just get placeholders
-    expect((await screen.findAllByRole("heading")).length).toBe(6); //* Still expect 6 titles heading elems
-    const morePlaceholderImgs = await screen.findAllByRole("heading", { name: /project/i }); //* 4 with class "placeholderText"
+    // WHEN Api just returns `{}`, THEN still yields `<PostCardPlaceholderList>` + same results
+    expect((await screen.findAllByRole("heading")).length).toBe(6);
+    const morePlaceholderImgs = await screen.findAllByRole("heading", { name: /project/i });
     expect(morePlaceholderImgs).toHaveLength(4);
     for (const placeholderImg of morePlaceholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument();
