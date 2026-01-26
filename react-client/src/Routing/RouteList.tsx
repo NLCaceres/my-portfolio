@@ -59,12 +59,13 @@ const routeTree = rootRoute.addChildren([
 	portfolioRoute.addChildren([portfolioChildRoute, portfolioIndexRoute])
 ]);
 
-export const TanStackRouter = createRouter({
+const TanStackRouter = createRouter({
 	routeTree,
 	scrollRestoration: true,
 	defaultNotFoundComponent: () => <Navigate to="/not-found" replace={true} />,
 	context: { showAlert: () => {} }
 });
+export default TanStackRouter;
 
 declare module "@tanstack/react-router" {
   interface Register { // eslint-disable-line

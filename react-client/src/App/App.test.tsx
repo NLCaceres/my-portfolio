@@ -4,7 +4,7 @@ import { screen, render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
-import { TanStackRouter } from "../Routing/RouteList";
+import { Router } from "../Routing/RouteList";
 import { RouterProvider } from "@tanstack/react-router";
 import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 import { type UserEvent } from "@testing-library/user-event";
@@ -60,8 +60,8 @@ describe("renders the whole app", () => {
       const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); // ?: VERY IMPORTANT due to setTimeout being used internally!
       vi.useFakeTimers(); // ?: OTHERWISE Vitest's fakeTimers will freeze userEvents entirely (like in line 58)
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
-      render(<RouterProvider router={TanStackRouter} />);
-      await waitFor(() => TanStackRouter.navigate({
+      render(<RouterProvider router={Router} />);
+      await waitFor(() => Router.navigate({
         to: "/portfolio/$postId", params: { postId: "about-me" }
       }));
       expect(await screen.findByText("About Me")).toBeInTheDocument();
@@ -86,8 +86,8 @@ describe("renders the whole app", () => {
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue( // - Must return a valid response for Turnstile to provide a success response
         { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       );
-      render(<RouterProvider router={TanStackRouter} />);
-      await waitFor(() => TanStackRouter.navigate({
+      render(<RouterProvider router={Router} />);
+      await waitFor(() => Router.navigate({
         to: "/portfolio/$postId", params: { postId: "about-me" }
       }));
       expect(await screen.findByText("About Me")).toBeInTheDocument();
@@ -110,7 +110,7 @@ describe("renders the whole app", () => {
       const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default")
         .mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
-      const { unmount } = render(<RouterProvider router={TanStackRouter} />);
+      const { unmount } = render(<RouterProvider router={Router} />);
       //? Running the `findBy` query first ensures the App is finished rendering
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
       expect(ApiMock).toHaveBeenCalledTimes(1); //? SINCE the API loader has fully returned
@@ -128,7 +128,7 @@ describe("renders the whole app", () => {
       unmount();
 
       useViewWidthSpy.mockReturnValue(mobileHighEndWidth); // - Rerender as mobile version
-      render(<RouterProvider router={TanStackRouter} />);
+      render(<RouterProvider router={Router} />);
       // WHEN at mobile widths, even bigger mobile widths
       const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
       // THEN clicking the "Contact" button should work as a link to navigate to "/contact-me"

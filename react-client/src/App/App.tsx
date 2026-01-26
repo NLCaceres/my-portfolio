@@ -9,7 +9,6 @@ import useDialog, { DialogProvider } from "../ContextProviders/DialogProvider";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import AppRouting from "../Routing/AppRouting";
-//import { TanStackRouter } from "../Routing/RouteList";
 //import * as serviceWorker from "./serviceWorker";
 
 
