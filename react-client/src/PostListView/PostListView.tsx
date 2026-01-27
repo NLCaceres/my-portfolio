@@ -1,18 +1,12 @@
-//import { useCallback, useEffect, /*useState*/ } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import PostCard from "./PostCard";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
-//import UseNullableAsync from "../Hooks/UseAsync";
-//import GetPostList from "../Data/Api/ProjectAPI";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
 import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Models/Project";
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
 
-//! Helpful types for PostListView useState
-type SplitProjectList = { majorProjects: Project[], minorProjects: Project[] };
-type ProjectTitleAndImage = Pick<Project, "title" | "post_images">;
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
 const PostListView = () => {
@@ -22,7 +16,7 @@ const PostListView = () => {
 
   //! State + Computed Props of the component
   const { showDialog } = useDialog();
-  const openModal = (newProject?: ProjectTitleAndImage) => {
+  const openModal = (newProject?: Pick<Project, "title" | "post_images">) => {
     if (viewWidth < 768 || !newProject || !newProject.post_images || newProject.post_images.length <= 1) {
       showDialog && showDialog(false);
       return;
@@ -35,28 +29,7 @@ const PostListView = () => {
   };
 
   const viewWidth = useViewWidth();
-  //const [projectList, setProjectList] = useState<SplitProjectList>({ majorProjects: [], minorProjects: [] });
   const projects = portfolioRoutesAPI.useLoaderData();
-  //const sortingCallback = useCallback((projectList?: SplitProjectList) => {
-  //  const sortedMajorProjects = SortProjects(projectList?.majorProjects ?? []).map(project => {
-  //    project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
-  //    return project;
-  //  });
-  //  const sortedSmallProjects = SortProjects(projectList?.minorProjects ?? []).map(project => {
-  //    project.post_images = SortProjectImagesByImportance(project.post_images ?? []);
-  //    return project;
-  //  });
-  //  //setProjectList({ majorProjects: sortedMajorProjects, minorProjects: sortedSmallProjects });
-  //  if (projectList) {
-  //    projectList.majorProjects = sortedMajorProjects;
-  //    projectList.minorProjects = sortedSmallProjects;
-  //  }
-  //}, []); //* Empty ensures the sort is ONLY called once
-
-  //UseNullableAsync(useCallback(async () => { //? useCallback is important AND if wanted, can be a separate "const" var like openModal
-  //  const qParams = (projectType === "about-me") ? "null" : projectType.replace("-", "_");
-  //  return GetPostList(qParams);
-  //}, [projectType]), sortingCallback);
   return (
     (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0) ?
       (
@@ -69,9 +42,12 @@ const PostListView = () => {
   );
 };
 
-//* ProjectList always returns an array of 2, the major projects list + the small projects list
-//* EXCEPT in the case of the AboutMe page where it's the 1 section & gets a special header
-type ProjectListProps = { projectList: SplitProjectList, projectType: string, viewWidth: number, modalControl: (project: Project) => void };
+//* ProjectList always returns an array containing 2 Project[], the major + small lists
+//* EXCEPT for "/about-me" which gets 1 "major" section + a special header
+type ProjectListProps = {
+  projectList: { majorProjects: Project[], minorProjects: Project[] },
+  projectType: string, viewWidth: number, modalControl: (project: Project) => void
+};
 const ProjectList = ({ projectList, projectType, viewWidth, modalControl }: ProjectListProps) => {
   return Object.entries(projectList).map(([projectSize, projects]) => {
     const properSize = CamelCaseToTitleCase((projectSize === "minorProjects") ? "smallProjects" : projectSize);

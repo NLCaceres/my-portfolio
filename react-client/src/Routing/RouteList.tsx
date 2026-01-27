@@ -1,9 +1,8 @@
 import App from "../App/App";
-import PostListView from "../PostListView/PostListView";
-import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, notFound } from "@tanstack/react-router";
 import { AlertHandler } from "../AppAlert/AppAlert";
 import GetPostList from "../Data/Api/ProjectAPI";
-// import { SortProjects } from "../Data/Models/Project";
+import PostListView from "../PostListView/PostListView";
+import { createRootRouteWithContext, createRoute, createRouter, getRouteApi, Navigate, notFound } from "@tanstack/react-router";
 
 type AppRouterContext = {
 	showAlert: AlertHandler
@@ -37,12 +36,7 @@ const portfolioChildRoute = createRoute({
   beforeLoad: ({ params }) => {
     if (!validPortfolioPath(params.postId)) throw notFound();
   },
-  loader: async ({ params }) => {
-    const projects = await GetPostList(postListParam(params.postId));
-    //SortProjects(projects.majorProjects);
-    //SortProjects(projects.minorProjects);
-    return projects;
-  },
+  loader: async ({ params }) => GetPostList(postListParam(params.postId)),
   component: PostListView
 });
 export const contactMeRouteAPI = getRouteApi("/contact-me");
