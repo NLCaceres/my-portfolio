@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@react-spring/web": "^10.0.3",
-    "@tanstack/react-router": "^1.150.0",
-    "@tanstack/react-router-devtools": "^1.150.0",
+    "@tanstack/react-router": "1.157.14",
+    "@tanstack/react-router-devtools": "1.157.14",
     "@types/node": "^22.19.7",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
@@ -22,26 +22,25 @@
     "react-a11y-dialog": "^7.4.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^6.30.3",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vite-tsconfig-paths": "^6.0.4"
+    "vite-tsconfig-paths": "^6.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@stylistic/eslint-plugin": "^5.7.0",
-    "@tanstack/router-plugin": "^1.150.0",
+    "@stylistic/eslint-plugin": "^5.7.1",
+    "@tanstack/router-plugin": "1.157.14",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-plugin-react": "^7.37.5",
-    "globals": "^17.0.0",
+    "globals": "^17.1.0",
     "jsdom": "^27.4.0",
     "typescript-eslint": "^8.53.1",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.18"
   },
   "scripts": {
     "start": "vite",
