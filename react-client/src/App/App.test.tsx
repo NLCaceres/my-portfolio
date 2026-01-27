@@ -4,7 +4,7 @@ import { screen, render, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import { mobileHighEndWidth, smallDesktopLowEndWidth } from "../Utility/Constants/Viewports";
-import { Router } from "../Routing/RouteList";
+import Router from "../Routing/RouteList";
 import { RouterProvider } from "@tanstack/react-router";
 import { type TurnstileWidgetProps } from "../ThirdParty/TurnstileWidget";
 import { type UserEvent } from "@testing-library/user-event";
