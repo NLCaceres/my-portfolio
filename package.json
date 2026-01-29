@@ -4,8 +4,8 @@
   "license": "MIT",
   "engines": {
     "node": "^22.12.0",
-    "npm": "^10.5.0",
-    "pnpm": "^9.15.0"
+    "npm": "^11.8.0",
+    "pnpm": "^10.28.2"
   },
   "scripts": {
     "railway-install": "pnpm -C react-client install --frozen-lockfile --prod",
