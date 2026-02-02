@@ -5,7 +5,7 @@ nixPkgs = ['nodejs-slim']
 cmds = ['bundle config set deployment true', 'bundle config set without development test', 'bundle install --jobs 1']
 
 [phases."node:install"]
-cmds = ['corepack enable', 'corepack prepare pnpm@10.28.2 --activate', 'pnpm railway-install']
+cmds = ['corepack enable', 'npm update -g corepack', 'corepack prepare pnpm@10.28.2 --activate', 'pnpm railway-install']
 
 [phases.build]
 cmds = ['pnpm railway-deploy', 'bundle exec rake assets:precompile']
