@@ -1,8 +1,11 @@
+[phases."node:setup"]
+nixPkgs = ['nodejs_24']
+
 [phases.install]
 cmds = ['bundle config set deployment true', 'bundle config set without development test', 'bundle install --jobs 1']
 
 [phases."node:install"]
-cmds = ['npm install -g corepack', 'corepack enable', 'corepack prepare pnpm@10.28.2 --activate', 'pnpm railway-install']
+cmds = ['pnpm railway-install']
 
 [phases.build]
 cmds = ['pnpm railway-deploy', 'bundle exec rake assets:precompile']

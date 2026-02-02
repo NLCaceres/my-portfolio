@@ -3,10 +3,9 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "^24.13.0",
-    "npm": "^11.8.0",
-    "pnpm": "^10.28.2"
+    "node": "^24.13.0"
   },
+  "packageManager": "pnpm@10.28.2",
   "scripts": {
     "railway-install": "pnpm -C react-client install --frozen-lockfile --prod",
     "railway-build": "pnpm -C react-client build",
