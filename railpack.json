@@ -19,6 +19,7 @@
 				}
 			],
 			"commands": [
+				"ls -a",
 				"pnpm railway-install",
 			]
 		},
