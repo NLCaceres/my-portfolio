@@ -8,7 +8,10 @@
 			"commands": [
 				"bundle config set deployment true",
 				"bundle config set without development test",
-				"COPY:Gemfile.lock Gemfile.lock",
+				{
+					"src": "Gemfile.lock",
+					"dest": "Gemfile.lock"
+				},
 				"bundle install --jobs 1"
 			]
 		},
