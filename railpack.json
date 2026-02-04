@@ -12,14 +12,9 @@
 				"bundle install --jobs 1"
 			]
 		},
-		"node:install": {
-			"inputs": [
-				{
-					"step": "install"
-				}
-			],
+		"install:node": {
 			"commands": [
-				"ls -a",
+				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
 				"pnpm railway-install",
 			]
 		},
