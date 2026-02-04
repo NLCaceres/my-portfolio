@@ -21,7 +21,7 @@
 			"commands": [
 				"pnpm railway-install",
 			]
-		}
+		},
 		"build": {
 			"commands": [
 				"...",
