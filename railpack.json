@@ -8,6 +8,7 @@
 			"commands": [
 				"bundle config set deployment true",
 				"bundle config set without development test",
+				"ls -a",
 				"bundle install --jobs 1"
 			]
 		},
