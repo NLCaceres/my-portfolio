@@ -8,7 +8,7 @@
 			"commands": [
 				"bundle config set deployment true",
 				"bundle config set without development test",
-				"ls -a",
+				"COPY: Gemfile.lock Gemfile.lock",
 				"bundle install --jobs 1"
 			]
 		},
