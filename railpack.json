@@ -12,6 +12,16 @@
 				"bundle install --jobs 1"
 			]
 		},
+		"node:install": {
+			"inputs": [
+				{
+					"step": "install"
+				}
+			],
+			"commands": [
+				"pnpm railway-install",
+			]
+		}
 		"build": {
 			"commands": [
 				"...",
@@ -27,13 +37,6 @@
 			],
 			"commands": [
 				"bin/rake db:migrate"
-			]
-		},
-		"node:install": {
-			"commands": [
-				"corepack enable",
-				"corepack use pnpm@10.28.2",
-				"pnpm railway-install"
 			]
 		}
 	}
