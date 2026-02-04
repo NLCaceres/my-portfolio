@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schema.railpack.com",
+	"packages": {
+		"node": "24"
+	},
+	"steps": {
+		"install": {
+			"commands": [
+				"bundle config set deployment true",
+				"bundle config set without development test",
+				"bundle install --jobs 1"
+			]
+		},
+		"build": {
+			"commands": [
+				"pnpm railway-deploy",
+				"bundle exec rake assets:precompile"
+			]
+		},
+		"release": {
+			"inputs": [
+				{
+					"step": "build"
+				}
+			],
+			"commands": [
+				"bin/rake db:migrate"
+			]
+		},
+		"node:install": {
+			"commands": [
+				"corepack enable",
+				"corepack use pnpm@10.28.2",
+				"pnpm railway-install"
+			]
+		}
+	}
+}
