@@ -9,8 +9,8 @@
 				"bundle config set deployment true",
 				"bundle config set without development test",
 				{
-					"src": "Gemfile.lock",
-					"dest": "Gemfile.lock"
+					"src": ".",
+					"dest": "."
 				},
 				"bundle install --jobs 1"
 			]
