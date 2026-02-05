@@ -14,7 +14,7 @@
 		},
 		"install:node": {
 			"commands": [
-				"mkdir -p /app/node_modules/.cache",
+				"mkdir -p /app/react-client/node_modules/.cache",
 				{
 					"src": "package.json",
 					"dest": "package.json"
@@ -34,6 +34,10 @@
 		"build": {
 			"commands": [
 				"...",
+				"ls -a",
+				"ls -a react-client",
+				"ls -a react-client/node_modules",
+				"ls -a react-client/node_modules/.bin",
 				"pnpm railway-deploy",
 				"bundle exec rake assets:precompile"
 			]
