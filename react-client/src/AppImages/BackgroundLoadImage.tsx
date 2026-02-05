@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode, type RefObject } from "react";
-import { animated, config, useResize, useSpring } from "@react-spring/web";
+import { animated, config, useSpring } from "@react-spring/web";
 import PlaceholderImg from "./PlaceholderImg";
 import BackgroundLoadImageCss from "./BackgroundLoadImage.module.css";
 import { type AnimatableStyle } from "../Utility/Typings/ReactSpringTypes";
