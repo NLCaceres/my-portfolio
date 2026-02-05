@@ -18,7 +18,6 @@
 				"touch /app/react-client/node_modules/.keep",
 				"mkdir -p react-client/node_modules/.cache",
 				"touch react-client/node_modules/.keep",
-				"ls -a app",
 				"ls -a react-client",
 				"ls -a react-client/node_modules",
 				"ls -a react-client/node_modules/.bin",
