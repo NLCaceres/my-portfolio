@@ -15,6 +15,7 @@
 		"install:node": {
 			"commands": [
 				"mkdir -p /app/react-client/node_modules/.cache",
+				"touch /app/react-client/node_modules/.keep",
 				{
 					"src": "package.json",
 					"dest": "package.json"
