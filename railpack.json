@@ -29,9 +29,7 @@
 				},
 				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
 				"pnpm railway-install",
-				"ls -a react-client",
-				"ls -a react-client/node_modules",
-				"ls -a react-client/node_modules/.bin"
+				"tree -a",
 			]
 		},
 		"build": {
@@ -46,10 +44,7 @@
 			],
 			"commands": [
 				"...",
-				"ls -a",
-				"ls -a react-client",
-				"ls -a react-client/node_modules",
-				"ls -a react-client/node_modules/.bin",
+				"tree -a",
 				"pnpm railway-deploy",
 				"bundle exec rake assets:precompile"
 			]
