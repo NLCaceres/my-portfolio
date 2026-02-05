@@ -36,6 +36,7 @@
 		},
 		"build": {
 			"inputs": [
+				"...",
 				{
 					"step": "install:node",
 					"include": [
