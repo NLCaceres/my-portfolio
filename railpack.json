@@ -32,16 +32,20 @@
 				},
 				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
 				"pnpm railway-install",
-				"tree -a -L 5",
 			]
 		},
 		"build": {
 			"inputs": [
 				"...",
+				{
+					"step": "install:node",
+					"include": [
+						"."
+					]
+				}
 			],
 			"commands": [
 				"...",
-				"tree -a -L 5",
 				"pnpm railway-deploy",
 				"bundle exec rake assets:precompile"
 			]
