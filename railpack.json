@@ -15,11 +15,6 @@
 		"install:node": {
 			"commands": [
 				"mkdir -p /app/react-client/node_modules/.cache",
-				"touch /app/react-client/node_modules/.keep",
-				"mkdir -p react-client/node_modules/.cache",
-				"touch react-client/node_modules/.keep",
-				"ls -a react-client",
-				"ls -a react-client/node_modules",
 				{
 					"src": "package.json",
 					"dest": "package.json"
@@ -34,10 +29,20 @@
 				},
 				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
 				"pnpm railway-install",
+				"ls -a react-client",
+				"ls -a react-client/node_modules",
 				"ls -a react-client/node_modules/.bin"
 			]
 		},
 		"build": {
+			"inputs": [
+				{
+					"step": "install:node",
+					"include": [
+						"."
+					]
+				}
+			],
 			"commands": [
 				"...",
 				"ls -a",
