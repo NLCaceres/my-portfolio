@@ -3,6 +3,9 @@
 	"packages": {
 		"node": "24"
 	},
+	"buildAptPackages": [
+		"tree"
+	],
 	"steps": {
 		"install": {
 			"commands": [
