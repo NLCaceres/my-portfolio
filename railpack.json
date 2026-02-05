@@ -14,9 +14,18 @@
 		},
 		"install:node": {
 			"commands": [
+				"mkdir -p /app/node_modules/.cache",
 				{
 					"src": "package.json",
 					"dest": "package.json"
+				},
+				{
+					"src": "react-client/package.json",
+					"dest": "react-client/package.json"
+				},
+				{
+					"src": "react-client/pnpm-lock.yaml",
+					"dest": "react-client/pnpm-lock.yaml"
 				},
 				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
 				"pnpm railway-install",
