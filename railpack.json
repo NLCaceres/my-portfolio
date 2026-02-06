@@ -57,6 +57,7 @@
 				}
 			],
 			"commands": [
+				"tree -a -L 5",
 				"bin/rake db:migrate"
 			]
 		}
