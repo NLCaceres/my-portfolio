@@ -53,7 +53,12 @@
 		"release": {
 			"inputs": [
 				{
-					"step": "build"
+					"step": "build",
+					"exclude": [
+						"./react-client",
+						"./test",
+						"./.github",
+					]
 				}
 			],
 			"commands": [
