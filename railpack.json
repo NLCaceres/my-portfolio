@@ -53,9 +53,6 @@
 		"release": {
 			"inputs": [
 				{
-					"step": "packages:mise"
-				},
-				{
 					"step": "install"
 				},
 				{
