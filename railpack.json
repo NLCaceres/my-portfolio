@@ -62,7 +62,7 @@
 					"step": "build",
 					"include": [
 						"."
-					]
+					],
 					"exclude": [
 						"react-client",
 						"test",
