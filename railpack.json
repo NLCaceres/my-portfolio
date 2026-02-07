@@ -3,9 +3,6 @@
 	"packages": {
 		"node": "24"
 	},
-	"buildAptPackages": [
-		"tree"
-	],
 	"steps": {
 		"install": {
 			"commands": [
@@ -71,7 +68,6 @@
 				}
 			],
 			"commands": [
-				"tree -a -L 5",
 				"bin/rake db:migrate"
 			]
 		}
