@@ -1,7 +1,0 @@
-[build]
-builder = "RAILPACK"
-
-[deploy]
-startCommand = "bin/rails server -p ${PORT:-3000} -e ${RACK_ENV:-development}"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 5
