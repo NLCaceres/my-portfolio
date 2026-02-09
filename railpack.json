@@ -33,7 +33,7 @@
 					"dest": "react-client/pnpm-lock.yaml"
 				},
 				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
-				"pnpm railway-install",
+				"pnpm railway-install"
 			]
 		},
 		"build": {
@@ -50,30 +50,9 @@
 				"pnpm railway-deploy",
 				"bundle exec rake assets:precompile",
 				"bundle exec bootsnap precompile --gemfile app/ config/ db/ lib/"
-			]
-		},
-		"release": {
-			"inputs": [
-				{
-					"step": "install"
-				},
-				{
-					"step": "install:node"
-				},
-				{
-					"step": "build",
-					"include": [
-						"."
-					],
-					"exclude": [
-						"react-client",
-						"test",
-						".github",
-					]
-				}
 			],
-			"commands": [
-				"bin/rake db:migrate"
+			"deployOutputs": [
+				{ "include": ["."], "exclude": ["react-client", "test", ".github"] }
 			]
 		}
 	}
