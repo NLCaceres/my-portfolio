@@ -3,14 +3,8 @@
 	"steps": {
 		"install": {
 			"commands": [
-				{
-					"src": "Gemfile",
-					"dest": "Gemfile"
-				},
-				{
-					"src": "Gemfile.lock",
-					"dest": "Gemfile.lock"
-				},
+				{ "src": "Gemfile", "dest": "Gemfile" },
+				{ "src": "Gemfile.lock", "dest": "Gemfile.lock" },
 				"gem install -N bundler:2.5.9",
 				"bundle config set deployment true",
 				"bundle config set without development test",
@@ -20,18 +14,9 @@
 		"install:node": {
 			"commands": [
 				"mkdir -p /app/react-client/node_modules/.cache",
-				{
-					"src": "package.json",
-					"dest": "package.json"
-				},
-				{
-					"src": "react-client/package.json",
-					"dest": "react-client/package.json"
-				},
-				{
-					"src": "react-client/pnpm-lock.yaml",
-					"dest": "react-client/pnpm-lock.yaml"
-				},
+				{ "src": "package.json", "dest": "package.json" },
+				{ "src": "react-client/package.json", "dest": "react-client/package.json" },
+				{ "src": "react-client/pnpm-lock.yaml", "dest": "react-client/pnpm-lock.yaml" },
 				"npm i -g corepack@latest && corepack enable && corepack prepare --activate",
 				"pnpm railway-install"
 			]
@@ -39,12 +24,7 @@
 		"build": {
 			"inputs": [
 				"...",
-				{
-					"step": "install:node",
-					"include": [
-						"."
-					]
-				}
+				{ "step": "install:node", "include": ["."] }
 			],
 			"commands": [
 				"pnpm railway-deploy",
