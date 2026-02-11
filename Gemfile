@@ -28,7 +28,7 @@ gem 'activeadmin', '~> 3.2'
 gem 'devise', '~> 4.8' # Adds Auth to ActiveAdmin via `rails g devise:install` before running the ActiveAdmin install
 gem 'sassc-rails' # Gives ActiveAdmin its stylesheets that can be overriden
 
-gem 'rack-attack', '>= 6.5', '< 6.8' # Adds throttling and blacklisting to Rack apps like Rails
+gem 'rack-attack', '~> 6.8' # Adds throttling and blacklisting to Rack apps like Rails
 
 group :development, :test do
   gem 'debug', ">= 1.0.0", platforms: %i[mri mingw x64_mingw]
