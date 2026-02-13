@@ -33,10 +33,11 @@ const PostListView = () => {
   const viewWidth = useViewWidth();
   const { data: projects } = useSWR(
     `/api/posts/${projectType}`,
-    () => GetPostList((projectType === "about-me") ? "null" : projectType.replace("-", "_"))
+    () => GetPostList((projectType === "about-me") ? "null" : projectType.replace("-", "_")),
+    { fallbackData: portfolioRoutesAPI.useLoaderData() }
   );
   return (
-    (projects && (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0)) ?
+    (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0) ?
       (
         <div>
           { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ title }</h1> }
