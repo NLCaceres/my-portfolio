@@ -16,6 +16,9 @@ const indexRoute = createRoute({
 	component: () =>
   <Navigate to="/portfolio/$postId" params={{ postId: "about-me" }} replace={true} />
 });
+
+
+//! Portfolio Routes
 const portfolioRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "portfolio"
@@ -26,33 +29,38 @@ const portfolioIndexRoute = createRoute({
 	component: () =>
   <Navigate to="/portfolio/$postId" params={{ postId: "about-me" }} replace={true} />
 });
-const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-end"] as const;
-const validPortfolioPath = (actualPath: string) =>
-  portfolioChildPaths.find(path => path.toLowerCase() === actualPath.toLowerCase());
-const postListParam = (path: string) => (path === "about-me") ? "null" : path.replace("-", "_");
 export const portfolioRoutesAPI = getRouteApi("/portfolio/$postId");
+const portfolioChildPaths = ["about-me", "android", "iOS", "front-end", "back-end"] as const;
 const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute, path: "$postId",
   beforeLoad: ({ params }) => {
-    if (!validPortfolioPath(params.postId)) throw notFound();
+    if (!portfolioChildPaths.find(path => path.toLowerCase() === params.postId.toLowerCase())) {
+			throw notFound();
+		}
   },
-  loader: async ({ params }) => GetPostList(postListParam(params.postId)),
+  loader: async ({ params: { postId }}) =>
+		GetPostList((postId === "about-me") ? "null" : postId.replace("-", "_")),
   component: PostListView
 });
+
+
+//! Misc Routes
 export const contactMeRouteAPI = getRouteApi("/contact-me");
 const contactMeRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "contact-me", // Leading and trailing slashes ignored
 }).lazy(() => import("../ContactMePage").then((f) => f.lazyContactMeRoute));
+
 const notFoundRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: "not-found"
 }).lazy(() => import("../NotFoundPage/NotFoundPage").then((f) => f.lazyNotFoundRoute));
+
+
 const routeTree = rootRoute.addChildren([
 	indexRoute, contactMeRoute, notFoundRoute,
 	portfolioRoute.addChildren([portfolioChildRoute, portfolioIndexRoute])
 ]);
-
 const TanStackRouter = createRouter({
 	routeTree,
 	scrollRestoration: true,
