@@ -1,4 +1,5 @@
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
+import useSWR from "swr";
 import PostCard from "./PostCard";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
@@ -6,6 +7,7 @@ import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Mo
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
+import GetPostList from "../Data/Api/ProjectAPI";
 
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
@@ -29,9 +31,12 @@ const PostListView = () => {
   };
 
   const viewWidth = useViewWidth();
-  const projects = portfolioRoutesAPI.useLoaderData();
+  const { data: projects } = useSWR(
+    `/api/posts/${projectType}`,
+    () => GetPostList((projectType === "about-me") ? "null" : projectType.replace("-", "_"))
+  );
   return (
-    (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0) ?
+    (projects && (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0)) ?
       (
         <div>
           { title && <h1 className={`ms-2 mb-0 fw-normal ${(viewWidth > 768) ? "display-3" : "display-2"}`}>{ title }</h1> }

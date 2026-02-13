@@ -1,3 +1,4 @@
+import { preload } from "swr";
 import App from "../App/App";
 import { AlertHandler } from "../AppAlert/AppAlert";
 import GetPostList from "../Data/Api/ProjectAPI";
@@ -36,7 +37,8 @@ const portfolioChildRoute = createRoute({
   beforeLoad: ({ params }) => {
     if (!validPortfolioPath(params.postId)) throw notFound();
   },
-  loader: async ({ params }) => GetPostList(postListParam(params.postId)),
+  loader: async ({ params }) =>
+		preload(`/api/posts/${params.postId}`, () => GetPostList(postListParam(params.postId))),
   component: PostListView
 });
 export const contactMeRouteAPI = getRouteApi("/contact-me");
