@@ -1,5 +1,4 @@
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
-import useSWR from "swr";
 import PostCard from "./PostCard";
 import PostCardPlaceholderList from "./PostCardPlaceholder";
 import { CamelCaseToTitleCase, KebabCaseToTitleCase, KebabCaseToKebabTitleCase } from "../Utility/Functions/ComputedProps";
@@ -7,7 +6,7 @@ import Project, { SortProjectImagesByImportance, SortProjects } from "../Data/Mo
 import useDialog from "../ContextProviders/DialogProvider";
 import AppCarousel from "../AppCarousel/AppCarousel";
 import { portfolioRoutesAPI } from "../Routing/RouteList";
-import GetPostList from "../Data/Api/ProjectAPI";
+import usePostList from "../Hooks/UsePostList";
 
 
 //* Component: Lists posts, alternating left to right (May refactor for right start as an option)
@@ -31,11 +30,7 @@ const PostListView = () => {
   };
 
   const viewWidth = useViewWidth();
-  const { data: projects } = useSWR(
-    `/api/posts/${projectType}`,
-    () => GetPostList((projectType === "about-me") ? "null" : projectType.replace("-", "_")),
-    { fallbackData: portfolioRoutesAPI.useLoaderData() }
-  );
+  const projects = usePostList(projectType);
   return (
     (projects?.majorProjects?.length > 0 || projects?.minorProjects?.length > 0) ?
       (

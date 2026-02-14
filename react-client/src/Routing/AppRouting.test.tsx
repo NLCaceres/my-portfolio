@@ -1,10 +1,11 @@
-import { vi } from "vitest";
+import { Mock, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { Globals } from "@react-spring/web";
 import ProjectFactory from "../Utility/TestHelpers/ProjectFactory";
 import Router from "./RouteList";
 import { RouterProvider } from "@tanstack/react-router";
 import * as GetPostList from "../Data/Api/ProjectAPI";
+import * as usePostList from "../Hooks/UsePostList";
 
 //* No click needed on this mock Widget, so keep it simple
 vi.mock("../ThirdParty/TurnstileWidget", () => {
@@ -16,10 +17,12 @@ beforeAll(() => { //? Skip Route Transition style animations, instant finish, no
 });
 
 describe("renders Tanstack Routes", () => {
+  let apiMock: Mock; let swrMock: Mock;
   beforeEach(() => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
-    vi.spyOn(GetPostList, "default")
-      .mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
+    const projects = { majorProjects: [majProject], minorProjects: [minProject] };
+    apiMock = vi.spyOn(GetPostList, "default").mockResolvedValue(projects);
+    swrMock = vi.spyOn(usePostList, "default").mockReturnValue(projects);
   });
   afterEach(() => { vi.restoreAllMocks(); });
 
@@ -72,8 +75,10 @@ describe("renders Tanstack Routes", () => {
     await waitFor(() => Router.navigate({ href: "/iOS" }));
     await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Just get redirect
 
-    vi.spyOn(GetPostList, "default") // Empty minor projects needed or finds multiple "Nicholas"
-      .mockResolvedValue({ majorProjects: [ProjectFactory.create()], minorProjects: [] });
+    // Empty minor projects needed or finds multiple "Nicholas"
+    const aboutMeProj = { majorProjects: [ProjectFactory.create()], minorProjects: [] };
+    apiMock.mockResolvedValue(aboutMeProj);
+    swrMock.mockReturnValue(aboutMeProj);
     await waitFor(() => // WHEN the URL param is empty, i.e. "/portfolio/"
       Router.navigate({ to: "/portfolio/$postId", params: { postId: "" } })
     );
