@@ -2,6 +2,11 @@
 inherit_gem:
   rubocop-rails-omakase: rubocop.yml
 
+Layout/LineLength:
+  Enabled: true
+  AutoCorrect: false
+  Max: 90
+
 Layout/LeadingCommentSpace:
   Enabled: false
 
