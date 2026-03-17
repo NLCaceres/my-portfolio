@@ -8,7 +8,6 @@ function usePostList(projectType: string) {
     () => GetPostList((projectType === "about-me") ? "null" : projectType.replace("-", "_")),
     { fallbackData: portfolioRoutesAPI.useLoaderData() }
   );
-
   return posts;
 }
 

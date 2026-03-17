@@ -1,3 +1,4 @@
+import { mutate } from "swr";
 import { vi, type MockInstance } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -28,11 +29,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     ViewWidthMock = vi.spyOn(ViewWidthContext, "default").mockReturnValue(averageTabletViewWidth);
     ProjectSortingMock = vi.spyOn(ProjectHelpers, "SortProjects");
   });
-  afterEach(() => {
-    ApiMock.mockRestore();
-    ViewWidthMock.mockRestore();
-    ProjectSortingMock.mockRestore();
-  });
+  afterEach(() => { vi.restoreAllMocks(); });
 
   test("only if the list has a set of major or minor projects", async () => {
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
@@ -42,27 +39,34 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     render(<RouterProvider router={router} />);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
-    expect(ApiMock).toHaveBeenCalledTimes(2);
+    expect(ApiMock).toHaveBeenCalledTimes(3);
     expect(ProjectSortingMock).toHaveBeenCalledTimes(2); //* 1 for major, 1 for minor
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
-    await waitFor(() => router.invalidate());
+    await waitFor(() => { //* MUST `waitFor` cache mutation or get `act()` error
+      mutate("/api/posts/android");
+      expect(ApiMock).toHaveBeenCalledTimes(4); //* Cache still calls API to double-check
+    });
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /small projects/i })).not.toBeInTheDocument();
-    expect(ApiMock).toHaveBeenCalledTimes(3);
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(3);
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(3); //* 1 for major ONLY
     expect(ProjectSortingMock).toHaveBeenLastCalledWith([majProject]);
 
     ApiMock.mockResolvedValue({ minorProjects: [minProject] });
-    await waitFor(() => router.invalidate());
+    await waitFor(() => {
+      mutate("/api/posts/android");
+      expect(ApiMock).toHaveBeenCalledTimes(5);
+    });
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
-    expect(ApiMock).toHaveBeenCalledTimes(4);
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(4); //* 1 for minor ONLY
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
 
     ApiMock.mockResolvedValue({ majorProjects: [], minorProjects: [] });
-    await waitFor(() => router.invalidate());
+    await waitFor(() => {
+      mutate("/api/posts/android");
+      expect(ApiMock).toHaveBeenCalledTimes(6);
+    });
     const placeholders = await screen.findAllByRole("heading"); // Must await to avoid `act` warning
     expect(placeholders.length).toBe(6); //* 6 placeholder headers in <PostCardPlaceholderList>
     // ALSO find 4 `<PlaceholderImg>` with "Project" text + `placeholderText` CSS
@@ -70,26 +74,23 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(placeholderImgs).toHaveLength(4);
     for (const placeholderImg of placeholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
     // BUT that means no `<ProjectList>` rendered, so no "Major" or "Small Project" title
-    expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument(); //* No PostListView actually renders
-    expect(ApiMock).toHaveBeenCalledTimes(5);
-    expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
+    expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument();
+    expect(ProjectSortingMock).toHaveBeenCalledTimes(4); //* AND no sorting done
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
-    //expect(ProjectSortingMock).toHaveBeenNthCalledWith(9, []); //* BOTH major and minor projects are empty arrays
-    //expect(ProjectSortingMock).toHaveBeenLastCalledWith([]); //* So 9th time is always called with an empty array
 
     ApiMock.mockImplementation(() => ({}));
-    await waitFor(() => router.invalidate());
-    // WHEN Api just returns `{}`, THEN still yields `<PostCardPlaceholderList>` + same results
+    await waitFor(() => {
+      mutate("/api/posts/android");
+      expect(ApiMock).toHaveBeenCalledTimes(7);
+    });
+    // WHEN API just returns `{}`, THEN still yields `<PostCardPlaceholderList>` + same results
     expect((await screen.findAllByRole("heading")).length).toBe(6);
     const morePlaceholderImgs = await screen.findAllByRole("heading", { name: /project/i });
     expect(morePlaceholderImgs).toHaveLength(4);
     for (const placeholderImg of morePlaceholderImgs) { expect(placeholderImg).toHaveClass("placeholderText"); }
     expect(screen.queryByRole("heading", { name: /(major|small) projects/i })).not.toBeInTheDocument();
-    expect(ApiMock).toHaveBeenCalledTimes(6);
     expect(ProjectSortingMock).toHaveBeenCalledTimes(4);
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
-    //expect(ProjectSortingMock).toHaveBeenNthCalledWith(11, undefined); //* BOTH undefined minor and major projects so [] used
-    //expect(ProjectSortingMock).toHaveBeenLastCalledWith(undefined); //* So 11th time is also called with an empty array
   });
   describe("that depends on viewWidth for rendering", () => {
     test("a dialog for multi-image posts", async () => {
@@ -156,9 +157,11 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
         router.navigate({ to: "/portfolio/$postId", params: { postId: "foobar-title" } })
       );
       render(<RouterProvider router={router} />);
-      const mainTitle = await screen.findByRole("heading", { name: /foobar title/i }); //* Title in PostListView component aka iOS, android, etc...
+      //* Main title in PostListView component == iOS, android, etc...
+      const mainTitle = await screen.findByRole("heading", { name: /foobar title/i });
       expect(mainTitle).toHaveClass("display-2");
-      const projectSectionTitle = screen.getAllByRole("heading", { name: /projects/i }); //* Either about-me or major/minor in ProjectList component
+      //* Section title == "About Me" or "Major/minor projects"
+      const projectSectionTitle = screen.getAllByRole("heading", { name: /projects/i });
       for (const projectSectionType of projectSectionTitle) {
         expect(projectSectionType).toHaveClass("display-2");
       }
