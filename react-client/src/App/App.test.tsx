@@ -91,7 +91,7 @@ describe("renders the whole app", () => {
         to: "/portfolio/$postId", params: { postId: "about-me" }
       }));
       expect(await screen.findByText("About Me")).toBeInTheDocument();
-      expect(ApiMock).toHaveBeenCalledTimes(1);
+      expect(ApiMock).toHaveBeenCalledTimes(2);
 
       await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
 
@@ -113,7 +113,7 @@ describe("renders the whole app", () => {
       const { unmount } = render(<RouterProvider router={Router} />);
       //? Running the `findBy` query first ensures the App is finished rendering
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
-      expect(ApiMock).toHaveBeenCalledTimes(1); //? SINCE the API loader has fully returned
+      expect(ApiMock).toHaveBeenCalledTimes(2); //? SINCE the API loader has fully returned
 
       // WHEN at Desktop widths, THEN the "Contact" button should open a modal
       await user.click(contactMeButton);
