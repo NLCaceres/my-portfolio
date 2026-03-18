@@ -63,7 +63,7 @@ describe("renders the whole app", () => {
       await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       render(<RouterProvider router={Router} />);
       //? Wait for the API data to load in the cache
-      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2))
+      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
       expect(await screen.findByText("About Me")).toBeInTheDocument();
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
@@ -87,7 +87,7 @@ describe("renders the whole app", () => {
       );
       await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       render(<RouterProvider router={Router} />);
-      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2))
+      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
       //? Running the `findBy` query is extra insurance that <App> fully rendered
       expect(await screen.findByText("About Me")).toBeInTheDocument();
 
