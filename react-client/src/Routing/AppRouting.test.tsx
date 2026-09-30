@@ -46,10 +46,10 @@ describe("renders Tanstack Routes", () => {
   });
 
   test("mapping out four main portfolio routes", async () => { //! iOS, Android, Front-End, Back-End
+    render(<RouterProvider router={Router} />);
     await waitFor(() => Router.navigate({
       to: "/portfolio/$postId", params: { postId: "android" }
     }));
-    render(<RouterProvider router={Router} />);
     await screen.findByRole("heading", { name: /Android/, level: 1 }); //* Should display Android in title header
 
     await waitFor(() => Router.navigate({
@@ -91,8 +91,8 @@ describe("renders Tanstack Routes", () => {
   });
 
   test("mapping a contact me page", async () => {
-    await waitFor(() => Router.navigate({ to: "/contact-me" }));
     render(<RouterProvider router={Router} />);
+    await waitFor(() => Router.navigate({ to: "/contact-me" }));
     await screen.findByText(/Contact Me!/);
 
     await waitFor(() => Router.navigate({ href: "/portfolio/contact-me" }));
@@ -100,8 +100,8 @@ describe("renders Tanstack Routes", () => {
   });
 
   test("mapping a fallback route to a not found page", async () => {
-    await waitFor(() => Router.navigate({ href: "/foobar" }));
     render(<RouterProvider router={Router} />);
+    await waitFor(() => Router.navigate({ href: "/foobar" }));
     await screen.findByText(/Sorry/); //* Should redirect to not found page
 
     await waitFor(() => Router.navigate({ to: "/not-found" }));

@@ -39,13 +39,13 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     render(<RouterProvider router={router} />);
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
-    expect(ApiMock).toHaveBeenCalledTimes(3);
+    expect(ApiMock).toHaveBeenCalledTimes(2);
     expect(ProjectSortingMock).toHaveBeenCalledTimes(2); //* 1 for major, 1 for minor
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
     await waitFor(() => { //* MUST `waitFor` cache mutation or get `act()` error
       mutate("/api/posts/android");
-      expect(ApiMock).toHaveBeenCalledTimes(4); //* Cache still calls API to double-check
+      expect(ApiMock).toHaveBeenCalledTimes(3); //* Cache still calls API to double-check
     });
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /small projects/i })).not.toBeInTheDocument();
@@ -55,7 +55,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     ApiMock.mockResolvedValue({ minorProjects: [minProject] });
     await waitFor(() => {
       mutate("/api/posts/android");
-      expect(ApiMock).toHaveBeenCalledTimes(5);
+      expect(ApiMock).toHaveBeenCalledTimes(4);
     });
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /major projects/i })).not.toBeInTheDocument();
@@ -65,7 +65,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     ApiMock.mockResolvedValue({ majorProjects: [], minorProjects: [] });
     await waitFor(() => {
       mutate("/api/posts/android");
-      expect(ApiMock).toHaveBeenCalledTimes(6);
+      expect(ApiMock).toHaveBeenCalledTimes(5);
     });
     const placeholders = await screen.findAllByRole("heading"); // Must await to avoid `act` warning
     expect(placeholders.length).toBe(6); //* 6 placeholder headers in <PostCardPlaceholderList>
@@ -81,7 +81,7 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     ApiMock.mockImplementation(() => ({}));
     await waitFor(() => {
       mutate("/api/posts/android");
-      expect(ApiMock).toHaveBeenCalledTimes(7);
+      expect(ApiMock).toHaveBeenCalledTimes(6);
     });
     // WHEN API just returns `{}`, THEN still yields `<PostCardPlaceholderList>` + same results
     expect((await screen.findAllByRole("heading")).length).toBe(6);

@@ -63,7 +63,7 @@ describe("renders the whole app", () => {
       await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       render(<RouterProvider router={Router} />);
       //? Wait for the API data to load in the cache
-      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
+      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(3));
       expect(await screen.findByText("About Me")).toBeInTheDocument();
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
@@ -85,8 +85,8 @@ describe("renders the whole app", () => {
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue( // - Must return a valid response for Turnstile to provide a success response
         { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       );
-      await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       render(<RouterProvider router={Router} />);
+      await waitFor(() => Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
       await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
       //? Running the `findBy` query is extra insurance that <App> fully rendered
       expect(await screen.findByText("About Me")).toBeInTheDocument();
@@ -108,8 +108,8 @@ describe("renders the whole app", () => {
       const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default")
         .mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
-      await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       const { unmount } = render(<RouterProvider router={Router} />);
+      await waitFor(() => Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
       await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
 
