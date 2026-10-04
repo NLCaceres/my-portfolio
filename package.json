@@ -2,9 +2,6 @@
   "name": "react-rails-portfolio",
   "private": true,
   "license": "MIT",
-  "engines": {
-    "node": "^24.13.0"
-  },
   "scripts": {
     "railway-install": "pnpm -C react-client install --frozen-lockfile --prod",
     "railway-build": "pnpm -C react-client build",
