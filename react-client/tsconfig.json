@@ -3,10 +3,10 @@
   "display": "React App",
 
   "compilerOptions": {
-    "rootDir": "src",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "rootDir": "./src",
+    "lib": ["dom", "esnext"],
     "skipLibCheck": true,
-    "types": ["vite/client", "vitest/globals"],
+    "types": ["node", "vite/client", "vitest/globals"],
 
     "module": "esnext",
     "esModuleInterop": true,
