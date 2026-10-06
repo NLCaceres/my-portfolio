@@ -6,12 +6,14 @@ const AppRouting = () => {
   const location = useLocation();
   const transitions = useTransition(location, {
     config: { tension: 200, friction: 15 },
-    keys: (item) => item.pathname, //? Prevents multiple Transition rerenders (limiting it nicely to two animating divs)
-    from: { transform: "translate3d(200%,0,0)", opacity: 0 }, enter: { transform: "translate3d(0%,0,0)", opacity: 1 },
-    leave: { transform: "translate3d(-200%,0,0)", opacity: 0, position: "absolute" }, //? Give space to newly entering Route
+    keys: (item) => item.pathname, //? Ensures ONLY 2 divs animated / rendered
+    from: { transform: "translate3d(200%,0,0)", opacity: 0 },
+    enter: { transform: "translate3d(0%,0,0)", opacity: 1 }, //? Position adds space to new route
+    leave: { transform: "translate3d(-200%,0,0)", opacity: 0, position: "absolute" as const },
   });
 
-  return transitions(style => ( //* No container around the animated.div needed if only the exiting div is position: absolute (AKA out of the HTML doc's flow)
+  //* No wrapper needed around animated.div IF exiting div has position to move it out of flow
+  return transitions(style => (
     <animated.div className={AppRoutingCss.animator} style={style}>
       <Outlet />
     </animated.div>
