@@ -9,9 +9,14 @@
   },
   "overrides": [
     {
-      "files": [
-        "src/**/*.{ts,tsx}"
-      ],
+      "files": ["src/**/*.{ts,tsx}"],
+      "env": {
+        "es2022": true,
+        "browser": true,
+        "node": true
+      },
+      "plugins": ["typescript"],
+      "jsPlugins": ["@stylistic/eslint-plugin"], //? Prefer Oxfmt BUT stopgap beta-fix
       "rules": {
         "constructor-super": "off",
         "for-direction": "error",
@@ -104,38 +109,18 @@
         "typescript/prefer-as-const": "error",
         "typescript/prefer-namespace-keyword": "error",
         "typescript/triple-slash-reference": "error",
-        "@stylistic/linebreak-style": [
-          "error",
-          "unix"
-        ],
+        "@stylistic/linebreak-style": ["error", "unix"],
         "@stylistic/no-trailing-spaces": "error",
-        "@stylistic/indent": [
-          "error",
-          2
-        ],
+        "@stylistic/indent": ["error", 2],
         "@stylistic/quotes": "error",
         "@stylistic/semi": "error",
-        "typescript/consistent-type-definitions": [
-          "error",
-          "type"
-        ]
-      },
-      "plugins": [
-        "typescript"
-      ],
-      "jsPlugins": [
-        "@stylistic/eslint-plugin"
-      ],
-      "env": {
-        "es2022": true,
-        "browser": true,
-        "node": true
+        "typescript/consistent-type-definitions": ["error", "type"]
       }
     },
     {
-      "files": [
-        "src/**/*.tsx"
-      ],
+      "files": ["src/**/*.tsx"],
+      "plugins": ["react"],
+      "jsPlugins": ["@stylistic/eslint-plugin"],
       "rules": {
         "react/display-name": "error",
         "react/jsx-key": "error",
@@ -156,28 +141,17 @@
         "react/react-in-jsx-scope": "off",
         "react/require-render-return": "error",
         "@stylistic/indent": "off"
-      },
-      "plugins": [
-        "react"
-      ],
-      "jsPlugins": [
-        "@stylistic/eslint-plugin"
-      ]
+      }
     },
     {
-      "files": [
-        "src/**/*.test.tsx"
-      ],
+      "files": ["src/**/*.test.tsx"],
+      "plugins": ["react", "typescript"],
+      "env": {
+        "jest": true
+      },
       "rules": {
         "react/display-name": "off",
         "typescript/no-non-null-assertion": "off"
-      },
-      "plugins": [
-        "react",
-        "typescript"
-      ],
-      "env": {
-        "jest": true
       }
     }
   ]
