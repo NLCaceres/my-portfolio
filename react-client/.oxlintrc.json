@@ -118,7 +118,7 @@
         "typescript/only-throw-error": "error",
         "typescript/prefer-as-const": "error",
         "typescript/prefer-namespace-keyword": "error",
-        "typescript/prefer-promise-reject-errors": "error",
+        "typescript/prefer-promise-reject-errors": "error", //? Typed improvement to base version
         "typescript/require-await": "error",
         "typescript/restrict-plus-operands": "error",
         "typescript/triple-slash-reference": "error",
@@ -157,14 +157,25 @@
       }
     },
     {
+      "files": ["src/**/*.test.{ts,tsx}"],
+      "plugins": ["typescript"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "typescript/no-non-null-assertion": "off",
+        "typescript/no-unsafe-assignment": "off",
+        "typescript/require-await": "off",
+      }
+    },
+    {
       "files": ["src/**/*.test.tsx"],
-      "plugins": ["react", "typescript"],
+      "plugins": ["react"],
       "env": {
         "jest": true
       },
       "rules": {
         "react/display-name": "off",
-        "typescript/no-non-null-assertion": "off"
       }
     }
   ]
