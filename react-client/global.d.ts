@@ -46,3 +46,16 @@ interface TurnstileOptions {
 }
 
 type SupportedLanguages = "ar-eg" | "de" | "en" | "es" | "fa" | "fr" | "id" | "it" | "ja" | "ko" | "nl" | "pl" | "pt-br" | "ru" | "tr" | "zh-cn" | "zh-tw"
+
+interface ViteTypeOptions {
+  // Can add this line to make ImportMetaEnv strict, no unknown keys
+  // strictImportMetaEnv: unknown
+}
+
+interface ImportMetaEnv {
+  readonly VITE_TURNSTILE_SITE_KEY: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
