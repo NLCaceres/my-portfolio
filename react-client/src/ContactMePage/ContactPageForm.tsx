@@ -1,4 +1,4 @@
-import { type FormEvent, useCallback, useState } from "react";
+import { type SubmitEvent, useCallback, useState } from "react";
 import useViewWidth from "../ContextProviders/ViewWidthProvider";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -37,18 +37,22 @@ const ContactPageForm = ({ onSubmitForm, darkMode = false }: ContactPageFormProp
   }, []);
 
   //! Form Handler
-  const SubmitContactForm = useCallback(async (event: FormEvent) => {
+  const SubmitContactForm = useCallback((event: SubmitEvent) => {
     event.preventDefault(); event.stopPropagation(); //* Prevent page reload
     if (!IsContactable) { return; }
 
     //! Validate
     const errors = validate({ email: newEmail.email, message: newEmail.message });
-    for (const key in errors) { if (errors[key].length > 0) { setValidationErrors(errors); return; } } //* Activate Validation Feedback
+    for (const key in errors) { if (errors[key].length > 0) {
+      setValidationErrors(errors); return;
+    } } //* Activate Validation Feedback
 
-    const isSuccessful = await ProcessTurnstileResponse(SendEmail(newEmail), "Successfully sent your email!");
-    if (onSubmitForm) { onSubmitForm(isSuccessful); } //* Also need to handle parent's callback
-    if (isSuccessful) { /* Send an email */ }
-    else { /* Error occurred w/ either Turnstile or sending the email */ }
+    ProcessTurnstileResponse(SendEmail(newEmail), "Successfully sent your email!").
+      then(isSuccessful => {
+      if (onSubmitForm) { onSubmitForm(isSuccessful); }
+      if (isSuccessful) { /* Send an email */ }
+      else { /* Error occurred w/ either Turnstile or sending the email */ }
+    });
   }, [IsContactable, onSubmitForm, newEmail]);
 
   return ( //* NoValidate ensures Browser doesn't apply its own validation to this form
