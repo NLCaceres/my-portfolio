@@ -35,7 +35,7 @@ const portfolioChildRoute = createRoute({
   getParentRoute: () => portfolioRoute, path: "$postId",
   beforeLoad: ({ params }) => {
     if (!portfolioChildPaths.find(path => path.toLowerCase() === params.postId.toLowerCase())) {
-			throw notFound();
+			throw notFound(); // oxlint-disable-line typescript/only-throw-error
 		}
   },
   loader: async ({ params: { postId }}) =>
