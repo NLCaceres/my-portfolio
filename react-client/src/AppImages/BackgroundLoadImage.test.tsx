@@ -71,19 +71,19 @@ describe("renders an image with option to display a placeholder while loading", 
       const { rerender, unmount } = render(<BackgroundLoadImage src="" alt="Img will load correctly" onLoad={loadCallback} />);
       const img = screen.getByRole("img"); //* Img begins loading in background
       fireEvent.load(img); //* FORCE image to "successfully" load
-      expect(loadCallback).toBeCalledTimes(1); //* Succeeded, check if callback added and call it
+      expect(loadCallback).toHaveBeenCalledTimes(1); //* Succeeded, check if callback added and call it
 
       rerender(<BackgroundLoadImage src="" alt="Img will load correctly" />);
       expect(img).toBeInTheDocument(); //* Image still there
       fireEvent.load(img); //* Image successfully loaded again but no callback passed in
-      expect(loadCallback).toBeCalledTimes(1); //* No callback so nothing to run on load success
+      expect(loadCallback).toHaveBeenCalledTimes(1); //* No callback so nothing to run on load success
       unmount();
 
       //* Re-add the callback
       render(<BackgroundLoadImage src="" alt="Img will load correctly" onLoad={loadCallback}/>);
       const failImg = screen.getByRole("img"); //* Image will fail to load correctly
       fireEvent.error(failImg); //* Image fails to load
-      expect(loadCallback).toBeCalledTimes(2); //* Still call parent's callback!
+      expect(loadCallback).toHaveBeenCalledTimes(2); //* Still call parent's callback!
     });
     test("that resets if the image src changes", async () => {
       const { rerender } = render(<BackgroundLoadImage src="foobar.jpeg" alt="Img will load" />);

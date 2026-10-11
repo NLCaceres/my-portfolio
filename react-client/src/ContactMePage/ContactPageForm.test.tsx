@@ -107,17 +107,22 @@ describe("renders the form for the contact page", () => {
       expect(import.meta.env.VITE_CONTACTABLE).toBe("false"); //* All ContactPageForm tests start with VITE_CONTACTABLE = "false"
       //* WHEN VITE_CONTACTABLE == "false", THEN contact button displays "currently unavailable"
       const submitButton = screen.getByRole("button", { name: /currently unavailable/i});
-      expect(onSubmitFunc).not.toBeCalled(); //* Submit callback spy not yet called
-      await user.click(submitButton); //* FireEvent would force a form submission, so definitely better to use UserEvent
-      expect(onSubmitFunc).not.toBeCalled(); //* AND the submit spy is not called due to VITE_CONTACTABLE == "false"
+      expect(onSubmitFunc).not.toHaveBeenCalled(); //* Submit callback spy not yet called
+      // FireEvent forces form submission, so `user` is better
+      await user.click(submitButton);
+      // AND submit spy not called since VITE_CONTACTABLE == "false"
+      expect(onSubmitFunc).not.toHaveBeenCalled();
 
-      import.meta.env.VITE_CONTACTABLE = "true"; //* Even if CONTACTABLE == true, if isVerifying == true then no submit called
-      unmount(); //* Need full unmount to have useState reset isVerifying to its initial state of `true`
+      // EVEN if CONTACTABLE == true, if isVerifying == true then no submit called
+      import.meta.env.VITE_CONTACTABLE = "true";
+      unmount(); //* Need full unmount to reset useState `isVerifying` to init state `true`
       render(<ContactPageForm onSubmitForm={onSubmitFunc} />);
       const verifyingSubmitButton = screen.getByRole("button", { name: /checking you're human/i});
-      expect(onSubmitFunc).not.toBeCalled();
-      await user.click(verifyingSubmitButton); //* WHEN contact button clicked, and CONTACTABLE == "true" AND isVerifying == `true`
-      expect(onSubmitFunc).not.toBeCalled(); //* THEN the submit spy still won't run since the component is stuck verifying
+      expect(onSubmitFunc).not.toHaveBeenCalled();
+       //* WHEN contact button clicked, and CONTACTABLE == "true" AND isVerifying == `true`
+      await user.click(verifyingSubmitButton);
+       //* THEN the submit spy still won't run since the component is stuck verifying
+      expect(onSubmitFunc).not.toHaveBeenCalled();
     });
     test("a try again state in the submit button if bot detected trying to submit", async () => {
       import.meta.env.VITE_CONTACTABLE = "true";
@@ -149,7 +154,7 @@ describe("renders the form for the contact page", () => {
 
     await user.click(screen.getByRole("button", { name: /turnstile verification button/i })); //* Turnstile finishes verification process
     const contactSubmitButton = await screen.findByRole("button", { name: /contact me/i }); //* SO contact submit button now visible
-    expect(onSubmitFunc).not.toBeCalled(); //* Haven't clicked submit button yet so spy not called yet
+    expect(onSubmitFunc).not.toHaveBeenCalled(); //* Haven't clicked submit button yet so spy not called yet
 
     //? preventDefault() + stopPropagation() in SubmitContactForm prevent a page reload AND jest-dom's "submit" not-implemented error
     fireEvent.submit(screen.getByTestId("form-container")); //? whenever fireEvent causes a form submission
