@@ -13,6 +13,6 @@ export function IsPlainObject(value: unknown): value is object {
     return false;
   }
 
-  const proto = Object.getPrototypeOf(value);
+  const proto: unknown = Object.getPrototypeOf(value);
   return proto === null || proto === Object.prototype || value.constructor === Object;
 }

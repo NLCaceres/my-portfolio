@@ -3,7 +3,7 @@ export default function SilenceWarning() {
   const origErrorConsole = window.console.error;
 
   window.console.error = (...args) => {
-    const firstArg = args.length > 0 && args[0];
+    const firstArg: unknown = args.length > 0 && args[0];
 
     //* Set up watcher for unimplemented form error
     const shouldBeIgnored = firstArg && typeof firstArg === "string" &&
