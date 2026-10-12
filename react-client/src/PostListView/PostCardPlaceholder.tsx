@@ -17,7 +17,7 @@ const PostCardPlaceholderList = ({ numPlaceholders = 4 }: { numPlaceholders?: nu
         <Placeholder xs={9} md={6} as="h1" className={`${PlaceholderCss.header}`} />
       </Placeholder>
       {/* No stable ID so use index for the following Placeholder Cards, should always render the same anyway */}
-      { [...Array(numPlaceholders)].map((_, i) => <PostCardPlaceholder className={"mx-sm-4"} key={i} />) }
+      {[...Array<number>(numPlaceholders)].map((_, i) => <PostCardPlaceholder className={"mx-sm-4"} key={i} />)}
     </>
   );
 };
