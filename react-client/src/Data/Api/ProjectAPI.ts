@@ -5,7 +5,7 @@ import Post from "../Models/Project";
 //* API that calls to Rails Backend and gets Projects in a format that can be turned into Posts
 //* qParams should probably be required BUT for now default to 'null' which returns aboutMe
 export default async function GetPostList(qParams = "null") {
-  const jsonResponse: Post | Post[] = await GetData(`/api/posts?project_type=${qParams}`);
+  const jsonResponse: Post | Post[] | undefined = await GetData(`/api/posts?project_type=${qParams}`);
 
   const projectList: { majorProjects: Post[], minorProjects: Post[] } = { majorProjects: [], minorProjects: [] };
   if (Array.isArray(jsonResponse)) { //* Rails SHOULD always return an [] (even if empty) but best to be safe
