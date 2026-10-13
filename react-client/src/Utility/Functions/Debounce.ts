@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//? Type inference doesn't work when `unknown` or `never` is used as a generic func param, so must use `any`
-
 //* Debounce groups function calls within a specific time period (the `wait` param)
 //* so that a function isn't needlessly called repeatedly in quick succession
 //* BUT it's worth noting that UNTIL the `wait` period has elapsed, the debounced func will return undefined!
@@ -13,10 +10,10 @@
 //* Ex: After another 500ms has passed, debouncedFunc(4) would return 6
 //* FOR THAT REASON: debounce is awesome for void funcs with side-effects that set some external state (see ViewWidthProvider)
 //* BUT not the most useful for funcs with return values because we get that return value in a later call AND with a delay
-export function debounce<F extends (...args: any[]) => any>(func: F, wait: number) {
+export function debounce<T extends unknown[], R>(func: (...args: T) => R, wait: number) {
   let timer: NodeJS.Timeout | undefined = undefined;
-  let recentArgValues: Parameters<F> | undefined = undefined;
-  let returnValue: ReturnType<F> | undefined = undefined;
+  let recentArgValues: T | undefined = undefined;
+  let returnValue: R | undefined = undefined;
 
   const completeDebounce = () => {
     clearTimeout(timer);
@@ -29,7 +26,7 @@ export function debounce<F extends (...args: any[]) => any>(func: F, wait: numbe
     }
   };
 
-  const debouncedFunc = (...args: Parameters<F>) => {
+  const debouncedFunc = (...args: T) => {
     recentArgValues = args; //* Grab the debounced function's new arg values
 
     if (timer) { //* Must be debouncing the function already
