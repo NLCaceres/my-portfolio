@@ -6,16 +6,13 @@ export default defineConfig({
     "correctness": "off"
   },
   "env": {
-    "builtin": true
+    "builtin": true,
+    "browser": true,
+    "node": true
   },
   "overrides": [
     {
       "files": ["src/**/*.{ts,tsx}"],
-      "env": {
-        "es2022": true,
-        "browser": true,
-        "node": true
-      },
       "plugins": ["typescript"],
       "jsPlugins": ["@stylistic/eslint-plugin"], //TODO Prefer OxFmt BUT stopgap beta fix
       "rules": {
@@ -172,9 +169,6 @@ export default defineConfig({
     {
       "files": ["src/**/*.test.tsx"],
       "plugins": ["react"],
-      "env": {
-        "jest": true
-      },
       "rules": {
         "react/display-name": "off",
       }
