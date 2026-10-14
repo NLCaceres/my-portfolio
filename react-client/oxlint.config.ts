@@ -1,5 +1,6 @@
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
+import { defineConfig } from "oxlint";
+
+export default defineConfig({
   "plugins": [],
   "categories": {
     "correctness": "off"
@@ -16,7 +17,7 @@
         "node": true
       },
       "plugins": ["typescript"],
-      "jsPlugins": ["@stylistic/eslint-plugin"], //? Prefer Oxfmt BUT stopgap beta-fix
+      "jsPlugins": ["@stylistic/eslint-plugin"], //TODO Prefer OxFmt BUT stopgap beta fix
       "rules": {
         "constructor-super": "off",
         "for-direction": "error",
@@ -106,16 +107,16 @@
         "typescript/no-this-alias": "error",
         "typescript/no-unnecessary-type-assertion": "error",
         "typescript/no-unnecessary-type-constraint": "error",
-        "typescript/no-unsafe-argument": "error",
-        "typescript/no-unsafe-assignment": "error",
-        "typescript/no-unsafe-call": "error",
+        "typescript/no-unsafe-argument": "error", // pedantic
+        "typescript/no-unsafe-assignment": "error", // pedantic
+        "typescript/no-unsafe-call": "error", // pedantic
         "typescript/no-unsafe-declaration-merging": "error",
         "typescript/no-unsafe-enum-comparison": "error",
         "typescript/no-unsafe-function-type": "error",
-        "typescript/no-unsafe-member-access": "error",
-        "typescript/no-unsafe-return": "error",
+        "typescript/no-unsafe-member-access": "error", // pedantic
+        "typescript/no-unsafe-return": "error", // pedantic
         "typescript/no-wrapper-object-types": "error",
-        "typescript/only-throw-error": "error",
+        "typescript/only-throw-error": "error", // Pedantic but useful
         "typescript/prefer-as-const": "error",
         "typescript/prefer-namespace-keyword": "error",
         "typescript/prefer-promise-reject-errors": "error", //? Typed improvement to base version
@@ -179,4 +180,4 @@
       }
     }
   ]
-}
+})
