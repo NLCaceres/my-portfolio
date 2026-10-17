@@ -8,6 +8,7 @@ declare module '*.svg';
 //? Found via Turnstile-Types (https://github.com/Le0Developer/turnstile-types/blob/master/index.d.ts)
 //* Recommended by Cloudflare's Community Resources Client-side Rendering
 type WidgetId = string;
+type ElementId = string;
 type Container = ElementId | HTMLElement;
 
 interface Window {
