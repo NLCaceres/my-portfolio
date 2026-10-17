@@ -27,9 +27,7 @@ export default defineConfig({
         "no-empty": "error", // restrict
         "no-fallthrough": "error", // pedantic
         "no-prototype-builtins": "error", // pedantic - in prog fix
-        "no-redeclare": "off", // pedantic - OFF
         "no-regex-spaces": "error", // restrict
-        "no-undef": "off", // nursery - OFF
         "no-unexpected-multiline": "error", // sus - dangerous fix
         "no-useless-assignment": "error", // nursery
         "preserve-caught-error": "error", // sus
@@ -71,22 +69,10 @@ export default defineConfig({
       "jsPlugins": ["@stylistic/eslint-plugin"],
       "rules": {
         "react/display-name": "error", // pedantic
-        "react/jsx-key": "error", // correct
         "react/jsx-no-comment-textnodes": "error", // sus
-        "react/jsx-no-duplicate-props": "error", // correct
         "react/jsx-no-target-blank": "error", // pedantic
-        "react/jsx-no-undef": "error", // correct
-        "react/no-children-prop": "error", // correct
-        "react/no-danger-with-children": "error", // correct
-        "react/no-direct-mutation-state": "error", // correct
-        "react/no-find-dom-node": "error", // correct
-        "react/no-is-mounted": "error", // correct
-        "react/no-render-return-value": "error", // correct
-        "react/no-string-refs": "error", // correct
         "react/no-unescaped-entities": "error", // pedantic
         "react/no-unknown-property": "error", // restrict
-        "react/no-unsafe": "off", // correct
-        "react/react-in-jsx-scope": "off", // sus
         "react/require-render-return": "error", // nursery
         "@stylistic/indent": "off"
       }
