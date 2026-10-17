@@ -64,9 +64,8 @@ export default defineConfig({
       }
     },
     {
-      "files": ["src/**/*.tsx"],
+      "files": ["src/**/*.{jsx,tsx}"],
       "plugins": ["react"],
-      "jsPlugins": ["@stylistic/eslint-plugin"],
       "rules": {
         "react/display-name": "error", // pedantic
         "react/jsx-no-comment-textnodes": "error", // sus
