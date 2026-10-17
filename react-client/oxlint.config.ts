@@ -1,131 +1,68 @@
 import { defineConfig } from "oxlint";
 
 export default defineConfig({
-  "plugins": [],
+  "ignorePatterns": ["*.config.{js,ts}", "*.d.ts", "serviceWorker.js"],
+  "plugins": ["eslint", "typescript"], // Default plugins are ESLint, OXC, Typescript, and Unicorn
+  "jsPlugins": ["@stylistic/eslint-plugin"], //TODO Prefer OxFmt BUT stopgap fix
   "categories": {
-    "correctness": "off"
+    "correctness": "error"
   },
   "env": {
     "builtin": true,
     "browser": true,
     "node": true
   },
+  "rules": {
+    "@stylistic/linebreak-style": ["error", "unix"],
+    "@stylistic/no-trailing-spaces": "error",
+    "@stylistic/indent": ["error", 2],
+    "@stylistic/quotes": "error",
+    "@stylistic/semi": "error",
+  },
   "overrides": [
     {
       "files": ["src/**/*.{ts,tsx}"],
-      "plugins": ["typescript"],
-      "jsPlugins": ["@stylistic/eslint-plugin"], //TODO Prefer OxFmt BUT stopgap beta fix
-      "rules": {
-        "constructor-super": "off",
-        "for-direction": "error",
-        "getter-return": "off",
-        "no-async-promise-executor": "error",
-        "no-case-declarations": "error",
-        "no-class-assign": "off",
-        "no-compare-neg-zero": "error",
-        "no-cond-assign": "error",
-        "no-const-assign": "off",
-        "no-constant-binary-expression": "error",
-        "no-constant-condition": "error",
-        "no-control-regex": "error",
-        "no-debugger": "error",
-        "no-delete-var": "error",
-        "no-dupe-class-members": "off",
-        "no-dupe-else-if": "error",
-        "no-dupe-keys": "off",
-        "no-duplicate-case": "error",
-        "no-empty": "error",
-        "no-empty-character-class": "error",
-        "no-empty-pattern": "error",
-        "no-empty-static-block": "error",
-        "no-ex-assign": "error",
-        "no-extra-boolean-cast": "error",
-        "no-fallthrough": "error",
-        "no-func-assign": "off",
-        "no-global-assign": "error",
-        "no-import-assign": "off",
-        "no-invalid-regexp": "error",
-        "no-irregular-whitespace": "error",
-        "no-loss-of-precision": "error",
-        "no-misleading-character-class": "error",
-        "no-new-native-nonconstructor": "off",
-        "no-nonoctal-decimal-escape": "error",
-        "no-obj-calls": "off",
-        "no-prototype-builtins": "error",
-        "no-redeclare": "off",
-        "no-regex-spaces": "error",
-        "no-self-assign": "error",
-        "no-setter-return": "off",
-        "no-shadow-restricted-names": "error",
-        "no-sparse-arrays": "error",
-        "no-this-before-super": "off",
-        "no-unassigned-vars": "error",
-        "no-undef": "off",
-        "no-unexpected-multiline": "error",
-        "no-unreachable": "off",
-        "no-unsafe-finally": "error",
-        "no-unsafe-negation": "off",
-        "no-unsafe-optional-chaining": "error",
-        "no-unused-labels": "error",
-        "no-unused-private-class-members": "error",
-        "no-unused-vars": "error",
-        "no-useless-assignment": "error",
-        "no-useless-backreference": "error",
-        "no-useless-catch": "error",
-        "no-useless-escape": "error",
-        "no-with": "off",
-        "preserve-caught-error": "error",
-        "require-yield": "error",
-        "use-isnan": "error",
-        "valid-typeof": "error",
-        "no-var": "error",
-        "prefer-const": "error",
-        "prefer-rest-params": "error",
-        "prefer-spread": "error",
-        "no-array-constructor": "error",
-        "no-unused-expressions": [
-          "error",
-          {
-            "allowShortCircuit": true,
-            "allowTernary": true
-          }
+      "rules": { // HAD ~50 of 57 total correctness BUT 14 were off
+        "no-case-declarations": "error", // pedantic
+        "no-empty": "error", // restrict
+        "no-fallthrough": "error", // pedantic
+        "no-prototype-builtins": "error", // pedantic - in prog fix
+        "no-redeclare": "off", // pedantic - OFF
+        "no-regex-spaces": "error", // restrict
+        "no-undef": "off", // nursery - OFF
+        "no-unexpected-multiline": "error", // sus - dangerous fix
+        "no-useless-assignment": "error", // nursery
+        "preserve-caught-error": "error", // sus
+        "no-var": "error", // restrict
+        "prefer-const": "error", // style
+        "prefer-rest-params": "error", // style
+        "prefer-spread": "error", // style
+        "no-array-constructor": "error", // pedantic
+        "no-unused-expressions": [ // correct
+          "error", { "allowShortCircuit": true, "allowTernary": true }
         ],
-        "typescript/ban-ts-comment": "error",
-        "typescript/no-deprecated": "error",
-        "typescript/no-duplicate-enum-values": "error",
-        "typescript/no-empty-object-type": "error",
-        "typescript/no-explicit-any": "error",
-        "typescript/no-extra-non-null-assertion": "error",
-        "typescript/no-misused-new": "error",
-        "typescript/no-misused-promises": "error",
-        "typescript/no-namespace": "error",
-        "typescript/no-non-null-asserted-optional-chain": "error",
-        "typescript/no-require-imports": "error",
-        "typescript/no-this-alias": "error",
-        "typescript/no-unnecessary-type-assertion": "error",
-        "typescript/no-unnecessary-type-constraint": "error",
+        "typescript/ban-ts-comment": "error", //! ONLY missing 2 typescript corrects
+        "typescript/consistent-type-definitions": ["error", "type"], // style
+        "typescript/no-deprecated": "error", // pedantic
+        "typescript/no-empty-object-type": "error", // restrict
+        "typescript/no-explicit-any": "error", // restriction
+        "typescript/no-misused-promises": "error", // pedantic
+        "typescript/no-namespace": "error", // restrict
+        "typescript/no-require-imports": "error", // restriction
+        "typescript/no-unnecessary-type-assertion": "error", // sus
+        "typescript/no-unnecessary-type-constraint": "error", // sus
         "typescript/no-unsafe-argument": "error", // pedantic
         "typescript/no-unsafe-assignment": "error", // pedantic
         "typescript/no-unsafe-call": "error", // pedantic
-        "typescript/no-unsafe-declaration-merging": "error",
-        "typescript/no-unsafe-enum-comparison": "error",
-        "typescript/no-unsafe-function-type": "error",
+        "typescript/no-unsafe-declaration-merging": "error", // correct
+        "typescript/no-unsafe-enum-comparison": "error", // sus
+        "typescript/no-unsafe-function-type": "error", // pedantic
         "typescript/no-unsafe-member-access": "error", // pedantic
         "typescript/no-unsafe-return": "error", // pedantic
-        "typescript/no-wrapper-object-types": "error",
         "typescript/only-throw-error": "error", // Pedantic but useful
-        "typescript/prefer-as-const": "error",
-        "typescript/prefer-namespace-keyword": "error",
-        "typescript/prefer-promise-reject-errors": "error", //? Typed improvement to base version
-        "typescript/require-await": "error",
-        "typescript/restrict-plus-operands": "error",
-        "typescript/triple-slash-reference": "error",
-        "@stylistic/linebreak-style": ["error", "unix"],
-        "@stylistic/no-trailing-spaces": "error",
-        "@stylistic/indent": ["error", 2],
-        "@stylistic/quotes": "error",
-        "@stylistic/semi": "error",
-        "typescript/consistent-type-definitions": ["error", "type"]
+        "typescript/prefer-promise-reject-errors": "error", // pedantic //? Typed improvement to base version
+        "typescript/require-await": "error", // pedantic
+        "typescript/restrict-plus-operands": "error", // pedantic
       }
     },
     {
@@ -133,24 +70,24 @@ export default defineConfig({
       "plugins": ["react"],
       "jsPlugins": ["@stylistic/eslint-plugin"],
       "rules": {
-        "react/display-name": "error",
-        "react/jsx-key": "error",
-        "react/jsx-no-comment-textnodes": "error",
-        "react/jsx-no-duplicate-props": "error",
-        "react/jsx-no-target-blank": "error",
-        "react/jsx-no-undef": "error",
-        "react/no-children-prop": "error",
-        "react/no-danger-with-children": "error",
-        "react/no-direct-mutation-state": "error",
-        "react/no-find-dom-node": "error",
-        "react/no-is-mounted": "error",
-        "react/no-render-return-value": "error",
-        "react/no-string-refs": "error",
-        "react/no-unescaped-entities": "error",
-        "react/no-unknown-property": "error",
-        "react/no-unsafe": "off",
-        "react/react-in-jsx-scope": "off",
-        "react/require-render-return": "error",
+        "react/display-name": "error", // pedantic
+        "react/jsx-key": "error", // correct
+        "react/jsx-no-comment-textnodes": "error", // sus
+        "react/jsx-no-duplicate-props": "error", // correct
+        "react/jsx-no-target-blank": "error", // pedantic
+        "react/jsx-no-undef": "error", // correct
+        "react/no-children-prop": "error", // correct
+        "react/no-danger-with-children": "error", // correct
+        "react/no-direct-mutation-state": "error", // correct
+        "react/no-find-dom-node": "error", // correct
+        "react/no-is-mounted": "error", // correct
+        "react/no-render-return-value": "error", // correct
+        "react/no-string-refs": "error", // correct
+        "react/no-unescaped-entities": "error", // pedantic
+        "react/no-unknown-property": "error", // restrict
+        "react/no-unsafe": "off", // correct
+        "react/react-in-jsx-scope": "off", // sus
+        "react/require-render-return": "error", // nursery
         "@stylistic/indent": "off"
       }
     },
@@ -161,16 +98,16 @@ export default defineConfig({
         "jest": true
       },
       "rules": {
-        "typescript/no-non-null-assertion": "off",
-        "typescript/no-unsafe-assignment": "off",
-        "typescript/require-await": "off",
+        "typescript/no-non-null-assertion": "off", // restrict
+        "typescript/no-unsafe-assignment": "off", // pedantic
+        "typescript/require-await": "off", // pedantic
       }
     },
     {
       "files": ["src/**/*.test.tsx"],
       "plugins": ["react"],
       "rules": {
-        "react/display-name": "off",
+        "react/display-name": "off", // pedantic
       }
     }
   ]
