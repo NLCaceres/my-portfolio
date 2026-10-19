@@ -1,3 +1,5 @@
+//* Currently just Cloudflare's Turnstile but this file is left open for other possible third party APIs
+
 type TurnstileResponse = {
   success: boolean,
   "error-codes"?: [string], // Optional array of errors sent by Cloudflare
@@ -7,14 +9,13 @@ type TurnstileResponse = {
 
 // Using Zod would probably make the following function even simpler or just eliminate the need for it all together
 // It might even eliminate the need for the above declared TurnstileResponse type
-function IsTurnstileResponse(response: TurnstileResponse | unknown): response is TurnstileResponse {
+function IsTurnstileResponse(response: unknown): response is TurnstileResponse {
   return (response as TurnstileResponse)["success"] !== undefined
     && (response as TurnstileResponse)["challenge_ts"] !== undefined
     && (response as TurnstileResponse)["message"] !== undefined;
 }
 
-//* Currently just Cloudflare's Turnstile but this file is left open for other possible third party APIs
-export async function ProcessTurnstileResponse(response: Promise<TurnstileResponse | unknown>, expectedMessage = "Success!") {
+export async function ProcessTurnstileResponse(response: Promise<unknown>, expectedMessage = "Success!") {
   const turnstileJSON = await response;
   if (!turnstileJSON) { return false; } //* If error occurred during POST, then expect an undefined response and end processing
 
