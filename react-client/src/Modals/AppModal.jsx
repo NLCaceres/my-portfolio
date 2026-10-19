@@ -10,7 +10,7 @@ const propIdOrModalId = id => {
     return finalID;
   }
   return `${id}-modal`;
-}
+};
 
 //* Probably an oversimplification of react-bootstrap's modal BUT works great!
 //@params - Required: Show = Visibility prop, onHide = Callback prop, ID = aria-label
@@ -24,17 +24,17 @@ const AppModal = props => {
 
   return (
     <Modal centered show={ props.show } onHide={ props.onHide } dialogClassName={`${AppModalCss.dialogBox}`}
-      aria-labelledby={computedID} contentClassName={`${AppModalCss.content} ${props.contentClasses || ''}`.trim()}>
-        { props.title && 
-          <ModalHeader ID={ computedID } className={`${props.headerClasses || ''}`} titleClasses={`${props.titleClasses || ''}`}>
+      aria-labelledby={computedID} contentClassName={`${AppModalCss.content} ${props.contentClasses || ""}`.trim()}>
+        { props.title &&
+          <ModalHeader ID={ computedID } className={`${props.headerClasses || ""}`} titleClasses={`${props.titleClasses || ""}`}>
             { props.title }
-          </ModalHeader> 
+          </ModalHeader>
         }
-        <Modal.Body className={`${props.bodyClasses || ''}`}>{ props.children }</Modal.Body>
-        { props.footer && <ModalFooter className={`${props.footerClasses || ''}`}>{ props.footer }</ModalFooter> }
+        <Modal.Body className={`${props.bodyClasses || ""}`}>{ props.children }</Modal.Body>
+        { props.footer && <ModalFooter className={`${props.footerClasses || ""}`}>{ props.footer }</ModalFooter> }
     </Modal>
   );
-}
+};
 
 //@params headerClasses -> className, titleClasses -> titleClasses, ID -> ID
 //@params title -> children = simple title string ideally
@@ -45,8 +45,8 @@ const ModalHeader = props => {
         { props.children }
       </Modal.Title>
     </Modal.Header>
-  )
-}
+  );
+};
 
 //@params footerClasses -> className, footer -> children = Any element or string
 const ModalFooter = props => {
@@ -54,7 +54,7 @@ const ModalFooter = props => {
     <Modal.Footer className={ props.className }>
       { props.children }
     </Modal.Footer>
-  )
-}
+  );
+};
 
 export default AppModal;
