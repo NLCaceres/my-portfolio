@@ -64,9 +64,9 @@ describe("render a simple react-bootstrap carousel", () => {
       render(<AppCarousel images={imageSet} />);
       const user = userEvent.setup();
       const activeImgIndicators = screen.getAllByRole("button");
-      const currentImages = screen.getAllByAltText(/BarfooAlt/i).sort();
-      //* currentImages[0].alt should be BarfooAlt1 or simply smallest numbered altText value
-      //* currentImages[1].alt should be BarfooAlt2
+      // Sort by alt text with smallest num suffix, e.g. "Foo1", "Foo2"
+      const currentImages = screen.getAllByAltText<HTMLImageElement>(/BarfooAlt/i)
+        .sort((a, b) => a.alt.localeCompare(b.alt));
       expect(currentImages[0].parentElement!.className).toBe("active carousel-item"); //* 1st is always active to start
       expect(currentImages[1].parentElement!.className).toBe("carousel-item"); //* Always starts deactivated
 
