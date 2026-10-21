@@ -18,7 +18,7 @@ vi.mock("../ThirdParty/TurnstileWidget", () => {
   };
 });
 
-const testRouter = (showAlert: () => boolean ) => {
+const testRouter = async (showAlert: () => boolean) => {
   const rootRoute = createRootRouteWithContext<{ showAlert: () => boolean }>()({
     component: Outlet
   });
@@ -28,7 +28,7 @@ const testRouter = (showAlert: () => boolean ) => {
   const router = createRouter({
     context: { showAlert }, routeTree: rootRoute.addChildren([indexRoute])
   });
-  router.navigate({ to: "/contact-me" });
+  await router.navigate({ to: "/contact-me" });
   return router;
 };
 describe("renders a simple contact page with a form component", () => {
@@ -36,7 +36,7 @@ describe("renders a simple contact page with a form component", () => {
 
   test("with a parent & form container using css modules, & form in dark mode", async () => {
     //? RouteContext `showAlert` param can be simple since not called here AND type won't matter
-    render(<RouterProvider router={testRouter(() => true)} />);
+    render(<RouterProvider router={await testRouter(() => true)} />);
     const headerTag = await screen.findByRole("heading", { name: /contact me/i });
     const parentContainer = headerTag.parentElement;
     expect(parentContainer).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("renders a simple contact page with a form component", () => {
       ) =>
         <button onClick={() => { onSubmitForm && onSubmitForm(isSuccessful); }}>Foobar</button>
       );
-    render(<RouterProvider router={testRouter(showAlertMock)} />);
+    render(<RouterProvider router={await testRouter(showAlertMock)} />);
     expect(showAlertMock).not.toHaveBeenCalled();
 
     await user.click(await screen.findByText("Foobar"));
@@ -81,12 +81,12 @@ describe("renders a simple contact page with a form component", () => {
     const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default")
       .mockReturnValue(averageTabletLowEndWidth);
 
-    const { rerender } = render(<RouterProvider router={testRouter(() => true)} />);
+    const { rerender } = render(<RouterProvider router={await testRouter(() => true)} />);
     const title = await screen.findByRole("heading", { name: /contact me/i });
     expect(title).toHaveClass("display-3");
 
     useViewWidthSpy.mockReturnValue(averageTabletViewWidth);
-    rerender(<RouterProvider router={testRouter(() => true)} />);
+    rerender(<RouterProvider router={await testRouter(() => true)} />);
     expect(await screen.findByRole("heading", { name: /contact me/i })).toHaveClass("display-2");
   });
   test("that depends and uses callbacks from the RoutingContext", async () => {
@@ -98,13 +98,13 @@ describe("renders a simple contact page with a form component", () => {
     vi.spyOn(TurnstileAPI, "ProcessTurnstileResponse")
       .mockImplementation(() => Promise.resolve(true));
 
-    const { rerender } = render(<RouterProvider router={testRouter(showAlertMock)} />);
+    const { rerender } = render(<RouterProvider router={await testRouter(showAlertMock)} />);
     fireEvent.submit(await screen.findByTestId("form-container"));
     //* WHEN form submits, THEN run `RouteContext.showAlert` in `submitContactForm`
     await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1));
     expect(showDialogMock).toHaveBeenCalledTimes(0); //* ONLY the alert appears, not the modal
 
-    rerender(<RouterProvider router={testRouter(showAlertMock)} />);
+    rerender(<RouterProvider router={await testRouter(showAlertMock)} />);
     fireEvent.submit(await screen.findByTestId("form-container"));
     //* WHEN the form tries to re-submit, THEN the mock ISN'T called again
     await waitFor(() => expect(showAlertMock).toHaveBeenCalledTimes(1));

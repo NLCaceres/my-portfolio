@@ -43,8 +43,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(ProjectSortingMock).toHaveBeenCalledTimes(2); //* 1 for major, 1 for minor
 
     ApiMock.mockResolvedValue({ majorProjects: [majProject] });
-    await waitFor(() => { //* MUST `waitFor` cache mutation or get `act()` error
-      mutate("/api/posts/android");
+    await waitFor(async () => { //* MUST `waitFor` cache mutation or get `act()` error
+      await mutate("/api/posts/android");
       expect(ApiMock).toHaveBeenCalledTimes(3); //* Cache still calls API to double-check
     });
     expect(await screen.findByRole("heading", { name: /major projects/i })).toBeInTheDocument();
@@ -53,8 +53,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(ProjectSortingMock).toHaveBeenLastCalledWith([majProject]);
 
     ApiMock.mockResolvedValue({ minorProjects: [minProject] });
-    await waitFor(() => {
-      mutate("/api/posts/android");
+    await waitFor(async () => {
+      await mutate("/api/posts/android");
       expect(ApiMock).toHaveBeenCalledTimes(4);
     });
     expect(await screen.findByRole("heading", { name: /small projects/i })).toBeInTheDocument();
@@ -63,8 +63,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
 
     ApiMock.mockResolvedValue({ majorProjects: [], minorProjects: [] });
-    await waitFor(() => {
-      mutate("/api/posts/android");
+    await waitFor(async () => {
+      await mutate("/api/posts/android");
       expect(ApiMock).toHaveBeenCalledTimes(5);
     });
     const placeholders = await screen.findAllByRole("heading"); // Must await to avoid `act` warning
@@ -79,8 +79,8 @@ describe("renders a list of bootstrap cards filled with post objs", () => {
     expect(ProjectSortingMock).toHaveBeenNthCalledWith(4, [minProject]);
 
     ApiMock.mockImplementation(() => ({}));
-    await waitFor(() => {
-      mutate("/api/posts/android");
+    await waitFor(async () => {
+      await mutate("/api/posts/android");
       expect(ApiMock).toHaveBeenCalledTimes(6);
     });
     // WHEN API just returns `{}`, THEN still yields `<PostCardPlaceholderList>` + same results
