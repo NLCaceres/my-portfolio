@@ -15,7 +15,7 @@ type PlaceholderImgProps = {
 
 //* Simple placeholder that displays text and spinner if used during a loading event
 const PlaceholderImg = ({
-  loading = false, children, className = "", style = undefined, textStyle = undefined
+  loading = false, children, className = "", style, textStyle
 }: PropsWithChildren<PlaceholderImgProps>) => {
   const childElem = (children === undefined || IsString(children)) ? // Need <h2> for strings
     <animated.h2 className={`${PlaceholderImgCss.placeholderText}`} style={{ ...textStyle }}>
