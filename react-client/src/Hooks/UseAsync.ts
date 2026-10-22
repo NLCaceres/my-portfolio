@@ -7,6 +7,7 @@ import { useEffect } from "react";
 export default function UseNullableAsync<T>(asyncFunc: () => Promise<T>, onSuccess?: (result?: T) => void): void {
   useEffect(() => {
     let isAlive = true;
+    // oxlint-disable-next-line typescript/no-floating-promises
     (async () => { //? Good trick to avoid old school promises.then(callback)
       const data = await asyncFunc();
       if (onSuccess && isAlive) { //* If there's a callback to use, check if alive then run it
