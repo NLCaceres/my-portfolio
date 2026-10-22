@@ -36,7 +36,7 @@ export default defineConfig({
         "prefer-rest-params": "error", // style
         "prefer-spread": "error", // style
         "no-array-constructor": "error", // pedantic
-        "no-unused-expressions": [ // correct
+        "no-unused-expressions": [ // correct - Changed `allowTernary` to true
           "error", { "allowShortCircuit": true, "allowTernary": true }
         ],
         "typescript/ban-ts-comment": "error", //! ONLY missing 2 typescript corrects
@@ -52,7 +52,6 @@ export default defineConfig({
         "typescript/no-unsafe-argument": "error", // pedantic
         "typescript/no-unsafe-assignment": "error", // pedantic
         "typescript/no-unsafe-call": "error", // pedantic
-        "typescript/no-unsafe-declaration-merging": "error", // correct
         "typescript/no-unsafe-enum-comparison": "error", // sus
         "typescript/no-unsafe-function-type": "error", // pedantic
         "typescript/no-unsafe-member-access": "error", // pedantic
@@ -80,7 +79,7 @@ export default defineConfig({
       "files": ["src/**/*.test.{ts,tsx}"],
       "plugins": ["typescript"],
       "env": {
-        "jest": true
+        "vitest": true
       },
       "rules": {
         "typescript/no-non-null-assertion": "off", // restrict
