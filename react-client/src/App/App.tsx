@@ -25,7 +25,7 @@ const Layout = () => {
 	useEffect(() => {
 		router.update({ context: { showAlert: showAlertBriefly } });
 		router.invalidate(); // Required to guarantee updates especially on 1st page load
-	}, []); // Prevent too many router updates & invalidations
+	}, [router]);
   const closeAlert = () => {
     clearTimeout(alertState.timeoutID);
     //* AppAlert already hid itself BUT line 34 setShowAlert update causes 1 final (but mostly skipped) rerender,
