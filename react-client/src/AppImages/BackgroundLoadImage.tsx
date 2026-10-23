@@ -26,12 +26,12 @@ const BackgroundLoadImage = (
   //! NEED the `from` key to make springs work as of v10
   const [fadeOutSpring, fadeOutAPI] = useSpring(() => ({ from: { opacity: 1 } }));
   const [fadeInSpring, fadeInAPI] = useSpring(() => ({ from: { opacity: 0 } }));
-  const resizeAnimations = () => { sizeSpringAPI.start({ to: { height: 500, width: 500 } }); };
+  const resizeAnimations = () => { void sizeSpringAPI.start({ to: { height: 500, width: 500 } }); };
   const successAnimations = () => { // Fade in img, fade out placeholder, & unmount it
     resizeAnimations();
     const slowestSpring = { tension: 260 , friction: 260 };
-    fadeInAPI.start({ from: { opacity: 0 }, to: { opacity: 1 }, config: slowestSpring });
-    fadeOutAPI.start({ from: { opacity: 1 }, to: { opacity: 0 }, config: slowestSpring, onRest: () => setLoading(false) });
+    void fadeInAPI.start({ from: { opacity: 0 }, to: { opacity: 1 }, config: slowestSpring });
+    void fadeOutAPI.start({ from: { opacity: 1 }, to: { opacity: 0 }, config: slowestSpring, onRest: () => setLoading(false) });
   };
   //! Actual state
   const [loading, setLoading] = useState(false);
