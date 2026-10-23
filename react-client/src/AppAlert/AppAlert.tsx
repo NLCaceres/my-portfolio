@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import FloatingAlertCss from "./AppAlert.module.css";
 
@@ -19,11 +19,12 @@ type AlertProps = {
 //@params - 4: then the next rerender WON'T run useEffect, therefore it won't re-evaluate if the alert should show
 const AppAlert = ({ title, message, color, onClose }: AlertProps) => {
   const [show, setShow] = useState(false); //* Should be hidden first
+  const [prevText, setPrevText] = useState<string | undefined>(undefined);
 
-  useEffect(() => { //* Ensure if parent sets new title or message, update visibility
-    const newShow = !!(title || message); //* Force conversion to boolean
-    setShow(newShow);
-  }, [title, message]);
+  if (prevText !== ((title ?? "") + " " + (message ?? ""))) {
+    setPrevText((title ?? "") + " " + (message ?? ""));
+    setShow(!!(title || message));
+  }
 
   const hideAlert = () => {
     setShow(false); //* Force to hide, which makes Bootstrap remove it from the DOM entirely BUT still in React's virtual DOM
