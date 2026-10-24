@@ -27,11 +27,11 @@ const NotFoundPage = () => { //* Simplified approach to prevent rerenders and no
       if (successful) { setContainerCSS(`${NotFoundCss.container}`); return; }
 
       setPlaceholderText("Sorry! That Puppy is Tough to Fetch!"); // AND start frame animations
-      flingAPI.start({ //? Starts at prev `rotate(-40deg)` so MUST return to 0deg in this `to` prop
+      void flingAPI.start({ //? Starts at prev `rotate(-40deg)` so MUST return to 0deg in this `to` prop
         config: { tension: 175, friction: 15 }, from: { x: "-50%" }, to: { x: "0%", transform: "rotate(0deg)" }
       });
       setContainerCSS(`${NotFoundCss.container}`);
-    });
+    }).catch(() => { console.error("Puppy loading animation failed"); });
   };
 
   //! useEffect randomly grabs a URL and sets the img's src tag to begin loading

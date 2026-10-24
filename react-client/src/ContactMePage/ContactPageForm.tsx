@@ -52,7 +52,7 @@ const ContactPageForm = ({ onSubmitForm, darkMode = false }: ContactPageFormProp
       if (onSubmitForm) { onSubmitForm(isSuccessful); }
       if (isSuccessful) { /* Send an email */ }
       else { /* Error occurred w/ either Turnstile or sending the email */ }
-    });
+    }).catch(() => { console.error("Email not sent"); });
   }, [IsContactable, onSubmitForm, newEmail]);
 
   return ( //* NoValidate ensures Browser doesn't apply its own validation to this form
