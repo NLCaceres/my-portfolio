@@ -24,13 +24,10 @@ const Layout = () => {
   };
 	useEffect(() => {
 		router.update({ context: { showAlert: showAlertBriefly } });
-		router.invalidate(); // Required to guarantee updates especially on 1st page load
 	}, [router]);
   const closeAlert = () => {
-    clearTimeout(alertState.timeoutID);
-    //* AppAlert already hid itself BUT line 34 setShowAlert update causes 1 final (but mostly skipped) rerender,
-    //* the alert remains hidden since its useEffect setShow() is skipped due to the value passed in not being actually changed/different
-    setShowAlert({});
+    clearTimeout(alertState.timeoutID); // Clears the AppAlert hiding timeout AFTER hiding
+    setShowAlert({}); // BUT 1 last re-render due to AlertState change EXCEPT still hidden
   };
 
   //! Contact Button Functionality
@@ -45,7 +42,7 @@ const Layout = () => {
     }
     else {
       SmoothScroll();
-      navigate({ to: "/contact-me" });
+      void navigate({ to: "/contact-me" });
     }
   };
   //* This func has to handle the ContactForm Modal because it can't access RoutingContext since it's not rendered by an <Outlet />
