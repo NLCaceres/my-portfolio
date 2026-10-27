@@ -62,9 +62,8 @@ describe("renders the whole app", () => {
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
       await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
       render(<RouterProvider router={Router} />);
-      //? Wait for the API data to load in the cache
-      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(3));
       expect(await screen.findByText("About Me")).toBeInTheDocument();
+      expect(ApiMock).toHaveBeenCalledTimes(1); // API eventually loads the cache
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
 
@@ -76,6 +75,7 @@ describe("renders the whole app", () => {
       // ?: Need `act()` since advancing the time will cause App's setTimeout to run a state update aka `setShowAlert`
       await act(() => vi.advanceTimersByTime(5000));
       expect(screen.queryByText("alert")).not.toBeInTheDocument();
+      expect(ApiMock).toHaveBeenCalledTimes(2); // Cache loaded API data
       vi.runOnlyPendingTimers();
       vi.useRealTimers();
     });
@@ -87,9 +87,8 @@ describe("renders the whole app", () => {
       );
       render(<RouterProvider router={Router} />);
       await waitFor(() => Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
-      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
-      //? Running the `findBy` query is extra insurance that <App> fully rendered
       expect(await screen.findByText("About Me")).toBeInTheDocument();
+      expect(ApiMock).toHaveBeenCalledTimes(2);
 
       await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
 
@@ -100,6 +99,7 @@ describe("renders the whole app", () => {
 
       await act(() => vi.advanceTimersByTime(5000));
       expect(screen.queryByText("alert")).not.toBeInTheDocument();
+      expect(ApiMock).toHaveBeenCalledTimes(2); // Cache loaded API data
       vi.runOnlyPendingTimers();
       vi.useRealTimers();
     });
@@ -110,8 +110,8 @@ describe("renders the whole app", () => {
       const user = userEvent.setup();
       const { unmount } = render(<RouterProvider router={Router} />);
       await waitFor(() => Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
-      await waitFor(() => expect(ApiMock).toHaveBeenCalledTimes(2));
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
+      expect(ApiMock).toHaveBeenCalledTimes(2);
 
       // WHEN at Desktop widths, THEN the "Contact" button should open a modal
       await user.click(contactMeButton);
@@ -135,11 +135,12 @@ describe("renders the whole app", () => {
         .toBeInTheDocument();
       // AND smooth scrolling happens on route transition, NOT if the modal is opening
       expect(scrollSpy).toHaveBeenCalledTimes(1);
+      expect(ApiMock).toHaveBeenCalledTimes(2); // No API call, completely cache loaded
     });
   });
 });
 
-// !: Helper Functions
+//! Helper Functions
 async function submitContactForm(user: UserEvent) { // - Provide a reusable way of firing the contact form
   const contactMeButton = screen.getByRole("button", { name: /contact me/i });
   await user.click(contactMeButton); // - Open Contact Form Modal
