@@ -21,9 +21,7 @@ const AppCarousel = ({ children, images, ItemComponent, className }: CarouselPro
   const viewWidth = useViewWidth();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  //? Disable unused-var since goToIndex() is typed with `e` to satisfy Carousel's onSelect
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const goToIndex = (newIndex: number, _e?: Record<string, unknown> | null) => { //? Add _ to `e` to disable the warning too
+  const goToIndex = (newIndex: number, _e?: Record<string, unknown> | null) => {
     setActiveIndex(newIndex);
   };
 
