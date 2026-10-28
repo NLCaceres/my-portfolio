@@ -70,7 +70,7 @@ const TanStackRouter = createRouter({
 export default TanStackRouter;
 
 declare module "@tanstack/react-router" {
-  interface Register { // eslint-disable-line
+  interface Register { // oxlint-disable-line typescript/consistent-type-definitions
     router: typeof TanStackRouter
   }
 }
