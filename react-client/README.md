@@ -2,11 +2,6 @@
 
 ## Future Changes
 
-- React changes
-  - JSX Dot Notation to simplify imports + name clarity?
-    - Ex: `<PostCard.Image> { children } </PostCard.Image>`
-  - Since React-Router may merge with Remix, migrating to TanStack and its
-  Router + SWR alternatives would probably be worth it
 - General Design
   - Drop Bootstrap and React-Bootstrap
     - Why? I'm not currently using a lot of Boostrap components, PLUS dropping
@@ -25,8 +20,10 @@
 
 - Improve Carousel UX, re-implementing lazy load images w/out Bootstrap
   - May alter the UX altogether with 1 of a few ideas (See AppCarousel for details)
-- Begin migrating to useSWR to access Github API and develop "Recent Works" components
+- `useSWR` with the Github API to develop a "Recent Works" component
   - "Recent Works" components likely to use the minified Card component
+  - Use Tanstack equivalent of `useSWR`, Tanstack Query?
+- Re-orient folders to leverage Tanstack Router file-based routing?
 - React-Spring animations may be packageable into reusable hooks due to similarity
   - Currently have the following Spring Animations: fadeIn, fadeOut, windup + fling
   - Currently have the following Transition Animations: exitLeft+fadeOut with enterRight+fadeIn
@@ -34,35 +31,18 @@
 
 ## Recent Changes
 
-- Upgraded to React 19!
-  - All Components now Functional + Hook based. No longer Class based!
-    - Testing hooks super simple now thanks to `renderHook()` from `testing-library/react`
-    - Reorganize folders to be oriented around individual components and their usage
-    - `useContext` used in `useViewWidth` to access viewport width w/out prop drilling
-    - Create accessible modal like `<dialog>` via A11y-Dialog's hook & React Portal
-  - React Router 6 and 6.4 Data API added in
-  - Typescript Migration Complete
-  - Implement PostListView sort by "start_date" and new "importance" property.
-    - AppModal sorts project images to better showcase projects for Desktop users
+- Updated to Typescript 7 with its new Go-based compiler
+  - Enabled move from ESLint to OxLint which leverages the new compiler and
+  is built on Rust, making it lightning fast.
+    - Still using ESLint-Stylistic until I get Oxfmt working
+- Upgraded to React 19 with full functional + hook-based components
+  - Added Tanstack Router, replacing React-Router due to Remix's changes
+  - `useContext` used in `useViewWidth` to access viewport width w/out prop drilling
+  - Created accessible modal like `<dialog>` via A11y-Dialog's hook & React Portal
+  - PostListView sorts by `start_date` and new `importance` prop
+    - Sorts project images for desktop users to better showcase projects
   - Embrace Vite as the new build/bundler tool for React + Vitest for JS Testing
-    - Vite replaces React-Scripts as the recommended tool, if not using Next/Remix
-    - Vitest, powered by Vite, easily replaces Jest as a powerful testing framework
-  - Using Node 22, NPM 10 and, now, PNPM 9
-- Bootstrap 5 + React-Bootstrap 2 migration
-  - CSS Modules + Media Queries help reduce `useViewWidth` Context calls
-    - Fixes NavBar being oversized on very small mobile devices!
-    - Simplifies Zigzag pattern of PostCardList
-  - BUT Bootstrap's helper classes used if they provide multiple CSS rules at once
-    - Ex: 'display-2' under the hood is actually 'font-weight', 'font-size', and
-    'line-height' for a very specific look!
-    - On the other hand, 'flex-grow-1' only adds 'flex-grow: 1', so a CSS module
-    class that combines the 'flex-grow' prop w/ other needed flex rules is simpler
-  - Repackaged React-Bootstrap components into my own custom components to fit my
-  needs and more easily reuse them across my Portfolio
-    - AppAlert is easy to fill, display, & recolor via `message` + `color` props
-    - AppSpinner packages the Bootstrap Spinner into an app-tailored, reusable,
-    and accessible component
-- React-Spring for animations
+- Added React-Spring for animations
   - `<img>` tags load behind their placeholders reducing pop-in, partly by growing
   into position, and fading out the placeholder.
     - If image load fails, `<img>` fade away, displaying a placeholder component
@@ -71,12 +51,6 @@
   and, on exit, quickly moving and fading to the left
   - Lazy load images on intersection via `useInView`
     - Even AppCarousel lazy loads its images one-by-one on mobile viewports
-- Migrated to ESLint's v9 flat config file, letting Typecript-ESLint merge the configs
-  - Migrated away from deprecated ESLint and removed Typescript-ESLint
-  style-focused rules and now using the style rules packaged in ESLint Stylistic
-  - ESLint-Plugin-React now works with ESLint 9
-  - Typescript-ESLint now bundles its parser and plugin together in `typescript-eslint`
-  - ESLint similarly restructured its packages, placing its own config into `@eslint/js`
 
 ## PNPM CLI Commands
 
@@ -87,5 +61,6 @@
     launches the tests w/out watch mode and the coverage flag gathers info via V8
 - `pnpm build` - Type-check then build app in `/dist`, minified & hashed for production
 - `pnpm preview` - Launches a production build locally for preview purposes only
-- `pnpm lint` - Runs ESLint/Typescript-ESLint on TS + TSX files BUT ignore warnings
-- `pnpm lint-strict` - Run ESLint/Typescript-ESLint on TS + TSX files including warnings
+- `pnpm lint` - Run Oxlint without type-aware rules
+- `pnpm lint-typed` - Run Oxlint with type-aware rules
+  - Both lint scripts can append `-fix` to eliminate fixable found issues
