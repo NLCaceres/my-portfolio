@@ -64,34 +64,7 @@ to it each and every year!
     - 1000 emails per month and ALSO 100 test emails per month
   - Contact feature turned off by Env Var until domain name chosen & linked to Mailtrap
 
-## Notes to Remember! - April 2024
-
-### Bundler
-
-- A nifty package manager for Ruby with two ways of updating
-  - `bundle install` conservatively updates packages if Gemfile modified
-  - `bundle update` updates ALL packages to latest version, w/in limits set by Gemfile
-    - NOTE it CAN BOTH fix `Gemfile.lock` issues OR cause breaking changes
-  - `bundle outdated --minor` and `bundle outdated --filter-minor` help check for
-  smaller upgrades to prevent breaking changes before a full `bundle update`
-    - Using `bundle update --minor` can help run these small updates in one simple
-    command, assuming the Gemfile permits so, i.e. uses `~> 1.0` or `>= 1.0, < 2.0`
-- Bundler can be configured via a file named 'config' placed in a '.bundle' folder
-  - There is a [TON of configuration options](https://bundler.io/v2.3/man/bundle-config.1.html)
-    - BUT the most important option is 'path' to define where Bundler installs gems
-      - To set it, run `bundle config set --local path vendor/bundle`
-      - Usually, 'path' is set to `vendor/bundle`, like via `bundle install --deployment`
-      - Setting 'path' avoids adding gems to your global list, isolating the app
-  - To create a config file, run `bundle config set --local <key> <value` w/ any
-  key-value pair. Bundler will automatically create a config file with your key-value
-  pair placed w/in it
-    - The 'local' flag isn't actually needed since it is used by default, as opposed
-    to 'global', BUT using 'local' is a good reminder of what you're configuring
-  - Using the config file is best practice for Bundler 2+ due to uncoming changes
-    - Bundler 1 & 2 can unexpectedly set a config file just by running commands
-    with flags, accidentally making flags stateful
-    - Bundler 3 will create consistent command behavior by defaulting to the config
-    file, letting flags alter command behavior ONLY when used
+## Helpful Notes
 
 ### Rails and its Commands
 
@@ -120,42 +93,7 @@ to it each and every year!
   - `bin/rails server` -> Start up the server (shortcut -> `bin/rails s`)
   - `bin/rails test` -> Test all except system tests (shortcut -> `bin/rails t`)
 
-### Debugging Rails 6+ Apps on Ruby 3+ via Ruby's debug gem
-
-- Must use the VSCode rdbg extension to attach the gem to the `rdbg` command process
-  - Ex: `bin/rdbg -n --open=vscode -c -- bin/rails s` to start the server process,
-  letting it wait for a debugger to attach
-    - MUST generate a `bin/rdbg` binstub via `bundler binstubs debug`
-  - THEN use VSCode's `Run and Debug` tab to launch `Attach rdbg` for debugging
-- To debug Rails tests, the following semi-complex launch.json config works!
-  - `rdbgPath` should usually grab rdbg from `vendor/bundle/ruby/<version>/gems/debug`
-
-  ```json
-  { 
-    "type": "rdbg", 
-    "request": "launch", 
-    "rdbgPath": "${workspaceRoot}/path/to/exe/rdbg", 
-    "command": "${workspaceRoot}/bin/rails", 
-    "script": "test", 
-    "args": []
-  }
-  ```
-
-  - Several key differences:
-    - "request" must be set to launch
-    - "command" must be simply set to 'bin/rails'
-    - "script" set to 'test'
-    - Oddly "args" MUST be at least an empty array (if no flags or args needed)
-  - ADDITIONALLY, MUST modify two files before starting the tests w/ debugger
-    - `bin/rails` task file comments out line 2 to keep Spring preloader from launching
-    its own process since `ruby/debug` can't attach to Spring
-    - `test_helper` file should use `parallelize(workers: 1)` to ensure only 1 process
-    is running, preventing other processes from completing the tests or skipping
-    breakpoints
-- Why not `byebug` or `ruby-debug-ide`? `byebug` is a bit too simple while `ruby-debug-ide`
-has issues with MacOS
-
-### My Package.json Commands
+### Root Package.json Commands
 
 - When deploying to Railway, there are 3 commands:
   - The `railway-install` command ensures the needed dependencies are installed
