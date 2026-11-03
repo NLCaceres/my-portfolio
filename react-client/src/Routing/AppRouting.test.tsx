@@ -17,8 +17,9 @@ beforeAll(() => { //? Skip Route Transition style animations, instant finish, no
 });
 
 describe("renders Tanstack Routes", () => {
-  let apiMock: Mock; let swrMock: Mock;
+  let apiMock: Mock; let swrMock: Mock; let router: ReturnType<typeof Router>;
   beforeEach(() => {
+    router = Router();
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     const projects = { majorProjects: [majProject], minorProjects: [minProject] };
     apiMock = vi.spyOn(GetPostList, "default").mockResolvedValue(projects);
@@ -27,52 +28,52 @@ describe("renders Tanstack Routes", () => {
   afterEach(() => { vi.restoreAllMocks(); });
 
   test("mapping a home page to '/' and '/portfolio/about-me'", async () => {
-    render(<RouterProvider router={Router} />);
+    render(<RouterProvider router={router} />);
     await screen.findByText(/about me/i); //* Await placeholders fading for major/minor projects to render in
 
-    await waitFor(() => Router.navigate({
+    await waitFor(() => router.navigate({
       to: "/portfolio/$postId", params: { postId: "about-me" }
     }));
     await screen.findByText(/about me/i); //* Should directly route to about me page
 
-    await waitFor(() => Router.navigate({ to: "/" }));
+    await waitFor(() => router.navigate({ to: "/" }));
     await screen.findByText(/about me/i); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Will get redirect instead
 
-    await waitFor(() => Router.navigate({ to: "/portfolio" }));
+    await waitFor(() => router.navigate({ to: "/portfolio" }));
     await screen.findByText(/about me/i);
 
-    await waitFor(() => Router.navigate({ href: "/about-me" }));
+    await waitFor(() => router.navigate({ href: "/about-me" }));
     await screen.findByText(/Sorry/);
   });
 
   test("mapping out four main portfolio routes", async () => { //! iOS, Android, Front-End, Back-End
-    render(<RouterProvider router={Router} />);
-    await waitFor(() => Router.navigate({
+    render(<RouterProvider router={router} />);
+    await waitFor(() => router.navigate({
       to: "/portfolio/$postId", params: { postId: "android" }
     }));
     await screen.findByRole("heading", { name: /Android/, level: 1 }); //* Should display Android in title header
 
-    await waitFor(() => Router.navigate({
+    await waitFor(() => router.navigate({
       to: "/portfolio/$postId", params: { postId: "front-end" }
     }));
     await screen.findByRole("heading", { name: /Front-End/, level: 1 }); //* Should display Front-End in title header
 
-    await waitFor(() => Router.navigate({
+    await waitFor(() => router.navigate({
       to: "/portfolio/$postId", params: { postId: "back-end" }
     }));
     await screen.findByRole("heading", { name: /Back-End/, level: 1 }); //* Should display Back-End in title header
 
-    await waitFor(() => Router.navigate({
+    await waitFor(() => router.navigate({
       to: "/portfolio/$postId", params: { postId: "iOS" }
     }));
     await screen.findByRole("heading", { name: /iOS/, level: 1 }); //* Should display iOS in title header
 
-    await waitFor(() => Router.navigate({
+    await waitFor(() => router.navigate({
       to: "/portfolio/$postId", params: { postId: "ANDROID" }
     }));
     await screen.findByRole("heading", { name: /ANDROID/, level: 1 }); //* Should display Android in title header
 
-    await waitFor(() => Router.navigate({ href: "/iOS" }));
+    await waitFor(() => router.navigate({ href: "/iOS" }));
     await screen.findByText(/Sorry/); //* THIS WILL NOT MATCH. It needs /portfolio prefix. Just get redirect
 
     // Empty minor projects needed or finds multiple "Nicholas"
@@ -80,31 +81,31 @@ describe("renders Tanstack Routes", () => {
     apiMock.mockResolvedValue(aboutMeProj);
     swrMock.mockReturnValue(aboutMeProj);
     await waitFor(() => // WHEN the URL param is empty, i.e. "/portfolio/"
-      Router.navigate({ to: "/portfolio/$postId", params: { postId: "" } })
+      router.navigate({ to: "/portfolio/$postId", params: { postId: "" } })
     );
     // THEN redirect to "About Me"
     await screen.findByRole("heading", { name: "About Me" });
     expect(screen.getByRole("heading", { name: /nicholas/i }));
 
-    await waitFor(() => Router.navigate({ href: "/portfolio/foobar/barfoo" }));
+    await waitFor(() => router.navigate({ href: "/portfolio/foobar/barfoo" }));
     expect(await screen.findByText("Sorry! Not Much to See Here!")).toBeInTheDocument();
   });
 
   test("mapping a contact me page", async () => {
-    render(<RouterProvider router={Router} />);
-    await waitFor(() => Router.navigate({ to: "/contact-me" }));
+    render(<RouterProvider router={router} />);
+    await waitFor(() => router.navigate({ to: "/contact-me" }));
     await screen.findByText(/Contact Me!/);
 
-    await waitFor(() => Router.navigate({ href: "/portfolio/contact-me" }));
+    await waitFor(() => router.navigate({ href: "/portfolio/contact-me" }));
     await screen.findByText(/Sorry/); //* Portfolio prefix not needed. Will redirect to not found page
   });
 
   test("mapping a fallback route to a not found page", async () => {
-    render(<RouterProvider router={Router} />);
-    await waitFor(() => Router.navigate({ href: "/foobar" }));
+    render(<RouterProvider router={router} />);
+    await waitFor(() => router.navigate({ href: "/foobar" }));
     await screen.findByText(/Sorry/); //* Should redirect to not found page
 
-    await waitFor(() => Router.navigate({ to: "/not-found" }));
+    await waitFor(() => router.navigate({ to: "/not-found" }));
     await screen.findByText(/Sorry/); //* Goes straight to not found page
   });
 });

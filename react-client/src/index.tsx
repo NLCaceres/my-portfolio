@@ -7,7 +7,8 @@ import * as serviceWorker from "./serviceWorker";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
-root.render(<RouterProvider router={Router} />);
+const router = Router();
+root.render(<RouterProvider router={router} />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

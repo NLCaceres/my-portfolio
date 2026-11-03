@@ -61,16 +61,17 @@ const routeTree = rootRoute.addChildren([
 	indexRoute, contactMeRoute, notFoundRoute,
 	portfolioRoute.addChildren([portfolioChildRoute, portfolioIndexRoute])
 ]);
-const TanStackRouter = createRouter({
-	routeTree,
-	scrollRestoration: true,
-	defaultNotFoundComponent: () => <Navigate to="/not-found" replace={true} />,
-	context: { showAlert: () => {} }
-});
-export default TanStackRouter;
+export default function initRouter() {
+	const router = createRouter({
+		routeTree, scrollRestoration: true,
+		defaultNotFoundComponent: () => <Navigate to="/not-found" replace={true} />,
+		context: { showAlert: () => {} }
+	});
+	return router;
+}
 
 declare module "@tanstack/react-router" {
   interface Register { // oxlint-disable-line typescript/consistent-type-definitions
-    router: typeof TanStackRouter
+    router: ReturnType<typeof initRouter>
   }
 }

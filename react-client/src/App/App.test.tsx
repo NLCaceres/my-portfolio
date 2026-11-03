@@ -49,8 +49,9 @@ beforeAll(() => { // ?: Skip animating styles from Route Transitions, immediatel
 });
 
 describe("renders the whole app", () => {
-  let ApiMock: MockInstance;
+  let ApiMock: MockInstance; let router: ReturnType<typeof Router>;
   beforeEach(() => {
+    router = Router();
     const majProject = ProjectFactory.create(); const minProject = ProjectFactory.create();
     ApiMock = vi.spyOn(GetPostList, "default").mockResolvedValue({ majorProjects: [majProject], minorProjects: [minProject] });
   });
@@ -60,10 +61,10 @@ describe("renders the whole app", () => {
       const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime }); // ?: VERY IMPORTANT due to setTimeout being used internally!
       vi.useFakeTimers(); // ?: OTHERWISE Vitest's fakeTimers will freeze userEvents entirely (like in line 58)
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
-      await Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } });
-      render(<RouterProvider router={Router} />);
-      expect(await screen.findByText("About Me")).toBeInTheDocument();
+      render(<RouterProvider router={router} />);
+      await waitFor(() => router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
       expect(ApiMock).toHaveBeenCalledTimes(1); // API eventually loads the cache
+      expect(await screen.findByText("About Me")).toBeInTheDocument();
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
 
@@ -85,10 +86,10 @@ describe("renders the whole app", () => {
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue( // - Must return a valid response for Turnstile to provide a success response
         { success: true, "error-codes": [], "challenge_ts": "1:00pm", "message": "Successfully sent your email!" }
       );
-      render(<RouterProvider router={Router} />);
-      await waitFor(() => Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
+      render(<RouterProvider router={router} />);
+      await waitFor(() => router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
+      expect(ApiMock).toHaveBeenCalledTimes(1);
       expect(await screen.findByText("About Me")).toBeInTheDocument();
-      expect(ApiMock).toHaveBeenCalledTimes(2);
 
       await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
 
@@ -108,10 +109,10 @@ describe("renders the whole app", () => {
       const useViewWidthSpy = vi.spyOn(ViewWidthContext, "default")
         .mockReturnValue(smallDesktopLowEndWidth);
       const user = userEvent.setup();
-      const { unmount } = render(<RouterProvider router={Router} />);
-      await waitFor(() => Router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
+      const { unmount } = render(<RouterProvider router={router} />);
+      await waitFor(() => router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
+      expect(ApiMock).toHaveBeenCalledTimes(1);
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
-      expect(ApiMock).toHaveBeenCalledTimes(2);
 
       // WHEN at Desktop widths, THEN the "Contact" button should open a modal
       await user.click(contactMeButton);
@@ -126,7 +127,7 @@ describe("renders the whole app", () => {
       unmount();
 
       useViewWidthSpy.mockReturnValue(mobileHighEndWidth); // - Rerender as mobile version
-      render(<RouterProvider router={Router} />);
+      render(<RouterProvider router={router} />);
       // WHEN at mobile widths, even bigger mobile widths
       const contactMeButtonLink = await screen.findByRole("button", { name: /contact me/i });
       // THEN clicking the "Contact" button should work as a link to navigate to "/contact-me"
