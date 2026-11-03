@@ -55,7 +55,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x, "24.x", "26.x"]
+        node-version: [24, 26]
 
     steps:
       - uses: actions/checkout@v7
@@ -79,7 +79,7 @@ jobs:
     environment: production
     strategy:
       matrix:
-        node-version: ["24.x"]
+        node-version: [24]
 
     steps:
       - uses: actions/checkout@v7
