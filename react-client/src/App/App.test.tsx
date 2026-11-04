@@ -30,22 +30,12 @@ vi.mock("../AppImages/PlaceholderImg", () => {
 
 beforeAll(() => { // ?: Skip animating styles from Route Transitions, immediately finish their interpolation
   Globals.assign({ skipAnimation: true }); // ?: So tests run quick BUT props are updated as expected!
-
-  // ?: Workaround for Vitest since Testing-Lib/UserEvent uses Jest timers by default,
-  // ?: making the typical userEvent.setup({ advanceTimers: vi.advanceTimersByTime }) useless without the following
-  // ?: This workaround is not required unless using userEvent, ex: TurnstileWidget or Browser tests
-  // @ts-expect-error: Ignore setting Jest since no type is available without the package itself
-  const _jest = globalThis.jest;
-
-  // @ts-expect-error: Merge original Jest settings with Vitest as the timer
-  globalThis.jest = {
-    // @ts-expect-error: Assert Jest setting is in global
-    ...globalThis.jest,
-    advanceTimersByTime: vi.advanceTimersByTime.bind(vi)
-  };
-
-  // @ts-expect-error: Restore Testing-Lib's original Jest timer
-  return () => void (globalThis.jest = _jest); // ?: Cleanup function to reset the global Jest
+  // Testing-Lib/React still defaults to Jest timers, so MUST stub out the Jest global
+  // that it looks up to exhaust remaining fake timers, which is an issue when using UserEvent
+  // Current solutions in prog are Testing-Lib/React#1443 (likely) and UserEvent#1324
+  // BUT these are years overdue now, so UserEvent#1115 suggests this more modern hacky-fix
+  vi.stubGlobal("jest", { advanceTimersByTime: vi.advanceTimersByTime.bind(vi) });
+  return () => { vi.unstubAllGlobals(); }; // Cleanup func run after ALL `afterAll` handlers run
 });
 
 describe("renders the whole app", () => {
