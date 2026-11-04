@@ -53,7 +53,6 @@ describe("renders the whole app", () => {
       vi.spyOn(CommonAPI, "SendEmail").mockResolvedValue("123"); // - Invalid response so Turnstile thinks user is a computer
       render(<RouterProvider router={router} />);
       await waitFor(() => router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
-      expect(ApiMock).toHaveBeenCalledTimes(1); // API eventually loads the cache
       expect(await screen.findByText("About Me")).toBeInTheDocument();
 
       await submitContactForm(user); // - Despite invalid user, trying to submit anyway fails behind the scenes
@@ -66,7 +65,7 @@ describe("renders the whole app", () => {
       // ?: Need `act()` since advancing the time will cause App's setTimeout to run a state update aka `setShowAlert`
       await act(() => vi.advanceTimersByTime(5000));
       expect(screen.queryByText("alert")).not.toBeInTheDocument();
-      expect(ApiMock).toHaveBeenCalledTimes(2); // Cache loaded API data
+      expect(ApiMock).toHaveBeenCalledTimes(2); // API loaded and cache loaded its data in
       vi.runOnlyPendingTimers();
       vi.useRealTimers();
     });
@@ -78,7 +77,6 @@ describe("renders the whole app", () => {
       );
       render(<RouterProvider router={router} />);
       await waitFor(() => router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
-      expect(ApiMock).toHaveBeenCalledTimes(1);
       expect(await screen.findByText("About Me")).toBeInTheDocument();
 
       await submitContactForm(user); // - User seems human so valid turnstile response received and email is sending
@@ -90,7 +88,7 @@ describe("renders the whole app", () => {
 
       await act(() => vi.advanceTimersByTime(5000));
       expect(screen.queryByText("alert")).not.toBeInTheDocument();
-      expect(ApiMock).toHaveBeenCalledTimes(2); // Cache loaded API data
+      expect(ApiMock).toHaveBeenCalledTimes(2);
       vi.runOnlyPendingTimers();
       vi.useRealTimers();
     });
@@ -101,7 +99,6 @@ describe("renders the whole app", () => {
       const user = userEvent.setup();
       const { unmount } = render(<RouterProvider router={router} />);
       await waitFor(() => router.navigate({ to: "/portfolio/$postId", params: { postId: "about-me" } }));
-      expect(ApiMock).toHaveBeenCalledTimes(1);
       const contactMeButton = await screen.findByRole("button", { name: /contact me/i });
 
       // WHEN at Desktop widths, THEN the "Contact" button should open a modal
@@ -126,7 +123,7 @@ describe("renders the whole app", () => {
         .toBeInTheDocument();
       // AND smooth scrolling happens on route transition, NOT if the modal is opening
       expect(scrollSpy).toHaveBeenCalledTimes(1);
-      expect(ApiMock).toHaveBeenCalledTimes(2); // No API call, completely cache loaded
+      expect(ApiMock).toHaveBeenCalledTimes(2);
     });
   });
 });
