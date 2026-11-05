@@ -7,6 +7,7 @@ export default defineConfig({
     include: ["./**/*.test.{ts,tsx}"],
     globals: true,
     environment: "jsdom",
+    pool: "vmThreads",
     css: { modules: { classNameStrategy: "non-scoped" } },
     setupFiles: "./src/setupTests.ts",
     coverage: {
