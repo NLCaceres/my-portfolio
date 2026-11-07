@@ -1,5 +1,6 @@
 {
 	"$schema": "https://schema.railpack.com",
+	"packages": { "pnpm" : "12.8.2" },
 	"steps": {
 		"install": {
 			"commands": [
@@ -19,7 +20,6 @@
 				{ "src": "react-client/package.json", "dest": "react-client/package.json" },
 				{ "src": "react-client/pnpm-lock.yaml", "dest": "react-client/pnpm-lock.yaml" },
 				{ "src": "react-client/pnpm-workspace.yaml", "dest": "react-client/pnpm-workspace.yaml" },
-				"npm i -g pnpm@12.8.2 --allow-scripts=pnpm",
 				"pnpm railway-install"
 			]
 		},
@@ -29,7 +29,6 @@
 				{ "step": "install:node", "include": ["."] }
 			],
 			"commands": [
-				"npm ls -g --depth 0",
 				"pnpm railway-deploy",
 				"bundle exec rake assets:precompile",
 				"bundle exec bootsnap precompile --gemfile app/ config/ db/ lib/"
