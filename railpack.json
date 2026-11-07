@@ -29,6 +29,7 @@
 				{ "step": "install:node", "include": ["."] }
 			],
 			"commands": [
+				"npm ls -g --depth 0",
 				"pnpm railway-deploy",
 				"bundle exec rake assets:precompile",
 				"bundle exec bootsnap precompile --gemfile app/ config/ db/ lib/"
