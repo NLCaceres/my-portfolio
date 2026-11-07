@@ -17,6 +17,7 @@
 				{ "src": "package.json", "dest": "package.json" },
 				{ "src": "react-client/package.json", "dest": "react-client/package.json" },
 				{ "src": "react-client/pnpm-lock.yaml", "dest": "react-client/pnpm-lock.yaml" },
+				{ "src": "react-client/pnpm-workspace.yaml", "dest": "react-client/pnpm-workspace.yaml" },
 				"npm i -g pnpm@12.8.2 --allow-scripts=pnpm",
 				"pnpm railway-install"
 			]
