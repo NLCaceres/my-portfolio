@@ -62,10 +62,8 @@ jobs:
       - name: Use PNPM 12 with NodeJS ${{ matrix.node-version }}
         uses: pnpm/setup@v3
         with:
-          version: 12
-          runtime: node@${{ matrix.node-version }}
-      - name: Install PNPM dependencies
-        run: pnpm -C react-client install --frozen-lockfile
+          working-directory: react-client
+          cache: true
       - name: Run React tests
         run: pnpm -C react-client test
 
