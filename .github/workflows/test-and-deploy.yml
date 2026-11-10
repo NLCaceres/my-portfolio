@@ -38,6 +38,8 @@ jobs:
       - uses: actions/checkout@v7
       - name: Set up Ruby based on ruby-version file
         uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
       - name: Set deployment config
         run: bundle config set deployment true
       - name: Set dependency groups
