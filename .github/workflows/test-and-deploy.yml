@@ -33,19 +33,15 @@ jobs:
     # Apply the following ENV vars to all of the following steps of this job
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
+      BUNDLE_DEPLOYMENT: true
+      BUNDLE_WITHOUT: development
 
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Ruby based on ruby-version file
+      - name: Set up Ruby 3.3.13 via `.ruby-version` and Install Gems via Bundler
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Set deployment config
-        run: bundle config set deployment true
-      - name: Set dependency groups
-        run: bundle config set without development
-      - name: Install Bundle dependencies
-        run: bundle install --jobs 1
       - name: Setup Database
         run: bin/rails db:setup
       - name: Run Ruby on Rails tests
