@@ -62,6 +62,7 @@ jobs:
         with:
           working-directory: react-client
           cache: true
+          save-cache: ${{ matrix.node-version == '24' }}
       - name: Run React tests
         run: pnpm -C react-client test
 
