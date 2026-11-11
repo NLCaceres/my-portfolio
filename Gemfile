@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby file: ".ruby-version"
 
@@ -25,7 +24,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby] # Bundle this gem 
 
 gem 'aws-sdk-s3', '~> 1' # Thanks to AWS v3's modularization, it's now best to take ONLY the AWS service gem you need
 
-gem 'activeadmin', '~> 3.2'
+gem 'activeadmin', '~> 3.2' # NOT migrating to v4
 gem 'devise', '~> 5.0' # Adds Auth to ActiveAdmin via `rails g devise:install` before running the ActiveAdmin install
 gem 'sassc-rails' # Gives ActiveAdmin its stylesheets that can be overriden
 
