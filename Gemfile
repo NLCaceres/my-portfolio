@@ -9,7 +9,7 @@ gem 'dotenv', '~> 3.1' # Auto-loads Env vars when Rails starts + provides Rake t
 gem 'json', '~> 2.20' # Fix until Rails 8 (which now supports v3+)
 gem 'pg', '>= 0.18', '< 2.0' # Database for ActiveRecord
 gem 'puma', '~> 6.0' # Puma acts as the app server
-gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby] # Bundle this gem to provide zoneinfo files to Windows
+gem 'tzinfo-data', platforms: %i[windows jruby] # Bundle this gem to provide zoneinfo files to Windows
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'
@@ -31,7 +31,7 @@ gem 'sassc-rails' # Gives ActiveAdmin its stylesheets that can be overriden
 gem 'rack-attack', '~> 6.8' # Adds throttling and blacklisting to Rack apps like Rails
 
 group :development, :test do
-  gem 'debug', ">= 1.0.0", platforms: %i[mri mingw x64_mingw]
+  gem 'debug', ">= 1.0.0", platforms: %i[mri windows]
   gem 'listen', '~> 3.0'
   gem 'rubocop'
   gem "rubocop-rails-omakase", require: false
