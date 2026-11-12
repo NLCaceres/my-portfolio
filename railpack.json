@@ -1,41 +1,37 @@
 {
-	"$schema": "https://schema.railpack.com",
-	"packages": { "pnpm" : "12.8.2" },
-	"steps": {
-		"install": {
-			"commands": [
-				{ "src": "Gemfile", "dest": "Gemfile" },
-				{ "src": "Gemfile.lock", "dest": "Gemfile.lock" },
-				"gem install -N bundler:2.5.9",
-				"bundle config set deployment true",
-				"bundle config set without development test",
-				"bundle install"
-			]
-		},
-		"install:node": {
-			"commands": [
-				"mkdir -p /app/react-client/node_modules/.cache",
-				"mkdir -p /app/node_modules",
-				{ "src": "package.json", "dest": "package.json" },
-				{ "src": "react-client/package.json", "dest": "react-client/package.json" },
-				{ "src": "react-client/pnpm-lock.yaml", "dest": "react-client/pnpm-lock.yaml" },
-				{ "src": "react-client/pnpm-workspace.yaml", "dest": "react-client/pnpm-workspace.yaml" },
-				"pnpm railway-install"
-			]
-		},
-		"build": {
-			"inputs": [
-				"...",
-				{ "step": "install:node", "include": ["."] }
-			],
-			"commands": [
-				"pnpm railway-deploy",
-				"bundle exec rake assets:precompile",
-				"bundle exec bootsnap precompile --gemfile app/ config/ db/ lib/"
-			],
-			"deployOutputs": [
-				{ "include": ["."], "exclude": ["react-client", "test", ".github"] }
-			]
-		}
-	}
+  "$schema": "https://schema.railpack.com",
+  "packages": { "pnpm": "12.8.2" },
+  "steps": {
+    "install": {
+      "commands": [
+        { "src": "Gemfile", "dest": "Gemfile" },
+        { "src": "Gemfile.lock", "dest": "Gemfile.lock" },
+        "gem install -N bundler:2.5.9",
+        "bundle config set deployment true",
+        "bundle config set without development test",
+        "bundle config set simulate_version 4",
+        "bundle install"
+      ]
+    },
+    "install:node": {
+      "commands": [
+        "mkdir -p /app/react-client/node_modules/.cache",
+        "mkdir -p /app/node_modules",
+        { "src": "package.json", "dest": "package.json" },
+        { "src": "react-client/package.json", "dest": "react-client/package.json" },
+        { "src": "react-client/pnpm-lock.yaml", "dest": "react-client/pnpm-lock.yaml" },
+        { "src": "react-client/pnpm-workspace.yaml", "dest": "react-client/pnpm-workspace.yaml" },
+        "pnpm railway-install"
+      ]
+    },
+    "build": {
+      "inputs": ["...", { "step": "install:node", "include": ["."] }],
+      "commands": [
+        "pnpm railway-deploy",
+        "bundle exec rake assets:precompile",
+        "bundle exec bootsnap precompile --gemfile app/ config/ db/ lib/"
+      ],
+      "deployOutputs": [{ "include": ["."], "exclude": ["react-client", "test", ".github"] }]
+    }
+  }
 }

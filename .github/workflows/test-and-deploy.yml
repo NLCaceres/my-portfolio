@@ -35,6 +35,7 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resume_react_rails-test
       BUNDLE_DEPLOYMENT: true
       BUNDLE_WITHOUT: development
+      BUNDLE_SIMULATE_VERSION: "4"
 
     steps:
       - uses: actions/checkout@v7
