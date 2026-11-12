@@ -6,7 +6,7 @@
       "commands": [
         { "src": "Gemfile", "dest": "Gemfile" },
         { "src": "Gemfile.lock", "dest": "Gemfile.lock" },
-        "gem install -N bundler:2.5.9",
+        "gem install bundler -N -v 2.7.2",
         "bundle config set deployment true",
         "bundle config set without development test",
         "bundle config set simulate_version 4",
